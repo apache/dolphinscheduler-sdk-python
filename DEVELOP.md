@@ -27,19 +27,17 @@ store or execute it. We here use [py4j][py4j] to dynamically access Java Virtual
 **PyDolphinScheduler** use GitHub to hold all source code, you should clone the code before you do same change.
 
 ```shell
-git clone git@github.com:apache/dolphinscheduler.git
+git clone git@github.com:apache/dolphinscheduler-sdk-python.git
 ```
 
 Now, we should install all dependence to make sure we could run test or check code style locally
 
 ```shell
-cd dolphinscheduler/dolphinscheduler-python/pydolphinscheduler
 python -m pip install -e '.[dev]'
 ```
 
 Next, we have to open pydolphinscheduler project in you editor. We recommend you use [pycharm][pycharm]
-instead of [IntelliJ IDEA][idea] to open it. And you could just open directory
-`dolphinscheduler-python/pydolphinscheduler` instead of `dolphinscheduler-python`.
+instead of [IntelliJ IDEA][idea] to open it.
 
 ## Brief Concept
 
@@ -208,8 +206,7 @@ this command output.
 
 Integrate Test can not run when you execute command `tox -e local-ci` because it needs external environment
 including [Docker](https://docs.docker.com/get-docker/) and specific image build by [maven](https://maven.apache.org/install.html).
-Here we would show you the step to run integrate test in directory `dolphinscheduler-python/pydolphinscheduler/tests/integration`.
-There are two ways to run integrate tests.
+Here we would show you the step to run integrate test in directory `tests/integration`. There are two ways to run integrate tests.
 
 #### Method 1: Launch Docker Container Locally
 
@@ -249,7 +246,8 @@ When you add a new package in pydolphinscheduler, you should also add the packag
 When you change public class, method or interface, you should change the [UPDATING.md](./UPDATING.md) to notice
 users who may use it in other way.
 
-<!-- content -->
+## Reference
+
 [py4j]: https://www.py4j.org/index.html
 [pycharm]: https://www.jetbrains.com/pycharm
 [idea]: https://www.jetbrains.com/idea/
@@ -260,4 +258,5 @@ users who may use it in other way.
 [black-editor]: https://black.readthedocs.io/en/stable/integrations/editors.html#pycharm-intellij-idea
 [coverage]: https://coverage.readthedocs.io/en/stable/
 [isort]: https://pycqa.github.io/isort/index.html
-[sphinx]: https://www.sphinx-doc.org/en/master/
+[sphinx]: https://www.sphinx-doc.org/en/master
+

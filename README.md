@@ -65,7 +65,7 @@ And for now we could run a simple example by:
 
 ```shell
 # Please make sure your terminal could 
-curl https://raw.githubusercontent.com/apache/dolphinscheduler/dev/dolphinscheduler-python/pydolphinscheduler/examples/tutorial.py -o ./tutorial.py
+curl https://raw.githubusercontent.com/apache/dolphinscheduler-sdk-python/main/src/pydolphinscheduler/examples/tutorial.py -o ./tutorial.py
 python ./tutorial.py
 ```
 
