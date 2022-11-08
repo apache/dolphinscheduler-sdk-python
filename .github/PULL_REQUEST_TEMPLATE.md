@@ -10,4 +10,4 @@ I confirm that the following checklist has been completed.
 
 - [ ] Add/Change **test cases** for the changes.
 - [ ] Add/Change the related **documentation**.
-- [ ] (Optional) Add https://github.com/apache/dolphinscheduler-sdk-python/UPDATING.md because it is a incompatible change.
+- [ ] (Optional) Add your change to `UPDATING.md` when it is an incompatible change.
