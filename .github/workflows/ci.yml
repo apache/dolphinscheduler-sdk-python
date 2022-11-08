@@ -131,7 +131,7 @@ jobs:
         run: |
           python -m tox -vv -e local-ci
   integrate-test:
-#    needs: license
+    needs: license
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -155,14 +155,12 @@ jobs:
       - name: Build Image
         working-directory: dolphinscheduler
         run: |
-          ls -al
-          pwd
-#          ./mvnw -B clean install \
-#          -Dmaven.test.skip \
-#          -Dmaven.javadoc.skip \
-#          -Dcheckstyle.skip=true \
-#          -Pdocker,release -Ddocker.tag=ci \
-#          -pl dolphinscheduler-standalone-server -am
+          ./mvnw -B clean install \
+          -Dmaven.test.skip \
+          -Dmaven.javadoc.skip \
+          -Dcheckstyle.skip=true \
+          -Pdocker,release -Ddocker.tag=ci \
+          -pl dolphinscheduler-standalone-server -am
       - name: Set up Python 3.7
         uses: actions/setup-python@v4
         with:
@@ -173,8 +171,6 @@ jobs:
       - name: Run Integrate Tests
         working-directory: src
         run: |
-          ls -al
-          pwd
           python -m tox -vv -e integrate-test
   result:
     name: CI
