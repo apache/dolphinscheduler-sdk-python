@@ -31,12 +31,10 @@ env:
 
 jobs:
   license:
-    name: license
     runs-on: ubuntu-latest
     steps:
         - uses: apache/skywalking-eyes/header@main
   dead-link:
-    name: Dead Link
     runs-on: ubuntu-latest
     needs: license
     timeout-minutes: 30
@@ -48,7 +46,6 @@ jobs:
             markdown-link-check -c .dlc.json -q "$file"
           done
   lint:
-    name: Lint
     timeout-minutes: 15
     runs-on: ubuntu-latest
     needs: license
@@ -65,7 +62,6 @@ jobs:
         run: |
           python -m tox -vv -e lint
   pytest:
-    name: Pytest
     timeout-minutes: 15
     needs: lint
     runs-on: ${{ matrix.os }}
@@ -95,7 +91,6 @@ jobs:
         run: |
           python -m tox -vv -e code-test
   doc-build:
-    name: Docs Build Test
     timeout-minutes: 15
     needs: lint
     runs-on: ubuntu-latest
@@ -116,7 +111,6 @@ jobs:
         run: |
           python -m tox -vv -e ${{ matrix.env-list }}
   local-ci:
-    name: Local CI
     timeout-minutes: 15
     needs:
       - pytest
@@ -135,7 +129,6 @@ jobs:
         run: |
           python -m tox -vv -e local-ci
   integrate-test:
-    name: Integrate Test
     needs: license
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -183,9 +176,9 @@ jobs:
     steps:
       - name: Status
         run: |
-          if [[ ${{ needs.Dead Link.result }} != 'success' ]] || \
-            [[ ${{ needs.Integrate Test.result }} != 'success' ]] || \
-            [[ ${{ needs.Local CI.result }} != 'success' ]]; then
+          if [[ ${{ needs.dead-link.result }} != 'success' ]] || \
+            [[ ${{ needs.integrate-test.result }} != 'success' ]] || \
+            [[ ${{ needs.local-ci.result }} != 'success' ]]; then
             echo "CI Failed!"
             exit -1
           fi
