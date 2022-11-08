@@ -1,4 +1,9 @@
 {
+  "ignorePatterns": [
+    {
+      "pattern": "^http://localhost"
+    }
+  ],
   "httpHeaders": [
     {
       "urls": ["https://docs.github.com/"],
