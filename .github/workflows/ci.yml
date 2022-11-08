@@ -169,9 +169,9 @@ jobs:
     name: CI
     if: always()
     needs:
-      - Dead Link
-      - Integrate Test
-      - Local CI
+      - dead-link
+      - integrate-test
+      - local-ci
     runs-on: ubuntu-latest
     steps:
       - name: Status
