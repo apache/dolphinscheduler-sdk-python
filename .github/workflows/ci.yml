@@ -136,6 +136,7 @@ jobs:
           python -m tox -vv -e local-ci
   integrate-test:
     name: Integrate Test
+    needs: license
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -171,3 +172,20 @@ jobs:
         working-directory: ~
         run: |
           python -m tox -vv -e integrate-test
+  result:
+    name: CI
+    if: always()
+    needs:
+      - Dead Link
+      - Integrate Test
+      - Local CI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Status
+        run: |
+          if [[ ${{ needs.Dead Link.result }} != 'success' ]] || \
+            [[ ${{ needs.Integrate Test.result }} != 'success' ]] || \
+            [[ ${{ needs.Local CI.result }} != 'success' ]]; then
+            echo "CI Failed!"
+            exit -1
+          fi
