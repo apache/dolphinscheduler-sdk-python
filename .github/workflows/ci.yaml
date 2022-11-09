@@ -30,11 +30,162 @@ env:
   DEPENDENCES: pip setuptools wheel tox
 
 jobs:
+  license:
+    runs-on: ubuntu-latest
+    steps:
+        - uses: apache/skywalking-eyes/header@main
+  dead-link:
+    runs-on: ubuntu-latest
+    needs: license
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v3
+      - run: sudo npm install -g markdown-link-check@3.10.0
+      - run: |
+          for file in $(find . -name "*.md"); do
+            markdown-link-check -c .dlc.json -q "$file"
+          done
+  lint:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    needs: license
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.7
+      - name: Install Dependences
+        run: |
+          python -m pip install --upgrade ${{ env.DEPENDENCES }}
+      - name: Run All Lint Check
+        run: |
+          python -m tox -vv -e lint
+  pytest:
+    timeout-minutes: 15
+    needs: lint
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # YAML parse `3.10` to `3.1`, so we have to add quotes for `'3.10'`, see also:
+        # https://github.com/actions/setup-python/issues/160#issuecomment-724485470
+        python-version: [3.6, 3.7, 3.8, 3.9, '3.10', 3.11-dev]
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+        # Skip because dependence [py4j](https://pypi.org/project/py4j/) not work on those environments
+        exclude:
+          - os: windows-latest
+            python-version: '3.10'
+          - os: windows-latest
+            python-version: 3.11-dev
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Dependences
+        run: |
+          python -m pip install --upgrade ${{ env.DEPENDENCES }}
+      - name: Run All Tests
+        run: |
+          python -m tox -vv -e code-test
+  doc-build:
+    timeout-minutes: 15
+    needs: lint
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # TODO Fix multi-version doc build
+#        env-list: [doc-build, doc-build-multi]
+        env-list: [doc-build]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.7
+      - name: Install Dependences
+        run: |
+          python -m pip install --upgrade ${{ env.DEPENDENCES }}
+      - name: Run Build Docs Tests ${{ matrix.env-list }}
+        run: |
+          python -m tox -vv -e ${{ matrix.env-list }}
+  local-ci:
+    timeout-minutes: 15
+    needs:
+      - pytest
+      - doc-build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.7
+      - name: Install Dependences
+        run: |
+          python -m pip install --upgrade ${{ env.DEPENDENCES }}
+      - name: Run Tests Build Docs
+        run: |
+          python -m tox -vv -e local-ci
+  integrate-test:
+    needs: license
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout Dolphinscheduler SDK Python
+        uses: actions/checkout@v3
+        with:
+          path: src
+      - name: Checkout Dolphinscheduler
+        uses: actions/checkout@v3
+        with:
+          repository: apache/dolphinscheduler
+          path: dolphinscheduler
+          submodules: true
+      - name: Cache local Maven repository
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
+      # Switch to project root directory to run mvnw command
+      - name: Build Image
+        working-directory: dolphinscheduler
+        run: |
+          ./mvnw -B clean install \
+          -Dmaven.test.skip \
+          -Dmaven.javadoc.skip \
+          -Dcheckstyle.skip=true \
+          -Pdocker,release -Ddocker.tag=ci \
+          -pl dolphinscheduler-standalone-server -am
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.7
+      - name: Install Dependences
+        run: |
+          python -m pip install --upgrade ${{ env.DEPENDENCES }}
+      - name: Run Integrate Tests
+        working-directory: src
+        run: |
+          python -m tox -vv -e integrate-test
   result:
     name: CI
     if: always()
+    needs:
+      - dead-link
+      - integrate-test
+      - local-ci
     runs-on: ubuntu-latest
     steps:
       - name: Status
         run: |
-          echo success
+          if [[ ${{ needs.dead-link.result }} != 'success' ]] || \
+            [[ ${{ needs.integrate-test.result }} != 'success' ]] || \
+            [[ ${{ needs.local-ci.result }} != 'success' ]]; then
+            echo "CI Failed!"
+            exit -1
+          fi
