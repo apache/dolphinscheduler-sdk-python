@@ -27,7 +27,7 @@ under the License.
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/psf/black)
 [![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat-square&labelColor=ef8336)](https://pycqa.github.io/isort)
-[![GitHub Build](https://github.com/apache/dolphinscheduler/actions/workflows/py-ci.yml/badge.svg?branch=dev)](https://github.com/apache/dolphinscheduler/actions?query=workflow%3A%22Python+API%22)
+[![CI](https://github.com/apache/dolphinscheduler-sdk-python/actions/workflows/ci.yaml/badge.svg)](https://github.com/apache/dolphinscheduler-sdk-python/actions/workflows/ci.yaml)
 
 **PyDolphinScheduler** is python API for Apache DolphinScheduler, which allow you definition
 your workflow by python code, aka workflow-as-codes.
