@@ -79,9 +79,9 @@ which we hold in GitHub
 .. code-block:: bash
 
    # Clone Apache DolphinScheduler repository
-   git clone git@github.com:apache/dolphinscheduler.git
+   git clone git@github.com:apache/dolphinscheduler-sdk-python.git
    # Install PyDolphinScheduler in develop mode
-   cd dolphinscheduler-python/pydolphinscheduler && python -m pip install -e .
+   python -m pip install -e .
 
 After you installed *PyDolphinScheduler*, please remember `start Python Gateway Service`_
 which waiting for *PyDolphinScheduler*'s workflow definition require.
@@ -92,7 +92,7 @@ package directly and do not care about other code(including Python gateway servi
 .. code-block:: bash
 
    # Must escape the '&' character by adding '\' 
-   pip install -e "git+https://github.com/apache/dolphinscheduler.git#egg=apache-dolphinscheduler&subdirectory=dolphinscheduler-python/pydolphinscheduler"
+   pip install -e "git+https://github.com/apache/dolphinscheduler-sdk-python.git#egg=apache-dolphinscheduler"
 
 Start Python Gateway Service
 ----------------------------
@@ -132,7 +132,7 @@ single bash command to get it
 
 .. code-block:: bash
 
-   wget https://raw.githubusercontent.com/apache/dolphinscheduler/dev/dolphinscheduler-python/pydolphinscheduler/src/pydolphinscheduler/examples/tutorial.py
+   wget https://raw.githubusercontent.com/apache/dolphinscheduler-sdk-python/main/src/pydolphinscheduler/examples/tutorial.py
 
 or you could copy-paste the content from `tutorial source code`_. And then you could run the example in your
 terminal
@@ -168,4 +168,4 @@ if you already know the basic usage or concept of *PyDolphinScheduler*, you coul
 .. _`instructions for all platforms here`: https://wiki.python.org/moin/BeginnersGuide/Download
 .. _`Apache DolphinScheduler`: https://dolphinscheduler.apache.org
 .. _`install Apache DolphinScheduler`: https://dolphinscheduler.apache.org/en-us/docs/latest/user_doc/guide/installation/standalone.html
-.. _`tutorial source code`: https://raw.githubusercontent.com/apache/dolphinscheduler/dev/dolphinscheduler-python/pydolphinscheduler/src/pydolphinscheduler/examples/tutorial.py
+.. _`tutorial source code`: https://raw.githubusercontent.com/apache/dolphinscheduler-sdk-python/main/src/pydolphinscheduler/examples/tutorial.py

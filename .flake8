@@ -28,7 +28,6 @@ exclude =
     dist,
     htmlcov,
     .tox,
-    dist,
 ignore = 
     # It's clear and not need to add docstring
     D107,  # D107: Don't require docstrings on __init__

@@ -32,10 +32,13 @@ if sys.version_info[0] < 3:
 
 logger = logging.getLogger(__name__)
 
-version = "3.1.0"
+version = "dev"
 
 # Start package required
 prod = [
+    "boto3>=1.23.10",
+    "oss2>=2.16.0",
+    "python-gitlab>=2.10.1",
     "click>=8.0.0",
     "py4j~=0.10",
     "ruamel.yaml",
@@ -140,11 +143,8 @@ setup(
     project_urls={
         "Homepage": "https://dolphinscheduler.apache.org",
         "Documentation": "https://dolphinscheduler.apache.org/python/dev/index.html",
-        "Source": "https://github.com/apache/dolphinscheduler/tree/dev/dolphinscheduler-python/"
-        "pydolphinscheduler",
-        "Issue Tracker": "https://github.com/apache/dolphinscheduler/issues?"
-        "q=is%3Aissue+is%3Aopen+label%3APython",
-        "Discussion": "https://github.com/apache/dolphinscheduler/discussions",
+        "Source": "https://github.com/apache/dolphinscheduler-sdk-python",
+        "Issue Tracker": "https://github.com/apache/dolphinscheduler-sdk-python/issues",
         "Twitter": "https://twitter.com/dolphinschedule",
     },
     packages=find_packages(where="src"),

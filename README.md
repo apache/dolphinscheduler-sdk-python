@@ -53,7 +53,7 @@ Here we show you how to install and run a simple example of pydolphinscheduler
 ### Start Server And Run Example
 
 Before you run an example, you have to start backend server. You could follow
-[development setup](../../docs/docs/en/contribute/development-environment-setup.md)
+[development setup](https://dolphinscheduler.apache.org/en-us/docs/dev/user_doc/contribute/development-environment-setup.html)
 section "DolphinScheduler Standalone Quick Start" to set up developer environment. You have to start backend
 and frontend server in this step, which mean that you could view DolphinScheduler UI in your browser with URL
 http://localhost:12345/dolphinscheduler
@@ -65,7 +65,7 @@ And for now we could run a simple example by:
 
 ```shell
 # Please make sure your terminal could 
-curl https://raw.githubusercontent.com/apache/dolphinscheduler/dev/dolphinscheduler-python/pydolphinscheduler/examples/tutorial.py -o ./tutorial.py
+curl https://raw.githubusercontent.com/apache/dolphinscheduler-sdk-python/main/src/pydolphinscheduler/examples/tutorial.py -o ./tutorial.py
 python ./tutorial.py
 ```
 

@@ -1,0 +1,15 @@
+# Editor
+.idea/
+.vscode/
+
+# Cache
+__pycache__/
+.tox/
+
+# Build
+build/
+*egg-info/
+
+# Test coverage
+.coverage
+htmlcov/

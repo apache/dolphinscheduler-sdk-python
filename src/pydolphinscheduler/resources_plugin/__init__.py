@@ -15,26 +15,11 @@
 # specific language governing permissions and limitations
 # under the License.
 
-"""Module for side object."""
+"""Init resources_plugin package."""
+from pydolphinscheduler.resources_plugin.github import GitHub
+from pydolphinscheduler.resources_plugin.gitlab import GitLab
+from pydolphinscheduler.resources_plugin.local import Local
+from pydolphinscheduler.resources_plugin.oss import OSS
+from pydolphinscheduler.resources_plugin.s3 import S3
 
-from typing import Optional
-
-from pydolphinscheduler.core import configuration
-from pydolphinscheduler.core.base import Base
-
-
-class BaseSide(Base):
-    """Base class for side object, it declare base behavior for them."""
-
-    def __init__(self, name: str, description: Optional[str] = None):
-        super().__init__(name, description)
-
-    @classmethod
-    def create_if_not_exists(
-        cls,
-        # TODO comment for avoiding cycle import
-        # user: Optional[User] = ProcessDefinitionDefault.USER
-        user=configuration.WORKFLOW_USER,
-    ):
-        """Create Base if not exists."""
-        raise NotImplementedError
+__all__ = ["Local", "GitHub", "GitLab", "OSS", "S3"]

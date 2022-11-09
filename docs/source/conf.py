@@ -88,7 +88,7 @@ html_sidebars = {
 }
 # Match all exists tag for pydolphinscheduler expect version 2.0.4(not release apache dolphinscheduler)
 smv_tag_whitelist = r"^(?!2.0.4)\d+\.\d+\.\d+$"
-smv_branch_whitelist = "dev"
+smv_branch_whitelist = "main"
 smv_remote_whitelist = r"^(origin|upstream)$"
 smv_released_pattern = "^refs/tags/.*$"
 smv_outputdir_format = "versions/{ref.name}"
