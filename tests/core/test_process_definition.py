@@ -67,6 +67,7 @@ def test_process_definition_key_attr(func):
         ("worker_group", configuration.WORKFLOW_WORKER_GROUP),
         ("warning_type", configuration.WORKFLOW_WARNING_TYPE),
         ("warning_group_id", 0),
+        ("execution_type", configuration.WORKFLOW_EXECUTION_TYPE.upper()),
         ("release_state", 1),
     ],
 )
@@ -89,6 +90,7 @@ def test_process_definition_default_value(name, value):
         ("worker_group", str, "worker_group"),
         ("warning_type", str, "FAILURE"),
         ("warning_group_id", int, 1),
+        ("execution_type", str, "PARALLEL"),
         ("timeout", int, 1),
         ("param", dict, {"key": "value"}),
         (
@@ -211,6 +213,22 @@ def test_warn_type_not_support_type(val: str):
 
 
 @pytest.mark.parametrize(
+    "val",
+    [
+        "ALLL",
+        "",
+        None,
+    ],
+)
+def test_execute_type_not_support_type(val: str):
+    """Test process definition param execute_type not support type error."""
+    with pytest.raises(
+        PyDSParamException, match="Parameter `execution_type` with unexpect value.*?"
+    ):
+        ProcessDefinition(TEST_PROCESS_DEFINITION_NAME, execution_type=val)
+
+
+@pytest.mark.parametrize(
     "param, expect",
     [
         (
@@ -321,6 +339,7 @@ def test_process_definition_get_define_without_task():
         "workerGroup": configuration.WORKFLOW_WORKER_GROUP,
         "warningType": configuration.WORKFLOW_WARNING_TYPE,
         "warningGroupId": 0,
+        "executionType": "PARALLEL",
         "timeout": 0,
         "releaseState": 1,
         "param": None,
