@@ -16,7 +16,7 @@
 # under the License.
 
 """DolphinScheduler Task and TaskRelation object."""
-
+import copy
 from logging import getLogger
 from typing import Dict, List, Optional, Sequence, Set, Tuple, Union
 
@@ -32,7 +32,9 @@ from pydolphinscheduler.core.process_definition import (
     ProcessDefinition,
     ProcessDefinitionContext,
 )
-from pydolphinscheduler.java_gateway import launch_gateway
+from pydolphinscheduler.core.resource import Resource
+from pydolphinscheduler.exceptions import PyDSParamException
+from pydolphinscheduler.java_gateway import JavaGate
 from pydolphinscheduler.models import Base
 
 logger = getLogger(__name__)
@@ -88,6 +90,7 @@ class Task(Base):
         "flag",
         "task_priority",
         "worker_group",
+        "environment_code",
         "delay_time",
         "fail_retry_times",
         "fail_retry_interval",
@@ -96,6 +99,17 @@ class Task(Base):
         "timeout",
     }
 
+    # task default attribute will into `task_params` property
+    _task_default_attr = {
+        "local_params",
+        "resource_list",
+        "dependence",
+        "wait_start_timeout",
+        "condition_result",
+    }
+    # task attribute ignore from _task_default_attr and will not into `task_params` property
+    _task_ignore_attr: set = set()
+    # task custom attribute define in sub class and will append to `task_params` property
     _task_custom_attr: set = set()
 
     DEFAULT_CONDITION_RESULT = {"successNode": [""], "failedNode": [""]}
@@ -108,6 +122,7 @@ class Task(Base):
         flag: Optional[str] = TaskFlag.YES,
         task_priority: Optional[str] = TaskPriority.MEDIUM,
         worker_group: Optional[str] = configuration.WORKFLOW_WORKER_GROUP,
+        environment_name: Optional[str] = None,
         delay_time: Optional[int] = 0,
         fail_retry_times: Optional[int] = 0,
         fail_retry_interval: Optional[int] = 1,
@@ -127,6 +142,7 @@ class Task(Base):
         self.flag = flag
         self.task_priority = task_priority
         self.worker_group = worker_group
+        self._environment_name = environment_name
         self.fail_retry_times = fail_retry_times
         self.fail_retry_interval = fail_retry_interval
         self.delay_time = delay_time
@@ -143,6 +159,7 @@ class Task(Base):
         # move attribute code and version after _process_definition and process_definition declare
         self.code, self.version = self.gen_code_and_version()
         # Add task to process definition, maybe we could put into property process_definition latter
+
         if (
             self.process_definition is not None
             and self.code not in self.process_definition.tasks
@@ -175,17 +192,27 @@ class Task(Base):
     def resource_list(self) -> List:
         """Get task define attribute `resource_list`."""
         resources = set()
-        for resource in self._resource_list:
-            if type(resource) == str:
-                resources.add(self.query_resource(resource).get(ResourceKey.ID))
-            elif type(resource) == dict and resource.get(ResourceKey.ID) is not None:
+        for res in self._resource_list:
+            if type(res) == str:
+                resources.add(
+                    Resource(name=res, user_name=self.user_name).get_id_from_database()
+                )
+            elif type(res) == dict and res.get(ResourceKey.ID) is not None:
                 logger.warning(
                     """`resource_list` should be defined using List[str] with resource paths,
                        the use of ids to define resources will be remove in version 3.2.0.
                     """
                 )
-                resources.add(resource.get(ResourceKey.ID))
+                resources.add(res.get(ResourceKey.ID))
         return [{ResourceKey.ID: r} for r in resources]
+
+    @property
+    def user_name(self) -> Optional[str]:
+        """Return user name of process definition."""
+        if self.process_definition:
+            return self.process_definition.user.name
+        else:
+            raise PyDSParamException("`user_name` cannot be empty.")
 
     @property
     def condition_result(self) -> Dict:
@@ -197,20 +224,24 @@ class Task(Base):
         """Set attribute condition_result."""
         self._condition_result = condition_result
 
+    def _get_attr(self) -> Set[str]:
+        """Get final task task_params attribute.
+
+        Base on `_task_default_attr`, append attribute from `_task_custom_attr` and subtract attribute from
+        `_task_ignore_attr`.
+        """
+        attr = copy.deepcopy(self._task_default_attr)
+        attr -= self._task_ignore_attr
+        attr |= self._task_custom_attr
+        return attr
+
     @property
     def task_params(self) -> Optional[Dict]:
         """Get task parameter object.
 
         Will get result to combine _task_custom_attr and custom_attr.
         """
-        custom_attr = {
-            "local_params",
-            "resource_list",
-            "dependence",
-            "wait_start_timeout",
-            "condition_result",
-        }
-        custom_attr |= self._task_custom_attr
+        custom_attr = self._get_attr()
         return self.get_define_custom(custom_attr=custom_attr)
 
     def __hash__(self):
@@ -288,17 +319,16 @@ class Task(Base):
         equal to 0 by java gateway, otherwise if will return the exists code and version.
         """
         # TODO get code from specific project process definition and task name
-        gateway = launch_gateway()
-        result = gateway.entry_point.getCodeAndVersion(
+        result = JavaGate().get_code_and_version(
             self.process_definition._project, self.process_definition.name, self.name
         )
         # result = gateway.entry_point.genTaskCodeList(DefaultTaskCodeNum.DEFAULT)
         # gateway_result_checker(result)
         return result.get("code"), result.get("version")
 
-    def query_resource(self, full_name):
-        """Get resource info from java gateway, contains resource id, name."""
-        gateway = launch_gateway()
-        return gateway.entry_point.queryResourcesFileInfo(
-            self.process_definition.user.name, full_name
-        )
+    @property
+    def environment_code(self) -> str:
+        """Convert environment name to code."""
+        if self._environment_name is None:
+            return None
+        return JavaGate().query_environment_info(self._environment_name)
