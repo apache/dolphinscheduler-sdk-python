@@ -23,6 +23,8 @@ github:
     - workflow
     - python
     - api
+  features:
+    issues: true
   enabled_merge_buttons:
     squash: true
     merge: false
