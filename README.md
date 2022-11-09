@@ -38,11 +38,11 @@ your workflow by python code, aka workflow-as-codes.
 
 ```shell
 # Install
-$ pip install apache-dolphinscheduler
+python -m pip install apache-dolphinscheduler
 
-# Check installation, it is success if you see version output, here we use 0.1.0 as example
-$ python -c "import pydolphinscheduler; print(pydolphinscheduler.__version__)"
-0.1.0
+# Verify installation is successful, it will show the version of apache-dolphinscheduler, here we use 0.1.0 as example
+pydolphinscheduler version
+# 0.1.0
 ```
 
 Here we show you how to install and run a simple example of pydolphinscheduler

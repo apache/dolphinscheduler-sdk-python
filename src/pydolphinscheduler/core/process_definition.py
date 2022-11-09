@@ -21,11 +21,8 @@ import json
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Set
 
-from pydolphinscheduler.constants import (
-    ProcessDefinitionDefault,
-    ProcessDefinitionReleaseState,
-    TaskType,
-)
+from pydolphinscheduler.constants import TaskType
+from pydolphinscheduler.core import configuration
 from pydolphinscheduler.core.base import Base
 from pydolphinscheduler.exceptions import PyDSParamException, PyDSTaskNoFoundException
 from pydolphinscheduler.java_gateway import launch_gateway
@@ -58,6 +55,17 @@ class ProcessDefinition(Base):
     """process definition object, will define process definition attribute, task, relation.
 
     TODO: maybe we should rename this class, currently use DS object name.
+
+    :param user: The user for current process definition. Will create a new one if it do not exists. If your
+        parameter ``project`` already exists but project's create do not belongs to ``user``, will grant
+        ``project`` to ``user`` automatically.
+    :param project: The project for current process definition. You could see the workflow in this project
+        thought Web UI after it :func:`submit` or :func:`run`. It will create a new project belongs to
+        ``user`` if it does not exists. And when ``project`` exists but project's create do not belongs
+        to ``user``, will grant `project` to ``user`` automatically.
+    :param resource_list: Resource files required by the current process definition.You can create and modify
+        resource files from this field. When the process definition is submitted, these resource files are
+        also submitted along with it.
     """
 
     # key attribute for identify ProcessDefinition object
@@ -75,12 +83,15 @@ class ProcessDefinition(Base):
         "_project",
         "_tenant",
         "worker_group",
+        "warning_type",
+        "warning_group_id",
         "timeout",
         "release_state",
         "param",
         "tasks",
         "task_definition_json",
         "task_relation_json",
+        "resource_list",
     }
 
     def __init__(
@@ -90,15 +101,17 @@ class ProcessDefinition(Base):
         schedule: Optional[str] = None,
         start_time: Optional[str] = None,
         end_time: Optional[str] = None,
-        timezone: Optional[str] = ProcessDefinitionDefault.TIME_ZONE,
-        user: Optional[str] = ProcessDefinitionDefault.USER,
-        project: Optional[str] = ProcessDefinitionDefault.PROJECT,
-        tenant: Optional[str] = ProcessDefinitionDefault.TENANT,
-        queue: Optional[str] = ProcessDefinitionDefault.QUEUE,
-        worker_group: Optional[str] = ProcessDefinitionDefault.WORKER_GROUP,
+        timezone: Optional[str] = configuration.WORKFLOW_TIME_ZONE,
+        user: Optional[str] = configuration.WORKFLOW_USER,
+        project: Optional[str] = configuration.WORKFLOW_PROJECT,
+        tenant: Optional[str] = configuration.WORKFLOW_TENANT,
+        worker_group: Optional[str] = configuration.WORKFLOW_WORKER_GROUP,
+        warning_type: Optional[str] = configuration.WORKFLOW_WARNING_TYPE,
+        warning_group_id: Optional[int] = 0,
         timeout: Optional[int] = 0,
-        release_state: Optional[str] = ProcessDefinitionReleaseState.ONLINE,
+        release_state: Optional[str] = configuration.WORKFLOW_RELEASE_STATE,
         param: Optional[Dict] = None,
+        resource_list: Optional[List] = None,
     ):
         super().__init__(name, description)
         self.schedule = schedule
@@ -108,15 +121,23 @@ class ProcessDefinition(Base):
         self._user = user
         self._project = project
         self._tenant = tenant
-        self._queue = queue
         self.worker_group = worker_group
+        self.warning_type = warning_type
+        if warning_type.strip().upper() not in ("FAILURE", "SUCCESS", "ALL", "NONE"):
+            raise PyDSParamException(
+                "Parameter `warning_type` with unexpect value `%s`", warning_type
+            )
+        else:
+            self.warning_type = warning_type.strip().upper()
+        self.warning_group_id = warning_group_id
         self.timeout = timeout
-        self.release_state = release_state
+        self._release_state = release_state
         self.param = param
         self.tasks: dict = {}
         # TODO how to fix circle import
         self._task_relations: set["TaskRelation"] = set()  # noqa: F821
         self._process_definition_code = None
+        self.resource_list = resource_list or []
 
     def __enter__(self) -> "ProcessDefinition":
         ProcessDefinitionContext.set(self)
@@ -151,15 +172,7 @@ class ProcessDefinition(Base):
 
         For now we just get from python side but not from java gateway side, so it may not correct.
         """
-        return User(
-            self._user,
-            ProcessDefinitionDefault.USER_PWD,
-            ProcessDefinitionDefault.USER_EMAIL,
-            ProcessDefinitionDefault.USER_PHONE,
-            self._tenant,
-            self._queue,
-            ProcessDefinitionDefault.USER_STATE,
-        )
+        return User(name=self._user, tenant=self._tenant)
 
     @staticmethod
     def _parse_datetime(val: Any) -> Any:
@@ -189,6 +202,25 @@ class ProcessDefinition(Base):
     def end_time(self, val) -> None:
         """Set attribute end_time."""
         self._end_time = val
+
+    @property
+    def release_state(self) -> int:
+        """Get attribute release_state."""
+        rs_ref = {
+            "online": 1,
+            "offline": 0,
+        }
+        if self._release_state not in rs_ref:
+            raise PyDSParamException(
+                "Parameter release_state only support `online` or `offline` but get %",
+                self._release_state,
+            )
+        return rs_ref[self._release_state]
+
+    @release_state.setter
+    def release_state(self, val: str) -> None:
+        """Set attribute release_state."""
+        self._release_state = val.lower()
 
     @property
     def param_json(self) -> Optional[List[Dict]]:
@@ -334,8 +366,6 @@ class ProcessDefinition(Base):
         :class:`pydolphinscheduler.constants.ProcessDefinitionDefault`.
         """
         # TODO used metaclass for more pythonic
-        self.tenant.create_if_not_exists(self._queue)
-        # model User have to create after Tenant created
         self.user.create_if_not_exists()
         # Project model need User object exists
         self.project.create_if_not_exists(self._user)
@@ -345,14 +375,16 @@ class ProcessDefinition(Base):
 
         This method should be called before process definition submit to java gateway
         For now, we have below checker:
-        * `self.param` should be set if task `switch` in this workflow.
+        * `self.param` or at least one local param of task should be set if task `switch` in this workflow.
         """
         if (
             any([task.task_type == TaskType.SWITCH for task in self.tasks.values()])
             and self.param is None
+            and all([len(task.local_params) == 0 for task in self.tasks.values()])
         ):
             raise PyDSParamException(
-                "Parameter param must be provider if task Switch in process definition."
+                "Parameter param or at least one local_param of task must "
+                "be provider if task Switch in process definition."
             )
 
     def submit(self) -> int:
@@ -368,15 +400,26 @@ class ProcessDefinition(Base):
             str(self.description) if self.description else "",
             json.dumps(self.param_json),
             json.dumps(self.schedule_json) if self.schedule_json else None,
+            self.warning_type,
+            self.warning_group_id,
             json.dumps(self.task_location),
             self.timeout,
             self.worker_group,
             self._tenant,
+            self.release_state,
             # TODO add serialization function
             json.dumps(self.task_relation_json),
             json.dumps(self.task_definition_json),
             None,
         )
+        if len(self.resource_list) > 0:
+            for res in self.resource_list:
+                gateway.entry_point.createOrUpdateResource(
+                    self._user,
+                    res.name,
+                    res.description,
+                    res.content,
+                )
         return self._process_definition_code
 
     def start(self) -> None:
@@ -391,5 +434,7 @@ class ProcessDefinition(Base):
             self.name,
             "",
             self.worker_group,
+            self.warning_type,
+            self.warning_group_id,
             24 * 3600,
         )

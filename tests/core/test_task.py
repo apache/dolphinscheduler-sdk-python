@@ -16,13 +16,16 @@
 # under the License.
 
 """Test Task class function."""
-
+import logging
+import re
 from unittest.mock import patch
 
 import pytest
 
+from pydolphinscheduler.core.process_definition import ProcessDefinition
 from pydolphinscheduler.core.task import Task, TaskRelation
 from tests.testing.task import Task as testTask
+from tests.testing.task import TaskWithCode
 
 TEST_TASK_RELATION_SET = set()
 TEST_TASK_RELATION_SIZE = 0
@@ -51,7 +54,7 @@ TEST_TASK_RELATION_SIZE = 0
             },
             {
                 "localParams": ["foo", "bar"],
-                "resourceList": ["foo", "bar"],
+                "resourceList": [{"id": 1}],
                 "dependence": {"foo", "bar"},
                 "waitStartTimeout": {"foo", "bar"},
                 "conditionResult": {"foo": ["bar"]},
@@ -59,7 +62,11 @@ TEST_TASK_RELATION_SIZE = 0
         ),
     ],
 )
-def test_property_task_params(attr, expect):
+@patch(
+    "pydolphinscheduler.core.task.Task.query_resource",
+    return_value=({"id": 1, "name": "foo"}),
+)
+def test_property_task_params(mock_resource, attr, expect):
     """Test class task property."""
     task = testTask(
         "test-property-task-params",
@@ -222,3 +229,50 @@ def test_tasks_list_shift(dep_expr: str, flag: str):
 
     assert all([1 == len(getattr(t, reverse_direction_attr)) for t in tasks])
     assert all([task.code in getattr(t, reverse_direction_attr) for t in tasks])
+
+
+def test_add_duplicate(caplog):
+    """Test add task which code already in process definition."""
+    with ProcessDefinition("test_add_duplicate_workflow") as _:
+        TaskWithCode(name="test_task_1", task_type="test", code=123, version=1)
+        with caplog.at_level(logging.WARNING):
+            TaskWithCode(
+                name="test_task_duplicate_code", task_type="test", code=123, version=2
+            )
+        assert all(
+            [
+                caplog.text.startswith("WARNING  pydolphinscheduler"),
+                re.findall("already in process definition", caplog.text),
+            ]
+        )
+
+
+@pytest.mark.parametrize(
+    "resources, expect",
+    [
+        (
+            ["/dev/test.py"],
+            [{"id": 1}],
+        ),
+        (
+            ["/dev/test.py", {"id": 2}],
+            [{"id": 1}, {"id": 2}],
+        ),
+    ],
+)
+@patch(
+    "pydolphinscheduler.core.task.Task.gen_code_and_version",
+    return_value=(123, 1),
+)
+@patch(
+    "pydolphinscheduler.core.task.Task.query_resource",
+    return_value=({"id": 1, "name": "/dev/test.py"}),
+)
+def test_python_resource_list(mock_code_version, mock_resource, resources, expect):
+    """Test python task resource list."""
+    task = Task(
+        name="python_resource_list.",
+        task_type="PYTHON",
+        resource_list=resources,
+    )
+    assert task.resource_list == expect
