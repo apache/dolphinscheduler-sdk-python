@@ -15,29 +15,26 @@
 # specific language governing permissions and limitations
 # under the License.
 
-"""Module resource."""
+"""Module for models object."""
 
 from typing import Optional
 
+from pydolphinscheduler import configuration
 from pydolphinscheduler.models import Base
 
 
-class Resource(Base):
-    """resource object, will define the resources that you want to create or update.
+class BaseSide(Base):
+    """Base class for models object, it declare base behavior for them."""
 
-    :param name: The fullname of resource.Includes path and suffix.
-    :param content: The description of resource.
-    :param description: The description of resource.
-    """
-
-    _DEFINE_ATTR = {"name", "content", "description"}
-
-    def __init__(
-        self,
-        name: str,
-        content: str,
-        description: Optional[str] = None,
-    ):
+    def __init__(self, name: str, description: Optional[str] = None):
         super().__init__(name, description)
-        self.content = content
-        self._resource_code = None
+
+    @classmethod
+    def create_if_not_exists(
+        cls,
+        # TODO comment for avoiding cycle import
+        # user: Optional[User] = ProcessDefinitionDefault.USER
+        user=configuration.WORKFLOW_USER,
+    ):
+        """Create Base if not exists."""
+        raise NotImplementedError

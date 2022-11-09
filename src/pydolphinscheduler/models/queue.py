@@ -15,29 +15,28 @@
 # specific language governing permissions and limitations
 # under the License.
 
-"""Module resource."""
+"""DolphinScheduler User object."""
 
 from typing import Optional
 
-from pydolphinscheduler.models import Base
+from pydolphinscheduler import configuration
+from pydolphinscheduler.java_gateway import gateway_result_checker, launch_gateway
+from pydolphinscheduler.models import BaseSide
 
 
-class Resource(Base):
-    """resource object, will define the resources that you want to create or update.
-
-    :param name: The fullname of resource.Includes path and suffix.
-    :param content: The description of resource.
-    :param description: The description of resource.
-    """
-
-    _DEFINE_ATTR = {"name", "content", "description"}
+class Queue(BaseSide):
+    """DolphinScheduler Queue object."""
 
     def __init__(
         self,
-        name: str,
-        content: str,
-        description: Optional[str] = None,
+        name: str = configuration.WORKFLOW_QUEUE,
+        description: Optional[str] = "",
     ):
         super().__init__(name, description)
-        self.content = content
-        self._resource_code = None
+
+    def create_if_not_exists(self, user=configuration.USER_NAME) -> None:
+        """Create Queue if not exists."""
+        gateway = launch_gateway()
+        # Here we set Queue.name and Queue.queueName same as self.name
+        result = gateway.entry_point.createProject(user, self.name, self.name)
+        gateway_result_checker(result, None)

@@ -15,29 +15,16 @@
 # specific language governing permissions and limitations
 # under the License.
 
-"""Module resource."""
+"""DolphinScheduler Worker Group object."""
 
 from typing import Optional
 
-from pydolphinscheduler.models import Base
+from pydolphinscheduler.models import BaseSide
 
 
-class Resource(Base):
-    """resource object, will define the resources that you want to create or update.
+class WorkerGroup(BaseSide):
+    """DolphinScheduler Worker Group object."""
 
-    :param name: The fullname of resource.Includes path and suffix.
-    :param content: The description of resource.
-    :param description: The description of resource.
-    """
-
-    _DEFINE_ATTR = {"name", "content", "description"}
-
-    def __init__(
-        self,
-        name: str,
-        content: str,
-        description: Optional[str] = None,
-    ):
+    def __init__(self, name: str, address: str, description: Optional[str] = None):
         super().__init__(name, description)
-        self.content = content
-        self._resource_code = None
+        self.address = address
