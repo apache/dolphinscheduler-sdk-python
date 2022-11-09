@@ -97,9 +97,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # TODO Fix multi-version doc build
-#        env-list: [doc-build, doc-build-multi]
-        env-list: [doc-build]
+        env-list: [doc-build, doc-build-multi]
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python 3.7
