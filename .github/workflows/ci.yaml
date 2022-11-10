@@ -20,6 +20,11 @@ on:
     branches:
       - main
   pull_request:
+  schedule:
+    # Schedule daily builds at 00:00 UTC, because pydolphinscheduler rely on dolphinscheduler's API server, and
+    # pydolphinscheduler can not aware of the changes of dolphinscheduler's API server code, so we need to add
+    # schedule job to need passive inspection the latest code in apache/dolphinscheduler still work on.
+    - cron: '0 0 * * *'
 
 concurrency:
   group: ci-${{ github.event.pull_request.number || github.ref }}
@@ -28,6 +33,7 @@ concurrency:
 # We have to update setuptools wheel to package with package_data, LICENSE, NOTICE
 env:
   DEPENDENCES: pip setuptools wheel tox
+  CODECOV_TOKEN: 7b597b03-7c9f-4175-b3ac-e74034ea87a6
 
 jobs:
   license:
@@ -90,6 +96,14 @@ jobs:
       - name: Run All Tests
         run: |
           python -m tox -vv -e code-test
+      - uses: codecov/codecov-action@v3
+        with:
+          token: ${{ env.CODECOV_TOKEN }}
+          files: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: true
+          verbose: true
   doc-build:
     timeout-minutes: 15
     needs: lint
