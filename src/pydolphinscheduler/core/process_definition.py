@@ -62,14 +62,14 @@ class ProcessDefinition(Base):
         same time. We can use this parameter to control the behavior about how to run those process definition
         instances. Currently we have four execution type:
 
-            * ``PARALLEL``(default value): it means all instances will allow to run even though the previous
-              instance is not finished.
-            * ``SERIAL_WAIT``: it means the all instance will wait for the previous instance to finish, and
-              all the waiting instances will be executed base on scheduling order.
-            * ``SERIAL_DISCARD``: it means the all instance will be discard(abandon) if the previous instance
-              is not finished.
-            * ``SERIAL_PRIORITY``: it means the all instance will wait for the previous instance to finish,
-              and all the waiting instances will be executed base on process definition priority order.
+          * ``PARALLEL``: Default value, all instances will allow to run even though the previous
+            instance is not finished.
+          * ``SERIAL_WAIT``: All instance will wait for the previous instance to finish, and all
+            the waiting instances will be executed base on scheduling order.
+          * ``SERIAL_DISCARD``: All instances will be discard(abandon) if the previous instance is not
+            finished.
+          * ``SERIAL_PRIORITY``: means the all instance will wait for the previous instance to finish, and
+            all the waiting instances will be executed base on process definition priority order.
 
     :param user: The user for current process definition. Will create a new one if it do not exists. If your
         parameter ``project`` already exists but project's create do not belongs to ``user``, will grant
@@ -148,7 +148,12 @@ class ProcessDefinition(Base):
         else:
             self.warning_type = warning_type.strip().upper()
         self.warning_group_id = warning_group_id
-        if execution_type is None or execution_type.strip().upper() not in ("PARALLEL", "SERIAL_WAIT", "SERIAL_DISCARD", "SERIAL_PRIORITY"):
+        if execution_type is None or execution_type.strip().upper() not in (
+            "PARALLEL",
+            "SERIAL_WAIT",
+            "SERIAL_DISCARD",
+            "SERIAL_PRIORITY",
+        ):
             raise PyDSParamException(
                 "Parameter `execution_type` with unexpect value `%s`", execution_type
             )
