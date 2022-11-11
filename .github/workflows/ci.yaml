@@ -157,6 +157,14 @@ jobs:
           repository: apache/dolphinscheduler
           path: dolphinscheduler
           submodules: true
+          ref: ${{ github.event.pull_request.12871.head.sha }}
+#          ref: ${{ github.event.pull_request.head.sha }}
+#          ref: pull/12871/head.comment # Replace NUMBER with the pull request number
+#      - name: Fetch Specific Pull Requests
+#        run: |
+#          cd dolphinscheduler
+#          git fetch origin pull/${{ github.event.pull_request.number }}/head:pr/${{ github.event.pull_request.number }}
+#          git checkout pr/${{ github.event.pull_request.number }}
       - name: Cache local Maven repository
         uses: actions/cache@v3
         with:
