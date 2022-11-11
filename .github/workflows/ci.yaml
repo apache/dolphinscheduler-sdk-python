@@ -163,20 +163,16 @@ jobs:
           repository: apache/dolphinscheduler
           path: dolphinscheduler
           submodules: true
-#          ref: +refs/pull/12871/head:refs/remotes/origin/pr/12871
           ref: refs/pull/12871/head
-#          ref: ${{ github.event.pull_request.head.sha }}
-#          ref: pull/12871/head.comment # Replace NUMBER with the pull request number
       - name: Fetch Specific Pull Requests
         working-directory: dolphinscheduler
         run: |
           echo ${{ github.event.pull_request.number }}
-          echo ${GITHUB_CONTEXT}
-          echo ${GITHUB_HEAD_COMMIT_CONTEXT}
-          echo ${GITHUB_FIRST_COMMIT_CONTEXT}
-          echo ${GITHUB_COMMIT_CONTEXT}
-          echo ${GITHUB_COMMITS_CONTEXT}
-#          git fetch origin pull/${{ github.event.pull_request.number }}/head:pr/${{ github.event.pull_request.number }}
+          echo $GITHUB_CONTEXT
+          echo $GITHUB_HEAD_COMMIT_CONTEXT
+          echo $GITHUB_FIRST_COMMIT_CONTEXT
+          echo $GITHUB_COMMIT_CONTEXT
+          echo $GITHUB_COMMITS_CONTEXT
           git fetch origin pull/12871/head:pr/12871
           git checkout pr/12871
       - name: Cache local Maven repository
