@@ -57,6 +57,20 @@ class ProcessDefinition(Base):
 
     TODO: maybe we should rename this class, currently use DS object name.
 
+    :param execution_type: Decision which behavior to run when process definition have multiple instances.
+        when process definition schedule interval is too short, it may cause multiple instances run at the
+        same time. We can use this parameter to control the behavior about how to run those process definition
+        instances. Currently we have four execution type:
+
+          * ``PARALLEL``: Default value, all instances will allow to run even though the previous
+            instance is not finished.
+          * ``SERIAL_WAIT``: All instance will wait for the previous instance to finish, and all
+            the waiting instances will be executed base on scheduling order.
+          * ``SERIAL_DISCARD``: All instances will be discard(abandon) if the previous instance is not
+            finished.
+          * ``SERIAL_PRIORITY``: means the all instance will wait for the previous instance to finish, and
+            all the waiting instances will be executed base on process definition priority order.
+
     :param user: The user for current process definition. Will create a new one if it do not exists. If your
         parameter ``project`` already exists but project's create do not belongs to ``user``, will grant
         ``project`` to ``user`` automatically.
@@ -86,6 +100,7 @@ class ProcessDefinition(Base):
         "worker_group",
         "warning_type",
         "warning_group_id",
+        "execution_type",
         "timeout",
         "release_state",
         "param",
@@ -109,6 +124,7 @@ class ProcessDefinition(Base):
         worker_group: Optional[str] = configuration.WORKFLOW_WORKER_GROUP,
         warning_type: Optional[str] = configuration.WORKFLOW_WARNING_TYPE,
         warning_group_id: Optional[int] = 0,
+        execution_type: Optional[str] = configuration.WORKFLOW_EXECUTION_TYPE,
         timeout: Optional[int] = 0,
         release_state: Optional[str] = configuration.WORKFLOW_RELEASE_STATE,
         param: Optional[Dict] = None,
@@ -132,6 +148,17 @@ class ProcessDefinition(Base):
         else:
             self.warning_type = warning_type.strip().upper()
         self.warning_group_id = warning_group_id
+        if execution_type is None or execution_type.strip().upper() not in (
+            "PARALLEL",
+            "SERIAL_WAIT",
+            "SERIAL_DISCARD",
+            "SERIAL_PRIORITY",
+        ):
+            raise PyDSParamException(
+                "Parameter `execution_type` with unexpect value `%s`", execution_type
+            )
+        else:
+            self._execution_type = execution_type
         self.timeout = timeout
         self._release_state = release_state
         self.param = param
@@ -224,6 +251,16 @@ class ProcessDefinition(Base):
     def release_state(self, val: str) -> None:
         """Set attribute release_state."""
         self._release_state = val.lower()
+
+    @property
+    def execution_type(self) -> str:
+        """Get attribute execution_type."""
+        return self._execution_type.upper()
+
+    @execution_type.setter
+    def execution_type(self, val: str) -> None:
+        """Set attribute execution_type."""
+        self._execution_type = val
 
     @property
     def param_json(self) -> Optional[List[Dict]]:
@@ -390,6 +427,7 @@ class ProcessDefinition(Base):
             json.dumps(self.param_json),
             self.warning_type,
             self.warning_group_id,
+            self.execution_type,
             self.timeout,
             self.worker_group,
             self._tenant,
@@ -398,7 +436,6 @@ class ProcessDefinition(Base):
             json.dumps(self.task_relation_json),
             json.dumps(self.task_definition_json),
             json.dumps(self.schedule_json) if self.schedule_json else None,
-            None,
             None,
         )
         if len(self.resource_list) > 0:

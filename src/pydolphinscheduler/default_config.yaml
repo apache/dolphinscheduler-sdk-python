@@ -56,3 +56,6 @@ default:
     # change to ``FAILURE`` if you want to warn users when workflow failed. All available enum value are
     # ``NONE``, ``SUCCESS``, ``FAILURE``, ``ALL`` 
     warning_type: NONE
+    # Default execution type about how to run multiple workflow instances, default value is ``parallel`` which
+    # mean run all workflow instances parallel and the other value is ``SERIAL_WAIT``, ``SERIAL_DISCARD``, ``SERIAL_PRIORITY``
+    execution_type: parallel
