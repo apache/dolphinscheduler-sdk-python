@@ -146,12 +146,6 @@ jobs:
     needs: license
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    env:
-      GITHUB_CONTEXT: ${{ toJson(github) }}
-      GITHUB_HEAD_COMMIT_CONTEXT: ${{ toJson(github.event.head_commit.message) }}
-      GITHUB_FIRST_COMMIT_CONTEXT: ${{ toJson(github.event.commits[0].message) }}
-      GITHUB_COMMIT_CONTEXT: ${{ toJson(github.event.commit.message) }}
-      GITHUB_COMMITS_CONTEXT: ${{ toJson(github.event.commits.message) }}
     steps:
       - name: Checkout Dolphinscheduler SDK Python
         uses: actions/checkout@v3
@@ -163,18 +157,6 @@ jobs:
           repository: apache/dolphinscheduler
           path: dolphinscheduler
           submodules: true
-          ref: refs/pull/12871/head
-      - name: Fetch Specific Pull Requests
-        working-directory: dolphinscheduler
-        run: |
-          echo ${{ github.event.pull_request.number }}
-          echo $GITHUB_CONTEXT
-          echo $GITHUB_HEAD_COMMIT_CONTEXT
-          echo $GITHUB_FIRST_COMMIT_CONTEXT
-          echo $GITHUB_COMMIT_CONTEXT
-          echo $GITHUB_COMMITS_CONTEXT
-          git fetch origin pull/12871/head:pr/12871
-          git checkout pr/12871
       - name: Cache local Maven repository
         uses: actions/cache@v3
         with:
