@@ -214,5 +214,8 @@ WORKFLOW_TIME_ZONE = os.environ.get(
 WORKFLOW_WARNING_TYPE = os.environ.get(
     "PYDS_WORKFLOW_WARNING_TYPE", configs.get("default.workflow.warning_type")
 )
+WORKFLOW_EXECUTION_TYPE = os.environ.get(
+    "PYDS_WORKFLOW_EXECUTION_TYPE", configs.get("default.workflow.execution_type")
+)
 
 # End Common Configuration Setting

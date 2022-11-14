@@ -65,6 +65,7 @@ expects = [
         "default.workflow.release_state": ("online", "offline"),
         "default.workflow.time_zone": ("Asia/Shanghai", "Europe/Amsterdam"),
         "default.workflow.warning_type": ("NONE", "SUCCESS"),
+        "default.workflow.execution_type": ("parallel", "serial_wait"),
     },
 ]
 

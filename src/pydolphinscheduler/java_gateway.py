@@ -260,6 +260,7 @@ class JavaGate:
         global_params: str,
         warning_type: str,
         warning_group_id: int,
+        execution_type: str,
         timeout: int,
         worker_group: str,
         tenant_code: str,
@@ -268,7 +269,6 @@ class JavaGate:
         task_definition_json: str,
         schedule: Optional[str] = None,
         other_params_json: Optional[str] = None,
-        execution_type: Optional[str] = None,
     ):
         """Create or update process definition through java gateway."""
         return self.java_gateway.entry_point.createOrUpdateProcessDefinition(
