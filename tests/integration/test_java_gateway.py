@@ -16,13 +16,19 @@
 # under the License.
 
 """Test pydolphinscheduler java gateway."""
-
-
+import pytest
 from py4j.java_gateway import GatewayParameters, JavaGateway, java_import
-from testing.constants import TOKEN
+from tests.testing.constants import TOKEN
 
 gateway_parameters = GatewayParameters(auth_token=TOKEN)
 gateway = JavaGateway(gateway_parameters=gateway_parameters)
+
+
+@pytest.fixture(scope="module")
+def class_tear_down():
+    """Tear down java gateway by close it."""
+    yield
+    gateway.close()
 
 
 def test_gateway_connect():
