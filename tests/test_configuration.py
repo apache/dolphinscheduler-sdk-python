@@ -18,7 +18,9 @@
 """Test class :mod:`pydolphinscheduler.core.configuration`' method."""
 
 import importlib
+import logging
 import os
+import re
 from pathlib import Path
 from typing import Any
 
@@ -33,7 +35,7 @@ from pydolphinscheduler.configuration import (
 )
 from pydolphinscheduler.exceptions import PyDSConfException
 from pydolphinscheduler.utils.yaml_parser import YamlParser
-from tests.testing.constants import DEV_MODE, ENV_PYDS_HOME
+from tests.testing.constants import DEV_MODE, ENV_PYDS_HOME, TOKEN
 from tests.testing.file import get_file_content
 
 
@@ -270,3 +272,20 @@ def test_get_configuration_env(config_name: str, src: Any, dest: Any):
     importlib.reload(configuration)
     assert getattr(configuration, config_name) == src
     assert env_name not in os.environ
+
+
+def test_token_alert(caplog):
+    """Test alert message in function :func:`token_alert`."""
+    with caplog.at_level(logging.WARNING):
+        configuration.token_alert(TOKEN)
+    assert all(
+        [
+            "highly recommend add a token in production, especially you deploy in public network."
+            in caplog.text,
+            re.findall(
+                "Auth token is.*?, highly recommend add a token in production, "
+                "especially you deploy in public network.",
+                caplog.text,
+            ),
+        ]
+    )

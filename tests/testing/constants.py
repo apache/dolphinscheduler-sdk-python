@@ -46,3 +46,6 @@ ENV_PYDS_HOME = "PYDS_HOME"
 DEV_MODE = str(
     os.environ.get("PY_DOLPHINSCHEDULER_DEV_MODE", False)
 ).strip().lower() in {"true", "t", "1"}
+
+# default token
+TOKEN = "jwUDzpLsNKEFER4*a8gruBH_GsAurNxU7A@Xc"

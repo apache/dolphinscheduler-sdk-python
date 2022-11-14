@@ -16,6 +16,7 @@
 # under the License.
 
 """Configuration module for pydolphinscheduler."""
+import logging
 import os
 from pathlib import Path
 from typing import Any
@@ -25,6 +26,8 @@ from pydolphinscheduler.utils import file
 from pydolphinscheduler.utils.yaml_parser import YamlParser
 
 BUILD_IN_CONFIG_PATH = Path(__file__).resolve().parent.joinpath("default_config.yaml")
+
+logger = logging.getLogger(__name__)
 
 
 def config_path() -> Path:
@@ -118,6 +121,25 @@ def set_single_config(key: str, value: Any) -> None:
     file.write(content=str(config), to_path=str(config_path()), overwrite=True)
 
 
+def token_alert(auth_token: str) -> None:
+    """Alert when auth token is default token or None or not.
+
+    To avoid user forget to change the default token, we will alert user we they use it.
+    """
+    if auth_token is None:
+        logger.warning(
+            "Auth token is None, highly recommend add a token in production, "
+            "especially you deploy in public network."
+        )
+    with open(BUILD_IN_CONFIG_PATH, mode="r") as f:
+        config = YamlParser(f.read())
+        if config.get("java_gateway.auth_token") == auth_token:
+            logger.warning(
+                "Auth token is default token, highly recommend add a token in production, "
+                "especially you deploy in public network."
+            )
+
+
 def get_int(val: Any) -> int:
     """Covert value to int."""
     return int(val)
@@ -151,6 +173,9 @@ JAVA_GATEWAY_AUTO_CONVERT = get_bool(
     os.environ.get(
         "PYDS_JAVA_GATEWAY_AUTO_CONVERT", configs.get("java_gateway.auto_convert")
     )
+)
+JAVA_GATEWAY_AUTH_TOKEN = os.environ.get(
+    "PYDS_JAVA_GATEWAY_AUTH_TOKEN", configs.get("java_gateway.auth_token")
 )
 
 # User Settings
