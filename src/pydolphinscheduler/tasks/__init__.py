@@ -67,5 +67,5 @@ __all__ = [
     "SubProcess",
     "Switch",
     "SageMaker",
-    "Kubernetes"
+    "Kubernetes",
 ]
