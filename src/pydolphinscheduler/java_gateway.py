@@ -32,31 +32,6 @@ from pydolphinscheduler.exceptions import PyDSJavaGatewayException
 logger = getLogger(__name__)
 
 
-def launch_gateway(
-    address: Optional[str] = None,
-    port: Optional[int] = None,
-    auto_convert: Optional[bool] = True,
-    auth_token: Optional[str] = None,
-) -> JavaGateway:
-    """Launch java gateway to pydolphinscheduler.
-
-    TODO Note that automatic conversion makes calling Java methods slightly less efficient because
-    in the worst case, Py4J needs to go through all registered converters for all parameters.
-    This is why automatic conversion is disabled by default.
-    """
-    auth_token = auth_token or configuration.JAVA_GATEWAY_AUTH_TOKEN
-    configuration.token_alert(auth_token)
-
-    gateway_parameters = GatewayParameters(
-        address=address or configuration.JAVA_GATEWAY_ADDRESS,
-        port=port or configuration.JAVA_GATEWAY_PORT,
-        auto_convert=auto_convert or configuration.JAVA_GATEWAY_AUTO_CONVERT,
-        auth_token=auth_token,
-    )
-    gateway = JavaGateway(gateway_parameters=gateway_parameters)
-    return gateway
-
-
 def gateway_result_checker(
     result: JavaMap,
     msg_check: Optional[str] = JavaGatewayDefault.RESULT_MESSAGE_SUCCESS,
@@ -75,7 +50,7 @@ def gateway_result_checker(
     return result
 
 
-class JavaGate:
+class GatewayEntryPoint:
     """Launch java gateway to pydolphin scheduler."""
 
     def __init__(
@@ -85,7 +60,11 @@ class JavaGate:
         auto_convert: Optional[bool] = True,
         auth_token: Optional[str] = None,
     ):
-        self.java_gateway = launch_gateway(address, port, auto_convert, auth_token)
+        self._gateway = None
+        self.address = address or configuration.JAVA_GATEWAY_ADDRESS
+        self.port = port or configuration.JAVA_GATEWAY_PORT
+        self.auto_convert = auto_convert or configuration.JAVA_GATEWAY_AUTO_CONVERT
+        self.auth_token = auth_token or configuration.JAVA_GATEWAY_AUTH_TOKEN
         gateway_version = "unknown"
         with contextlib.suppress(Py4JError):
             # 1. Java gateway version is too old: doesn't have method 'getGatewayVersion()'
@@ -99,41 +78,59 @@ class JavaGate:
                 "(check: https://pypi.org/project/apache-dolphinscheduler)"
             )
 
+    @property
+    def gateway(self) -> JavaGateway:
+        """Launch java gateway to pydolphinscheduler.
+
+        TODO Note that automatic conversion makes calling Java methods slightly less efficient because
+        in the worst case, Py4J needs to go through all registered converters for all parameters.
+        This is why automatic conversion is disabled by default.
+        """
+        if self._gateway is not None:
+            return self._gateway
+        configuration.token_alert(self.auth_token)
+        gateway_parameters = GatewayParameters(
+            address=self.address,
+            port=self.port,
+            auto_convert=self.auto_convert,
+            auth_token=self.auth_token,
+        )
+        self._gateway = JavaGateway(gateway_parameters=gateway_parameters)
+        return self._gateway
+
     def get_gateway_version(self):
         """Get the java gateway version, expected to be equal with pydolphinscheduler."""
-        return self.java_gateway.entry_point.getGatewayVersion()
+        return self.gateway.entry_point.getGatewayVersion()
 
     def get_datasource_info(self, name: str):
         """Get datasource info through java gateway."""
-        return self.java_gateway.entry_point.getDatasourceInfo(name)
+        return self.gateway.entry_point.getDatasourceInfo(name)
 
     def get_resources_file_info(self, program_type: str, main_package: str):
         """Get resources file info through java gateway."""
-        return self.java_gateway.entry_point.getResourcesFileInfo(
-            program_type, main_package
-        )
+        return self.gateway.entry_point.getResourcesFileInfo(program_type, main_package)
 
     def create_or_update_resource(
         self, user_name: str, name: str, content: str, description: Optional[str] = None
     ):
         """Create or update resource through java gateway."""
-        return self.java_gateway.entry_point.createOrUpdateResource(
+        return self.gateway.entry_point.createOrUpdateResource(
             user_name, name, description, content
         )
 
     def query_resources_file_info(self, user_name: str, name: str):
         """Get resources file info through java gateway."""
-        return self.java_gateway.entry_point.queryResourcesFileInfo(user_name, name)
+        return self.gateway.entry_point.queryResourcesFileInfo(user_name, name)
 
     def query_environment_info(self, name: str):
         """Get environment info through java gateway."""
-        return self.java_gateway.entry_point.getEnvironmentInfo(name)
+        return self.gateway.entry_point.getEnvironmentInfo(name)
 
     def get_code_and_version(
         self, project_name: str, process_definition_name: str, task_name: str
     ):
         """Get code and version through java gateway."""
-        return self.java_gateway.entry_point.getCodeAndVersion(
+        return self.gateway.entry_point.getCodeAndVersion(
             project_name, process_definition_name, task_name
         )
 
@@ -141,41 +138,39 @@ class JavaGate:
         self, user: str, name: str, description: Optional[str] = None
     ):
         """Create or grant project through java gateway."""
-        return self.java_gateway.entry_point.createOrGrantProject(
-            user, name, description
-        )
+        return self.gateway.entry_point.createOrGrantProject(user, name, description)
 
     def query_project_by_name(self, user: str, name: str):
         """Query project through java gateway."""
-        return self.java_gateway.entry_point.queryProjectByName(user, name)
+        return self.gateway.entry_point.queryProjectByName(user, name)
 
     def update_project(
         self, user: str, project_code: int, project_name: str, description: str
     ):
         """Update project through java gateway."""
-        return self.java_gateway.entry_point.updateProject(
+        return self.gateway.entry_point.updateProject(
             user, project_code, project_name, description
         )
 
     def delete_project(self, user: str, code: int):
         """Delete project through java gateway."""
-        return self.java_gateway.entry_point.deleteProject(user, code)
+        return self.gateway.entry_point.deleteProject(user, code)
 
     def create_tenant(
         self, tenant_name: str, queue_name: str, description: Optional[str] = None
     ):
         """Create tenant through java gateway."""
-        return self.java_gateway.entry_point.createTenant(
+        return self.gateway.entry_point.createTenant(
             tenant_name, description, queue_name
         )
 
     def query_tenant(self, tenant_code: str):
         """Query tenant through java gateway."""
-        return self.java_gateway.entry_point.queryTenantByCode(tenant_code)
+        return self.gateway.entry_point.queryTenantByCode(tenant_code)
 
     def grant_tenant_to_user(self, user_name: str, tenant_code: str):
         """Grant tenant to user through java gateway."""
-        return self.java_gateway.entry_point.grantTenantToUser(user_name, tenant_code)
+        return self.gateway.entry_point.grantTenantToUser(user_name, tenant_code)
 
     def update_tenant(
         self,
@@ -186,13 +181,13 @@ class JavaGate:
         description: Optional[str] = None,
     ):
         """Update tenant through java gateway."""
-        return self.java_gateway.entry_point.updateTenant(
+        return self.gateway.entry_point.updateTenant(
             user, tenant_id, code, queue_id, description
         )
 
     def delete_tenant(self, user: str, tenant_id: int):
         """Delete tenant through java gateway."""
-        return self.java_gateway.entry_point.deleteTenantById(user, tenant_id)
+        return self.gateway.entry_point.deleteTenantById(user, tenant_id)
 
     def create_user(
         self,
@@ -205,13 +200,13 @@ class JavaGate:
         status: int,
     ):
         """Create user through java gateway."""
-        return self.java_gateway.entry_point.createUser(
+        return self.gateway.entry_point.createUser(
             name, password, email, phone, tenant, queue, status
         )
 
     def query_user(self, user_id: int):
         """Query user through java gateway."""
-        return self.java_gateway.queryUser(user_id)
+        return self.gateway.queryUser(user_id)
 
     def update_user(
         self,
@@ -224,13 +219,13 @@ class JavaGate:
         status: int,
     ):
         """Update user through java gateway."""
-        return self.java_gateway.entry_point.updateUser(
+        return self.gateway.entry_point.updateUser(
             name, password, email, phone, tenant, queue, status
         )
 
     def delete_user(self, name: str, user_id: int):
         """Delete user through java gateway."""
-        return self.java_gateway.entry_point.deleteUser(name, user_id)
+        return self.gateway.entry_point.deleteUser(name, user_id)
 
     def get_dependent_info(
         self,
@@ -239,7 +234,7 @@ class JavaGate:
         task_name: Optional[str] = None,
     ):
         """Get dependent info through java gateway."""
-        return self.java_gateway.entry_point.getDependentInfo(
+        return self.gateway.entry_point.getDependentInfo(
             project_name, process_definition_name, task_name
         )
 
@@ -247,7 +242,7 @@ class JavaGate:
         self, user_name: str, project_name: str, process_definition_name: str
     ):
         """Get process definition info through java gateway."""
-        return self.java_gateway.entry_point.getProcessDefinitionInfo(
+        return self.gateway.entry_point.getProcessDefinitionInfo(
             user_name, project_name, process_definition_name
         )
 
@@ -271,7 +266,7 @@ class JavaGate:
         other_params_json: Optional[str] = None,
     ):
         """Create or update process definition through java gateway."""
-        return self.java_gateway.entry_point.createOrUpdateProcessDefinition(
+        return self.gateway.entry_point.createOrUpdateProcessDefinition(
             user_name,
             project_name,
             name,
@@ -302,7 +297,7 @@ class JavaGate:
         timeout: int,
     ):
         """Exec process instance through java gateway."""
-        return self.java_gateway.entry_point.execProcessInstance(
+        return self.gateway.entry_point.execProcessInstance(
             user_name,
             project_name,
             process_definition_name,
@@ -312,3 +307,6 @@ class JavaGate:
             warning_group_id,
             timeout,
         )
+
+
+gateway = GatewayEntryPoint()

@@ -37,7 +37,7 @@ from pydolphinscheduler.core.process_definition import (
 from pydolphinscheduler.core.resource import Resource
 from pydolphinscheduler.core.resource_plugin import ResourcePlugin
 from pydolphinscheduler.exceptions import PyDSParamException, PyResPluginException
-from pydolphinscheduler.java_gateway import JavaGate
+from pydolphinscheduler.java_gateway import gateway
 from pydolphinscheduler.models import Base
 
 logger = getLogger(__name__)
@@ -369,7 +369,7 @@ class Task(Base):
         equal to 0 by java gateway, otherwise if will return the exists code and version.
         """
         # TODO get code from specific project process definition and task name
-        result = JavaGate().get_code_and_version(
+        result = gateway.get_code_and_version(
             self.process_definition._project, self.process_definition.name, self.name
         )
         # result = gateway.entry_point.genTaskCodeList(DefaultTaskCodeNum.DEFAULT)
@@ -381,4 +381,4 @@ class Task(Base):
         """Convert environment name to code."""
         if self._environment_name is None:
             return None
-        return JavaGate().query_environment_info(self._environment_name)
+        return gateway.query_environment_info(self._environment_name)
