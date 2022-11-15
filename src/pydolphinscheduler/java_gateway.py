@@ -108,9 +108,7 @@ class GatewayEntryPoint:
 
     def get_resources_file_info(self, program_type: str, main_package: str):
         """Get resources file info through java gateway."""
-        return self.gateway.entry_point.getResourcesFileInfo(
-            program_type, main_package
-        )
+        return self.gateway.entry_point.getResourcesFileInfo(program_type, main_package)
 
     def create_or_update_resource(
         self, user_name: str, name: str, content: str, description: Optional[str] = None
@@ -140,9 +138,7 @@ class GatewayEntryPoint:
         self, user: str, name: str, description: Optional[str] = None
     ):
         """Create or grant project through java gateway."""
-        return self.gateway.entry_point.createOrGrantProject(
-            user, name, description
-        )
+        return self.gateway.entry_point.createOrGrantProject(user, name, description)
 
     def query_project_by_name(self, user: str, name: str):
         """Query project through java gateway."""
