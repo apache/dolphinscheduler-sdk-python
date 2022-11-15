@@ -20,7 +20,7 @@
 from typing import Optional
 
 from pydolphinscheduler.exceptions import PyDSParamException
-from pydolphinscheduler.java_gateway import JavaGate
+from pydolphinscheduler.java_gateway import gateway
 from pydolphinscheduler.models import Base
 
 
@@ -53,7 +53,7 @@ class Resource(Base):
             raise PyDSParamException(
                 "`user_name` is required when querying resources from python gate."
             )
-        return JavaGate().query_resources_file_info(self.user_name, self.name)
+        return gateway.query_resources_file_info(self.user_name, self.name)
 
     def get_id_from_database(self):
         """Get resource id from java gateway."""
@@ -65,7 +65,7 @@ class Resource(Base):
             raise PyDSParamException(
                 "`user_name` and `content` are required when create or update resource from python gate."
             )
-        JavaGate().create_or_update_resource(
+        gateway.create_or_update_resource(
             self.user_name,
             self.name,
             self.content,

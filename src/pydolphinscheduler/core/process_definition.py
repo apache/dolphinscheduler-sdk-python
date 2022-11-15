@@ -26,7 +26,7 @@ from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.resource import Resource
 from pydolphinscheduler.core.resource_plugin import ResourcePlugin
 from pydolphinscheduler.exceptions import PyDSParamException, PyDSTaskNoFoundException
-from pydolphinscheduler.java_gateway import JavaGate
+from pydolphinscheduler.java_gateway import gateway
 from pydolphinscheduler.models import Base, Project, Tenant, User
 from pydolphinscheduler.utils.date import MAX_DATETIME, conv_from_str, conv_to_schedule
 
@@ -419,7 +419,7 @@ class ProcessDefinition(Base):
         self._ensure_side_model_exists()
         self._pre_submit_check()
 
-        self._process_definition_code = JavaGate().create_or_update_process_definition(
+        self._process_definition_code = gateway.create_or_update_process_definition(
             self._user,
             self._project,
             self.name,
@@ -449,7 +449,7 @@ class ProcessDefinition(Base):
 
         which post to `start-process-instance` to java gateway
         """
-        JavaGate().exec_process_instance(
+        gateway.exec_process_instance(
             self._user,
             self._project,
             self.name,

@@ -20,7 +20,7 @@
 from typing import Optional
 
 from pydolphinscheduler import configuration
-from pydolphinscheduler.java_gateway import JavaGate
+from pydolphinscheduler.java_gateway import gateway
 from pydolphinscheduler.models import BaseSide
 
 
@@ -46,7 +46,7 @@ class Tenant(BaseSide):
         self, queue_name: str, user=configuration.USER_NAME
     ) -> None:
         """Create Tenant if not exists."""
-        tenant = JavaGate().create_tenant(self.name, self.description, queue_name)
+        tenant = gateway.create_tenant(self.name, self.description, queue_name)
         self.tenant_id = tenant.getId()
         self.code = tenant.getTenantCode()
         # gateway_result_checker(result, None)
@@ -54,7 +54,7 @@ class Tenant(BaseSide):
     @classmethod
     def get_tenant(cls, code: str) -> "Tenant":
         """Get Tenant list."""
-        tenant = JavaGate().query_tenant(code)
+        tenant = gateway.query_tenant(code)
         if tenant is None:
             return cls()
         return cls(
@@ -68,7 +68,7 @@ class Tenant(BaseSide):
         self, user=configuration.USER_NAME, code=None, queue_id=None, description=None
     ) -> None:
         """Update Tenant."""
-        JavaGate().update_tenant(user, self.tenant_id, code, queue_id, description)
+        gateway.update_tenant(user, self.tenant_id, code, queue_id, description)
         # TODO: check queue_id and queue_name
         self.queue = str(queue_id)
         self.code = code
@@ -76,5 +76,5 @@ class Tenant(BaseSide):
 
     def delete(self) -> None:
         """Delete Tenant."""
-        JavaGate().delete_tenant(self.user_name, self.tenant_id)
+        gateway.delete_tenant(self.user_name, self.tenant_id)
         self.delete_all()

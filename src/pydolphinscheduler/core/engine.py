@@ -23,7 +23,7 @@ from py4j.protocol import Py4JJavaError
 
 from pydolphinscheduler.core.task import Task
 from pydolphinscheduler.exceptions import PyDSParamException
-from pydolphinscheduler.java_gateway import JavaGate
+from pydolphinscheduler.java_gateway import gateway
 
 
 class ProgramType(str):
@@ -63,7 +63,7 @@ class Engine(Task):
             return self._resource
         else:
             try:
-                self._resource = JavaGate().get_resources_file_info(
+                self._resource = gateway.get_resources_file_info(
                     program_type, main_package
                 )
             # Handler source do not exists error, for now we just terminate the process.

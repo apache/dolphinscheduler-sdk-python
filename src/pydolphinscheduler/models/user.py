@@ -20,7 +20,7 @@
 from typing import Optional
 
 from pydolphinscheduler import configuration
-from pydolphinscheduler.java_gateway import JavaGate
+from pydolphinscheduler.java_gateway import gateway
 from pydolphinscheduler.models import BaseSide, Tenant
 
 
@@ -65,7 +65,7 @@ class User(BaseSide):
         """Create User if not exists."""
         # Should make sure queue already exists.
         self.create_tenant_if_not_exists()
-        user = JavaGate().create_user(
+        user = gateway.create_user(
             self.name,
             self.password,
             self.email,
@@ -81,7 +81,7 @@ class User(BaseSide):
     @classmethod
     def get_user(cls, user_id) -> "User":
         """Get User."""
-        user = JavaGate().query_user(user_id)
+        user = gateway.query_user(user_id)
         if user is None:
             return cls("")
         user_id = user.getId()
@@ -107,7 +107,7 @@ class User(BaseSide):
         status=None,
     ) -> None:
         """Update User."""
-        user = JavaGate().update_user(
+        user = gateway.update_user(
             self.name,
             password,
             email,
@@ -126,5 +126,5 @@ class User(BaseSide):
 
     def delete(self) -> None:
         """Delete User."""
-        JavaGate().delete_user(self.name, self.user_id)
+        gateway.delete_user(self.name, self.user_id)
         self.delete_all()
