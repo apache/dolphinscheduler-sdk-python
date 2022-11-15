@@ -23,6 +23,7 @@ import pytest
 from ruamel.yaml import YAML
 
 from pydolphinscheduler.utils.yaml_parser import YamlParser
+from tests.testing.constants import TOKEN
 from tests.testing.path import path_default_config_yaml
 
 yaml = YAML()
@@ -40,6 +41,7 @@ expects = [
     {
         # yaml.load("no need test") is a flag about skipping it because it to different to maintainer
         "java_gateway": yaml.load("no need test"),
+        "java_gateway.auth_token": (TOKEN, "new-token"),
         "java_gateway.address": ("127.0.0.1", "127.1.1.1"),
         "java_gateway.port": (25333, 25555),
         "java_gateway.auto_convert": (True, False),

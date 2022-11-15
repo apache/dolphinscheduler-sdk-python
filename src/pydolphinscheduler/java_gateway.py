@@ -36,6 +36,7 @@ def launch_gateway(
     address: Optional[str] = None,
     port: Optional[int] = None,
     auto_convert: Optional[bool] = True,
+    auth_token: Optional[str] = None,
 ) -> JavaGateway:
     """Launch java gateway to pydolphinscheduler.
 
@@ -43,10 +44,14 @@ def launch_gateway(
     in the worst case, Py4J needs to go through all registered converters for all parameters.
     This is why automatic conversion is disabled by default.
     """
+    auth_token = auth_token or configuration.JAVA_GATEWAY_AUTH_TOKEN
+    configuration.token_alert(auth_token)
+
     gateway_parameters = GatewayParameters(
         address=address or configuration.JAVA_GATEWAY_ADDRESS,
         port=port or configuration.JAVA_GATEWAY_PORT,
         auto_convert=auto_convert or configuration.JAVA_GATEWAY_AUTO_CONVERT,
+        auth_token=auth_token,
     )
     gateway = JavaGateway(gateway_parameters=gateway_parameters)
     return gateway
@@ -78,8 +83,9 @@ class JavaGate:
         address: Optional[str] = None,
         port: Optional[int] = None,
         auto_convert: Optional[bool] = True,
+        auth_token: Optional[str] = None,
     ):
-        self.java_gateway = launch_gateway(address, port, auto_convert)
+        self.java_gateway = launch_gateway(address, port, auto_convert, auth_token)
         gateway_version = "unknown"
         with contextlib.suppress(Py4JError):
             # 1. Java gateway version is too old: doesn't have method 'getGatewayVersion()'

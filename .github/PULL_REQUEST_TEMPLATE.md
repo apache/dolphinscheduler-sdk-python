@@ -9,5 +9,5 @@
 I confirm that the following checklist has been completed.
 
 - [ ] Add/Change **test cases** for the changes.
-- [ ] Add/Change the related **documentation**.
+- [ ] Add/Change the related **documentation**, should also change `docs/source/config.rst` when you change file `default_config.yaml`.
 - [ ] (Optional) Add your change to `UPDATING.md` when it is an incompatible change.
