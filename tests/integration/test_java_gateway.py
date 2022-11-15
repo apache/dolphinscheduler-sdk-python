@@ -18,6 +18,7 @@
 """Test pydolphinscheduler java gateway."""
 import pytest
 from py4j.java_gateway import GatewayParameters, JavaGateway, java_import
+
 from tests.testing.constants import TOKEN
 
 gateway_parameters = GatewayParameters(auth_token=TOKEN)
