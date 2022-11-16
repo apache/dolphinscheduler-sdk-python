@@ -19,7 +19,7 @@
 workflow:
   name: "kubernetes"
 
-# Define the tasks under the workflow
+# Define the tasks within the workflow
 tasks:
   - name: kubernetes
     task_type: K8S
