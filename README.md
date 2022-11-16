@@ -34,6 +34,11 @@ your workflow by python code, aka workflow-as-codes.
 
 ## Quick Start
 
+### Version Compatibility
+
+At Nov 7, 2022 we seperated PyDolphinScheduler from DolphinScheduler, and the version of PyDolphinScheduler 4.0.0
+can match multiple versions of DolphinScheduler, for more details, please refer to [version](https://dolphinscheduler.apache.org/python/main/index.html#version)
+
 ### Installation
 
 ```shell
