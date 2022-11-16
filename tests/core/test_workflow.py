@@ -394,6 +394,7 @@ def test_deprecated_workflow_simple_context_manager():
 
     with warnings.catch_warnings(record=True) as w:
         from pydolphinscheduler.core.process_definition import ProcessDefinition
+
         assert len(w) == 1
         assert issubclass(w[-1].category, DeprecationWarning)
         assert "deprecated" in str(w[-1].message)
@@ -406,11 +407,11 @@ def test_deprecated_workflow_simple_context_manager():
                     pre_task = pd.get_one_task_by_name(f"task-{i - 1}")
                     curr_task.set_upstream(pre_task)
             assert len(pd.tasks) == expect_tasks_num
-    
+
             # Test if task workflow same as origin one
             task: Task = pd.get_one_task_by_name("task-0")
             assert pd is task.workflow
-    
+
             # Test if all tasks with expect deps
             for i in range(expect_tasks_num):
                 task: Task = pd.get_one_task_by_name(f"task-{i}")

@@ -112,7 +112,9 @@ class DependentItem(Base):
             )
             self.workflow_name = kwargs.pop("process_definition_name")
         else:
-            raise PyDSParamException("Parameter `workflow_name` or `process_definition_name` is required, but got None.")
+            raise PyDSParamException(
+                "Parameter `workflow_name` or `process_definition_name` is required, but got None."
+            )
         self.dependent_task_name = dependent_task_name
         if dependent_date is None:
             raise PyDSParamException(
