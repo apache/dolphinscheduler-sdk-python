@@ -16,8 +16,6 @@
 # under the License.
 
 """Task Kubernetes."""
-from typing import Optional
-
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.task import Task
 
@@ -48,7 +46,6 @@ class Kubernetes(Task):
         namespace: str,
         min_cpu_cores: float,
         min_memory_space: float,
-        params_map: Optional[str] = str({}),
         *args,
         **kwargs
     ):
@@ -57,4 +54,3 @@ class Kubernetes(Task):
         self.namespace = namespace
         self.min_cpu_cores = min_cpu_cores
         self.min_memory_space = min_memory_space
-        self.params_map = params_map
