@@ -158,7 +158,7 @@ jobs:
           path: dolphinscheduler
           submodules: true
           # Temporary add to make https://github.com/apache/dolphinscheduler-sdk-python/issues/12 work
-          ref: refs/pull/12918/head
+          # ref: refs/pull/12918/head
       - name: Cache local Maven repository
         uses: actions/cache@v3
         with:
