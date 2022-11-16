@@ -21,13 +21,13 @@ from unittest.mock import patch
 
 import pytest
 
-from pydolphinscheduler.core.process_definition import ProcessDefinition
+from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.exceptions import PyDSParamException
 from pydolphinscheduler.tasks.func_wrap import task
 from tests.testing.decorator import foo as foo_decorator
 from tests.testing.task import Task
 
-PD_NAME = "test_process_definition"
+WORKFLOW_NAME = "test_workflow"
 TASK_NAME = "test_task"
 
 
@@ -35,16 +35,16 @@ TASK_NAME = "test_task"
     "pydolphinscheduler.core.task.Task.gen_code_and_version", return_value=(12345, 1)
 )
 def test_single_task_outside(mock_code):
-    """Test single decorator task which outside process definition."""
+    """Test single decorator task which outside workflow."""
 
     @task
     def foo():
         print(TASK_NAME)
 
-    with ProcessDefinition(PD_NAME) as pd:
+    with Workflow(WORKFLOW_NAME) as pd:
         foo()
 
-    assert pd is not None and pd.name == PD_NAME
+    assert pd is not None and pd.name == WORKFLOW_NAME
     assert len(pd.tasks) == 1
 
     pd_task = pd.tasks[12345]
@@ -56,8 +56,8 @@ def test_single_task_outside(mock_code):
     "pydolphinscheduler.core.task.Task.gen_code_and_version", return_value=(12345, 1)
 )
 def test_single_task_inside(mock_code):
-    """Test single decorator task which inside process definition."""
-    with ProcessDefinition(PD_NAME) as pd:
+    """Test single decorator task which inside workflow."""
+    with Workflow(WORKFLOW_NAME) as pd:
 
         @task
         def foo():
@@ -65,7 +65,7 @@ def test_single_task_inside(mock_code):
 
         foo()
 
-    assert pd is not None and pd.name == PD_NAME
+    assert pd is not None and pd.name == WORKFLOW_NAME
     assert len(pd.tasks) == 1
 
     pd_task = pd.tasks[12345]
@@ -84,7 +84,7 @@ def test_addition_decorator_error(mock_code):
     def foo():
         print(TASK_NAME)
 
-    with ProcessDefinition(PD_NAME) as pd:  # noqa: F841
+    with Workflow(WORKFLOW_NAME) as pd:  # noqa: F841
         with pytest.raises(
             PyDSParamException, match="Do no support other decorators for.*"
         ):
@@ -96,7 +96,7 @@ def test_addition_decorator_error(mock_code):
     side_effect=Task("test_func_wrap", "func_wrap").gen_code_and_version,
 )
 def test_multiple_tasks_outside(mock_code):
-    """Test multiple decorator tasks which outside process definition."""
+    """Test multiple decorator tasks which outside workflow."""
 
     @task
     def foo():
@@ -106,13 +106,13 @@ def test_multiple_tasks_outside(mock_code):
     def bar():
         print(TASK_NAME)
 
-    with ProcessDefinition(PD_NAME) as pd:
+    with Workflow(WORKFLOW_NAME) as pd:
         foo = foo()
         bar = bar()
 
         foo >> bar
 
-    assert pd is not None and pd.name == PD_NAME
+    assert pd is not None and pd.name == WORKFLOW_NAME
     assert len(pd.tasks) == 2
 
     task_foo = pd.get_one_task_by_name("foo")
@@ -135,8 +135,8 @@ def test_multiple_tasks_outside(mock_code):
     side_effect=Task("test_func_wrap", "func_wrap").gen_code_and_version,
 )
 def test_multiple_tasks_inside(mock_code):
-    """Test multiple decorator tasks which inside process definition."""
-    with ProcessDefinition(PD_NAME) as pd:
+    """Test multiple decorator tasks which inside workflow."""
+    with Workflow(WORKFLOW_NAME) as pd:
 
         @task
         def foo():
@@ -151,7 +151,7 @@ def test_multiple_tasks_inside(mock_code):
 
         foo >> bar
 
-    assert pd is not None and pd.name == PD_NAME
+    assert pd is not None and pd.name == WORKFLOW_NAME
     assert len(pd.tasks) == 2
 
     task_foo = pd.get_one_task_by_name("foo")

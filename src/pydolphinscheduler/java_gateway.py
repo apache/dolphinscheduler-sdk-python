@@ -127,11 +127,11 @@ class GatewayEntryPoint:
         return self.gateway.entry_point.getEnvironmentInfo(name)
 
     def get_code_and_version(
-        self, project_name: str, process_definition_name: str, task_name: str
+        self, project_name: str, workflow_name: str, task_name: str
     ):
         """Get code and version through java gateway."""
         return self.gateway.entry_point.getCodeAndVersion(
-            project_name, process_definition_name, task_name
+            project_name, workflow_name, task_name
         )
 
     def create_or_grant_project(
@@ -230,23 +230,21 @@ class GatewayEntryPoint:
     def get_dependent_info(
         self,
         project_name: str,
-        process_definition_name: str,
+        workflow_name: str,
         task_name: Optional[str] = None,
     ):
         """Get dependent info through java gateway."""
         return self.gateway.entry_point.getDependentInfo(
-            project_name, process_definition_name, task_name
+            project_name, workflow_name, task_name
         )
 
-    def get_process_definition_info(
-        self, user_name: str, project_name: str, process_definition_name: str
-    ):
-        """Get process definition info through java gateway."""
+    def get_workflow_info(self, user_name: str, project_name: str, workflow_name: str):
+        """Get workflow info through java gateway."""
         return self.gateway.entry_point.getProcessDefinitionInfo(
-            user_name, project_name, process_definition_name
+            user_name, project_name, workflow_name
         )
 
-    def create_or_update_process_definition(
+    def create_or_update_workflow(
         self,
         user_name: str,
         project_name: str,
@@ -265,7 +263,7 @@ class GatewayEntryPoint:
         schedule: Optional[str] = None,
         other_params_json: Optional[str] = None,
     ):
-        """Create or update process definition through java gateway."""
+        """Create or update workflow through java gateway."""
         return self.gateway.entry_point.createOrUpdateProcessDefinition(
             user_name,
             project_name,
@@ -285,22 +283,22 @@ class GatewayEntryPoint:
             execution_type,
         )
 
-    def exec_process_instance(
+    def exec_workflow_instance(
         self,
         user_name: str,
         project_name: str,
-        process_definition_name: str,
+        workflow_name: str,
         cron_time: str,
         worker_group: str,
         warning_type: str,
         warning_group_id: int,
         timeout: int,
     ):
-        """Exec process instance through java gateway."""
+        """Exec workflow instance through java gateway."""
         return self.gateway.entry_point.execProcessInstance(
             user_name,
             project_name,
-            process_definition_name,
+            workflow_name,
             cron_time,
             worker_group,
             warning_type,

@@ -27,7 +27,7 @@ from tests.testing.constants import task_without_example
 from tests.testing.path import get_all_examples, get_tasks
 from tests.testing.task import Task
 
-process_definition_name = set()
+workflow_name = set()
 
 
 def import_module(script_name, script_path):
@@ -44,7 +44,8 @@ def test_task_without_example():
     Avoiding add new type of tasks but without adding example describe how to use it.
     """
     # We use example/tutorial.py as shell task example
-    ignore_name = {"__init__.py", "shell.py", "func_wrap.py"}
+    # Task sub_process is deprecated and will be removed in the future, so we set it to ignore
+    ignore_name = {"__init__.py", "shell.py", "func_wrap.py", "sub_process.py"}
     all_tasks = {task.stem for task in get_tasks(ignore_name=ignore_name)}
 
     have_example_tasks = set()
@@ -63,23 +64,23 @@ def test_task_without_example():
 def setup_and_teardown_for_stuff():
     """Fixture of py.test handle setup and teardown."""
     yield
-    global process_definition_name
-    process_definition_name = set()
+    global workflow_name
+    workflow_name = set()
 
 
 def submit_check_without_same_name(self):
-    """Side effect for verifying process definition name and adding it to global variable."""
-    if self.name in process_definition_name:
+    """Side effect for verifying workflow name and adding it to global variable."""
+    if self.name in workflow_name:
         raise ValueError(
-            "Example process definition should not have same name, but get duplicate name: %s",
+            "Example workflow should not have same name, but get duplicate name: %s",
             self.name,
         )
-    submit_add_process_definition(self)
+    submit_add_workflow(self)
 
 
-def submit_add_process_definition(self):
-    """Side effect for adding process definition name to global variable."""
-    process_definition_name.add(self.name)
+def submit_add_workflow(self):
+    """Side effect for adding workflow name to global variable."""
+    workflow_name.add(self.name)
 
 
 def test_example_basic():
@@ -114,9 +115,9 @@ def test_example_basic():
         ), f"We expect all examples have __doc__, but {ex.name} do not."
 
 
-@patch("pydolphinscheduler.core.process_definition.ProcessDefinition.start")
+@patch("pydolphinscheduler.core.workflow.Workflow.start")
 @patch(
-    "pydolphinscheduler.core.process_definition.ProcessDefinition.submit",
+    "pydolphinscheduler.core.workflow.Workflow.submit",
     side_effect=submit_check_without_same_name,
     autospec=True,
 )
@@ -127,12 +128,10 @@ def test_example_basic():
     # using :arg:`return_value`
     side_effect=Task("test_example", "test_example").gen_code_and_version,
 )
-def test_example_process_definition_without_same_name(
-    mock_code_version, mock_submit, mock_start
-):
-    """Test all examples file without same process definition's name.
+def test_example_workflow_without_same_name(mock_code_version, mock_submit, mock_start):
+    """Test all examples file without same workflow's name.
 
-    Our process definition would compete with others if we have same process definition name. It will make
+    Our workflow would compete with others if we have same workflow name. It will make
     different between actually workflow and our workflow-as-code file which make users feel strange.
     """
     for ex in get_all_examples():
@@ -142,10 +141,10 @@ def test_example_process_definition_without_same_name(
     assert True
 
 
-@patch("pydolphinscheduler.core.process_definition.ProcessDefinition.start")
+@patch("pydolphinscheduler.core.workflow.Workflow.start")
 @patch(
-    "pydolphinscheduler.core.process_definition.ProcessDefinition.submit",
-    side_effect=submit_add_process_definition,
+    "pydolphinscheduler.core.workflow.Workflow.submit",
+    side_effect=submit_add_workflow,
     autospec=True,
 )
 @patch(
@@ -155,13 +154,13 @@ def test_example_process_definition_without_same_name(
     # using :arg:`return_value`
     side_effect=Task("test_example", "test_example").gen_code_and_version,
 )
-def test_file_name_in_process_definition(mock_code_version, mock_submit, mock_start):
+def test_file_name_in_workflow(mock_code_version, mock_submit, mock_start):
     """Test example file name in example definition name.
 
     We should not directly assert equal, because some of the examples contain
-    more than one process definition.
+    more than one workflow.
     """
-    global process_definition_name
+    global workflow_name
     for ex in get_all_examples():
         # Skip __init__ file
         if ex.stem == "__init__":
@@ -170,7 +169,7 @@ def test_file_name_in_process_definition(mock_code_version, mock_submit, mock_st
         # without one named bulk_create_example
         if ex.stem == "bulk_create_example":
             continue
-        process_definition_name = set()
-        assert ex.stem not in process_definition_name
+        workflow_name = set()
+        assert ex.stem not in workflow_name
         import_module(ex.name, str(ex))
-        assert ex.stem in process_definition_name
+        assert ex.stem in workflow_name

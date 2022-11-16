@@ -15,28 +15,28 @@
 # specific language governing permissions and limitations
 # under the License.
 
-"""Test Task sub_process."""
+"""Test Task sub workflow."""
 
 
 from unittest.mock import patch
 
 import pytest
 
-from pydolphinscheduler.core.process_definition import ProcessDefinition
-from pydolphinscheduler.tasks.sub_process import SubProcess
+from pydolphinscheduler.core.workflow import Workflow
+from pydolphinscheduler.tasks.sub_workflow import SubWorkflow
 
-TEST_SUB_PROCESS_DEFINITION_NAME = "sub-test-process-definition"
-TEST_SUB_PROCESS_DEFINITION_CODE = "3643589832320"
-TEST_PROCESS_DEFINITION_NAME = "simple-test-process-definition"
+TEST_SUB_WORKFLOW_NAME = "sub-test-workflow"
+TEST_SUB_WORKFLOW_CODE = "3643589832320"
+TEST_WORKFLOW_NAME = "simple-test-workflow"
 
 
 @pytest.mark.parametrize(
     "attr, expect",
     [
         (
-            {"process_definition_name": TEST_SUB_PROCESS_DEFINITION_NAME},
+            {"workflow_name": TEST_SUB_WORKFLOW_NAME},
             {
-                "processDefinitionCode": TEST_SUB_PROCESS_DEFINITION_CODE,
+                "processDefinitionCode": TEST_SUB_WORKFLOW_CODE,
                 "localParams": [],
                 "resourceList": [],
                 "dependence": {},
@@ -47,12 +47,12 @@ TEST_PROCESS_DEFINITION_NAME = "simple-test-process-definition"
     ],
 )
 @patch(
-    "pydolphinscheduler.tasks.sub_process.SubProcess.get_process_definition_info",
+    "pydolphinscheduler.tasks.sub_workflow.SubWorkflow.get_workflow_info",
     return_value=(
         {
             "id": 1,
-            "name": TEST_SUB_PROCESS_DEFINITION_NAME,
-            "code": TEST_SUB_PROCESS_DEFINITION_CODE,
+            "name": TEST_SUB_WORKFLOW_NAME,
+            "code": TEST_SUB_WORKFLOW_CODE,
         }
     ),
 )
@@ -61,26 +61,26 @@ TEST_PROCESS_DEFINITION_NAME = "simple-test-process-definition"
     return_value=(123, 1),
 )
 def test_property_task_params(mock_code_version, mock_pd_info, attr, expect):
-    """Test task sub process property."""
-    task = SubProcess("test-sub-process-task-params", **attr)
+    """Test task sub workflow property."""
+    task = SubWorkflow("test-sub-workflow-task-params", **attr)
     assert expect == task.task_params
 
 
 @patch(
-    "pydolphinscheduler.tasks.sub_process.SubProcess.get_process_definition_info",
+    "pydolphinscheduler.tasks.sub_workflow.SubWorkflow.get_workflow_info",
     return_value=(
         {
             "id": 1,
-            "name": TEST_SUB_PROCESS_DEFINITION_NAME,
-            "code": TEST_SUB_PROCESS_DEFINITION_CODE,
+            "name": TEST_SUB_WORKFLOW_NAME,
+            "code": TEST_SUB_WORKFLOW_CODE,
         }
     ),
 )
-def test_sub_process_get_define(mock_process_definition):
-    """Test task sub_process function get_define."""
+def test_sub_workflow_get_define(mock_workflow_definition):
+    """Test task sub_workflow function get_define."""
     code = 123
     version = 1
-    name = "test_sub_process_get_define"
+    name = "test_sub_workflow_get_define"
     expect = {
         "code": code,
         "name": name,
@@ -91,7 +91,7 @@ def test_sub_process_get_define(mock_process_definition):
         "taskParams": {
             "resourceList": [],
             "localParams": [],
-            "processDefinitionCode": TEST_SUB_PROCESS_DEFINITION_CODE,
+            "processDefinitionCode": TEST_SUB_WORKFLOW_CODE,
             "dependence": {},
             "conditionResult": {"successNode": [""], "failedNode": [""]},
             "waitStartTimeout": {},
@@ -110,6 +110,6 @@ def test_sub_process_get_define(mock_process_definition):
         "pydolphinscheduler.core.task.Task.gen_code_and_version",
         return_value=(code, version),
     ):
-        with ProcessDefinition(TEST_PROCESS_DEFINITION_NAME):
-            sub_process = SubProcess(name, TEST_SUB_PROCESS_DEFINITION_NAME)
-            assert sub_process.get_define() == expect
+        with Workflow(TEST_WORKFLOW_NAME):
+            sub_workflow = SubWorkflow(name, TEST_SUB_WORKFLOW_NAME)
+            assert sub_workflow.get_define() == expect

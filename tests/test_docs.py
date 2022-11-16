@@ -22,7 +22,8 @@ import re
 from tests.testing.constants import task_without_example
 from tests.testing.path import get_doc_tasks, get_tasks
 
-ignore_code_file = {"__init__.py"}
+# Task sub_process is deprecated and will be removed in the future, so we set it to ignore
+ignore_code_file = {"__init__.py", "sub_process.py"}
 ignore_doc_file = {"index.rst"}
 
 

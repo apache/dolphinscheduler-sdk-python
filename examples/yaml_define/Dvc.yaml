@@ -23,7 +23,7 @@ workflow:
   name: "DVC"
   release_state: "offline"
 
-# Define the tasks under the process
+# Define the tasks within the workflow
 tasks:
   - name: init_dvc 
     task_type: DVCInit

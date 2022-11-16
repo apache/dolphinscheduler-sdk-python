@@ -39,7 +39,7 @@ from pydolphinscheduler.tasks.sagemaker import SageMaker
 from pydolphinscheduler.tasks.shell import Shell
 from pydolphinscheduler.tasks.spark import Spark
 from pydolphinscheduler.tasks.sql import Sql
-from pydolphinscheduler.tasks.sub_process import SubProcess
+from pydolphinscheduler.tasks.sub_workflow import SubWorkflow
 from pydolphinscheduler.tasks.switch import Branch, Default, Switch, SwitchCondition
 
 __all__ = [
@@ -64,7 +64,7 @@ __all__ = [
     "Shell",
     "Spark",
     "Sql",
-    "SubProcess",
+    "SubWorkflow",
     "Switch",
     "SageMaker",
     "Kubernetes",

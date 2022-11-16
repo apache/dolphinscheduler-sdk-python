@@ -18,10 +18,10 @@
 # [start workflow_declare]
 """A example workflow for task flink."""
 
-from pydolphinscheduler.core.process_definition import ProcessDefinition
+from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.tasks.flink import DeployMode, Flink, ProgramType
 
-with ProcessDefinition(name="task_flink_example", tenant="tenant_exists") as pd:
+with Workflow(name="task_flink_example", tenant="tenant_exists") as pd:
     task = Flink(
         name="task_flink",
         main_class="org.apache.flink.streaming.examples.wordcount.WordCount",

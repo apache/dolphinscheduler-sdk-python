@@ -24,7 +24,7 @@ import os
 task_without_example = {
     "sql",
     "http",
-    "sub_process",
+    "sub_workflow",
     "python",
     "procedure",
 }

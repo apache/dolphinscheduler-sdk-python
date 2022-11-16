@@ -19,7 +19,7 @@
 """A example workflow for task sagemaker."""
 import json
 
-from pydolphinscheduler.core.process_definition import ProcessDefinition
+from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.tasks.sagemaker import SageMaker
 
 sagemaker_request_data = {
@@ -33,7 +33,7 @@ sagemaker_request_data = {
     ],
 }
 
-with ProcessDefinition(
+with Workflow(
     name="task_sagemaker_example",
     tenant="tenant_exists",
 ) as pd:

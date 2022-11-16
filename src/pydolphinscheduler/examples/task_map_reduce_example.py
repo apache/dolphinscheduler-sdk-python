@@ -19,10 +19,10 @@
 """A example workflow for task mr."""
 
 from pydolphinscheduler.core.engine import ProgramType
-from pydolphinscheduler.core.process_definition import ProcessDefinition
+from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.tasks.map_reduce import MR
 
-with ProcessDefinition(name="task_map_reduce_example", tenant="tenant_exists") as pd:
+with Workflow(name="task_map_reduce_example", tenant="tenant_exists") as pd:
     task = MR(
         name="task_mr",
         main_class="wordcount",

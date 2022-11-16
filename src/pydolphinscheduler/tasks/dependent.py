@@ -17,6 +17,7 @@
 
 """Task dependent."""
 
+import warnings
 from typing import Dict, Optional, Tuple
 
 from pydolphinscheduler.constants import TaskType
@@ -73,7 +74,7 @@ class DependentDate(str):
 class DependentItem(Base):
     """Dependent item object, minimal unit for task dependent.
 
-    It declare which project, process_definition, task are dependent to this task.
+    It declares which project, workflow, task are dependent to this task.
     """
 
     _DEFINE_ATTR = {
@@ -89,14 +90,26 @@ class DependentItem(Base):
     def __init__(
         self,
         project_name: str,
-        process_definition_name: str,
+        # TODO zhongjiajie should be also depeloped in 4.1.0
+        workflow_name: str,
         dependent_task_name: Optional[str] = DEPENDENT_ALL_TASK_IN_WORKFLOW,
         dependent_date: Optional[DependentDate] = DependentDate.TODAY,
+        *args,
+        **kwargs,
     ):
-        obj_name = f"{project_name}.{process_definition_name}.{dependent_task_name}.{dependent_date}"
+        obj_name = (
+            f"{project_name}.{workflow_name}.{dependent_task_name}.{dependent_date}"
+        )
         super().__init__(obj_name)
         self.project_name = project_name
-        self.process_definition_name = process_definition_name
+        self.workflow_name = workflow_name
+        if "process_definition_name" in kwargs and self.workflow_name is None:
+            warnings.warn(
+                "Parameter name `process_definition_name` is deprecated, please use `workflow_name` instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            self.workflow_name = kwargs.pop("process_definition_name")
         self.dependent_task_name = dependent_task_name
         if dependent_date is None:
             raise PyDSParamException(
@@ -155,7 +168,7 @@ class DependentItem(Base):
         """Get name info parameter to query code."""
         param = (
             self.project_name,
-            self.process_definition_name,
+            self.workflow_name,
             self.dependent_task_name if not self.is_all_task else None,
         )
         return param

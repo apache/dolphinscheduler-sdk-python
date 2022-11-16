@@ -23,8 +23,8 @@ from unittest.mock import PropertyMock, patch
 
 import pytest
 
-from pydolphinscheduler.core.process_definition import ProcessDefinition
 from pydolphinscheduler.core.task import Task, TaskRelation
+from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.exceptions import PyResPluginException
 from pydolphinscheduler.resources_plugin import Local
 from tests.testing.task import Task as TestTask
@@ -306,8 +306,8 @@ def test_tasks_list_shift(dep_expr: str, flag: str):
 
 
 def test_add_duplicate(caplog):
-    """Test add task which code already in process definition."""
-    with ProcessDefinition("test_add_duplicate_workflow") as _:
+    """Test add task which code already in workflow."""
+    with Workflow("test_add_duplicate_workflow") as _:
         TaskWithCode(name="test_task_1", task_type="test", code=123, version=1)
         with caplog.at_level(logging.WARNING):
             TaskWithCode(
@@ -316,7 +316,7 @@ def test_add_duplicate(caplog):
         assert all(
             [
                 caplog.text.startswith("WARNING  pydolphinscheduler"),
-                re.findall("already in process definition", caplog.text),
+                re.findall("already in workflow", caplog.text),
             ]
         )
 
@@ -367,8 +367,8 @@ def test_task_ext_attr(
                 "name": "test_task_abtain_res_plugin",
                 "task_type": "TaskType",
                 "resource_plugin": Local("prefix"),
-                "process_definition": ProcessDefinition(
-                    name="process_definition",
+                "workflow": Workflow(
+                    name="workflow",
                     resource_plugin=Local("prefix"),
                 ),
             },
@@ -386,8 +386,8 @@ def test_task_ext_attr(
             {
                 "name": "test_task_abtain_res_plugin",
                 "task_type": "TaskType",
-                "process_definition": ProcessDefinition(
-                    name="process_definition",
+                "workflow": Workflow(
+                    name="workflow",
                     resource_plugin=Local("prefix"),
                 ),
             },
@@ -412,8 +412,8 @@ def test_task_obtain_res_plugin(m_get_content, m_code_version, attr, expected):
         {
             "name": "test_task_abtain_res_plugin",
             "task_type": "TaskType",
-            "process_definition": ProcessDefinition(
-                name="process_definition",
+            "workflow": Workflow(
+                name="workflow",
             ),
         },
     ],

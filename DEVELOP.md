@@ -46,9 +46,9 @@ define by code, user usually do not care user, tenant, or queue exists or not. A
 a new workflow by the code his/her definition. So we have some **side object** in `pydolphinscheduler/side`
 directory, their only check object exists or not, and create them if not exists.
 
-### Process Definition
+### Workflow
 
-pydolphinscheduler workflow object name, process definition is also same name as Java object(maybe would be change to
+pydolphinscheduler workflow object name, workflow is also same name as Java object(maybe would be change to
 other word for more simple).
 
 ### Tasks

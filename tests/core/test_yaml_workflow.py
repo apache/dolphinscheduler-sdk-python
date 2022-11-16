@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-"""Test YAML process."""
+"""Test YAML workflow."""
 
 import os
 from pathlib import Path
@@ -24,10 +24,10 @@ from unittest.mock import patch
 import pytest
 
 from pydolphinscheduler import configuration, tasks
-from pydolphinscheduler.core.process_definition import ProcessDefinition
-from pydolphinscheduler.core.yaml_process_define import (
+from pydolphinscheduler.core.workflow import Workflow
+from pydolphinscheduler.core.yaml_workflow import (
     ParseTool,
-    create_process_definition,
+    create_workflow,
     get_task_cls,
 )
 from pydolphinscheduler.exceptions import PyDSTaskNoFoundException
@@ -117,7 +117,7 @@ def test_parse_tool_parse_possible_path_file():
         ("Shell", tasks.Shell),
         ("Spark", tasks.Spark),
         ("Sql", tasks.Sql),
-        ("SubProcess", tasks.SubProcess),
+        ("SubWorkflow", tasks.SubWorkflow),
         ("Switch", tasks.Switch),
         ("SageMaker", tasks.SageMaker),
     ],
@@ -156,7 +156,7 @@ def test_get_error(task_type):
         ("Shell.yaml"),
         ("Spark.yaml"),
         ("Sql.yaml"),
-        ("SubProcess.yaml"),
+        ("SubWorkflow.yaml"),
         # ("Switch.yaml"),
         ("MoreConfiguration.yaml"),
     ],
@@ -177,15 +177,15 @@ def test_get_error(task_type):
         "taskDefinitionCode": 0,
     },
 )
-@patch.object(ProcessDefinition, "run")
-@patch.object(ProcessDefinition, "submit")
-def test_get_create_process_definition(
+@patch.object(Workflow, "run")
+@patch.object(Workflow, "submit")
+def test_get_create_workflow(
     prun, psubmit, dep_item, db_info, resource_info, yaml_file
 ):
-    """Test create_process_definition function to parse example YAML file."""
+    """Test create_workflow function to parse example YAML file."""
     yaml_file_path = Path(path_yaml_example).joinpath(yaml_file)
     with patch(
         "pydolphinscheduler.core.task.Task.gen_code_and_version",
         side_effect=Task("test_func_wrap", "func_wrap").gen_code_and_version,
     ):
-        create_process_definition(yaml_file_path)
+        create_workflow(yaml_file_path)

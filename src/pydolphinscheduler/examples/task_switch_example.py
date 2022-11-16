@@ -30,11 +30,11 @@ parent -> switch ->
 .
 """
 
-from pydolphinscheduler.core.process_definition import ProcessDefinition
+from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.tasks.shell import Shell
 from pydolphinscheduler.tasks.switch import Branch, Default, Switch, SwitchCondition
 
-with ProcessDefinition(
+with Workflow(
     name="task_switch_example", tenant="tenant_exists", param={"var": "1"}
 ) as pd:
     parent = Shell(name="parent", command="echo parent")

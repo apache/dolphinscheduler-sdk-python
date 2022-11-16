@@ -21,7 +21,7 @@ workflow:
   param:
     n: 1
 
-# Define the tasks under the workflow
+# Define the tasks within the workflow
 tasks:
   - name: shell_0
     task_type: Shell

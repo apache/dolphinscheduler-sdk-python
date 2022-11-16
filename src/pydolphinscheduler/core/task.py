@@ -30,12 +30,9 @@ from pydolphinscheduler.constants import (
     TaskPriority,
     TaskTimeoutFlag,
 )
-from pydolphinscheduler.core.process_definition import (
-    ProcessDefinition,
-    ProcessDefinitionContext,
-)
 from pydolphinscheduler.core.resource import Resource
 from pydolphinscheduler.core.resource_plugin import ResourcePlugin
+from pydolphinscheduler.core.workflow import Workflow, WorkflowContext
 from pydolphinscheduler.exceptions import PyDSParamException, PyResPluginException
 from pydolphinscheduler.java_gateway import gateway
 from pydolphinscheduler.models import Base
@@ -47,7 +44,7 @@ class TaskRelation(Base):
     """TaskRelation object, describe the relation of exactly two tasks."""
 
     # Add attr `_KEY_ATTR` to overwrite :func:`__eq__`, it is make set
-    # `Task.process_definition._task_relations` work correctly.
+    # `Task.workflow._task_relations` work correctly.
     _KEY_ATTR = {
         "pre_task_code",
         "post_task_code",
@@ -135,7 +132,7 @@ class Task(Base):
         timeout_flag: Optional[int] = TaskTimeoutFlag.CLOSE,
         timeout_notify_strategy: Optional = None,
         timeout: Optional[int] = 0,
-        process_definition: Optional[ProcessDefinition] = None,
+        workflow: Optional[Workflow] = None,
         local_params: Optional[List] = None,
         resource_list: Optional[List] = None,
         dependence: Optional[Dict] = None,
@@ -156,25 +153,20 @@ class Task(Base):
         self.timeout_flag = timeout_flag
         self.timeout_notify_strategy = timeout_notify_strategy
         self.timeout = timeout
-        self._process_definition = None
-        self.process_definition: ProcessDefinition = (
-            process_definition or ProcessDefinitionContext.get()
-        )
+        self._workflow = None
+        self.workflow: Workflow = workflow or WorkflowContext.get()
         self._upstream_task_codes: Set[int] = set()
         self._downstream_task_codes: Set[int] = set()
         self._task_relation: Set[TaskRelation] = set()
-        # move attribute code and version after _process_definition and process_definition declare
+        # move attribute code and version after _workflow and workflow declare
         self.code, self.version = self.gen_code_and_version()
-        # Add task to process definition, maybe we could put into property process_definition latter
+        # Add task to workflow, maybe we could put into property workflow latter
 
-        if (
-            self.process_definition is not None
-            and self.code not in self.process_definition.tasks
-        ):
-            self.process_definition.add_task(self)
+        if self.workflow is not None and self.code not in self.workflow.tasks:
+            self.workflow.add_task(self)
         else:
             logger.warning(
-                "Task code %d already in process definition, prohibit re-add task.",
+                "Task code %d already in workflow, prohibit re-add task.",
                 self.code,
             )
 
@@ -188,14 +180,14 @@ class Task(Base):
         self.get_content()
 
     @property
-    def process_definition(self) -> Optional[ProcessDefinition]:
-        """Get attribute process_definition."""
-        return self._process_definition
+    def workflow(self) -> Optional[Workflow]:
+        """Get attribute workflow."""
+        return self._workflow
 
-    @process_definition.setter
-    def process_definition(self, process_definition: Optional[ProcessDefinition]):
-        """Set attribute process_definition."""
-        self._process_definition = process_definition
+    @workflow.setter
+    def workflow(self, workflow: Optional[Workflow]):
+        """Set attribute workflow."""
+        self._workflow = workflow
 
     @property
     def resource_list(self) -> List:
@@ -217,9 +209,9 @@ class Task(Base):
 
     @property
     def user_name(self) -> Optional[str]:
-        """Return user name of process definition."""
-        if self.process_definition:
-            return self.process_definition.user.name
+        """Return user name of workflow."""
+        if self.workflow:
+            return self.workflow.user.name
         else:
             raise PyDSParamException("`user_name` cannot be empty.")
 
@@ -257,11 +249,11 @@ class Task(Base):
         """Return the resource plug-in.
 
         according to parameter resource_plugin and parameter
-        process_definition.resource_plugin.
+        workflow.resource_plugin.
         """
         if self.resource_plugin is None:
-            if self.process_definition.resource_plugin is not None:
-                return self.process_definition.resource_plugin
+            if self.workflow.resource_plugin is not None:
+                return self.workflow.resource_plugin
             else:
                 raise PyResPluginException(
                     "The execution command of this task is a file, but the resource plugin is empty"
@@ -281,8 +273,8 @@ class Task(Base):
                 setattr(self, self.ext_attr.lstrip(Symbol.UNDERLINE), content)
             else:
                 if self.resource_plugin is not None or (
-                    self.process_definition is not None
-                    and self.process_definition.resource_plugin is not None
+                    self.workflow is not None
+                    and self.workflow.resource_plugin is not None
                 ):
                     index = _ext_attr.rfind(Symbol.POINT)
                     if index != -1:
@@ -333,24 +325,24 @@ class Task(Base):
                 self._upstream_task_codes.add(task.code)
                 task._downstream_task_codes.add(self.code)
 
-                if self._process_definition:
+                if self._workflow:
                     task_relation = TaskRelation(
                         pre_task_code=task.code,
                         post_task_code=self.code,
                         name=f"{task.name} {Delimiter.DIRECTION} {self.name}",
                     )
-                    self.process_definition._task_relations.add(task_relation)
+                    self.workflow._task_relations.add(task_relation)
             else:
                 self._downstream_task_codes.add(task.code)
                 task._upstream_task_codes.add(self.code)
 
-                if self._process_definition:
+                if self._workflow:
                     task_relation = TaskRelation(
                         pre_task_code=self.code,
                         post_task_code=task.code,
                         name=f"{self.name} {Delimiter.DIRECTION} {task.name}",
                     )
-                    self.process_definition._task_relations.add(task_relation)
+                    self.workflow._task_relations.add(task_relation)
 
     def set_upstream(self, tasks: Union["Task", Sequence["Task"]]) -> None:
         """Set parameter tasks as upstream to current task."""
@@ -360,17 +352,17 @@ class Task(Base):
         """Set parameter tasks as downstream to current task."""
         self._set_deps(tasks, upstream=False)
 
-    # TODO code should better generate in bulk mode when :ref: processDefinition run submit or start
+    # TODO code should better generate in bulk mode when :ref: workflow run submit or start
     def gen_code_and_version(self) -> Tuple:
         """
         Generate task code and version from java gateway.
 
-        If task name do not exists in process definition before, if will generate new code and version id
+        If task name do not exists in workflow before, if will generate new code and version id
         equal to 0 by java gateway, otherwise if will return the exists code and version.
         """
-        # TODO get code from specific project process definition and task name
+        # TODO get code from specific project workflow and task name
         result = gateway.get_code_and_version(
-            self.process_definition._project, self.process_definition.name, self.name
+            self.workflow._project, self.workflow.name, self.name
         )
         # result = gateway.entry_point.genTaskCodeList(DefaultTaskCodeNum.DEFAULT)
         # gateway_result_checker(result)
