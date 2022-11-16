@@ -15,40 +15,28 @@
 # specific language governing permissions and limitations
 # under the License.
 
-"""Task sub_process."""
+"""This module is deprecated. Please use `pydolphinscheduler.tasks.sub_workflow.SubWorkflow`."""
 
-from typing import Dict
+import warnings
 
-from pydolphinscheduler.constants import TaskType
-from pydolphinscheduler.core.task import Task
-from pydolphinscheduler.exceptions import PyDSProcessDefinitionNotAssignException
-from pydolphinscheduler.java_gateway import gateway
+from pydolphinscheduler.tasks.sub_workflow import SubWorkflow
+
+warnings.warn(
+    "This module is deprecated and will be remove in 4.1.0. "
+    "Please use `pydolphinscheduler.tasks.sub_workflow.SubWorkflow` instead.",
+    DeprecationWarning,
+    stacklevel=2,
+)
 
 
-class SubProcess(Task):
-    """Task SubProcess object, declare behavior for SubProcess task to dolphinscheduler."""
+class SubProcess(SubWorkflow):
+    """Task SubProcess object, declare behavior for SubProcess task to dolphinscheduler.
 
-    _task_custom_attr = {"process_definition_code"}
+    This module is deprecated and will be remove in 4.1.0. Please use
+    `pydolphinscheduler.tasks.sub_workflow.SubWorkflow` instead.
+    """
 
     def __init__(self, name: str, process_definition_name: str, *args, **kwargs):
-        super().__init__(name, TaskType.SUB_PROCESS, *args, **kwargs)
-        self.process_definition_name = process_definition_name
-
-    @property
-    def process_definition_code(self) -> str:
-        """Get process definition code, a wrapper for :func:`get_process_definition_info`."""
-        return self.get_process_definition_info(self.process_definition_name).get(
-            "code"
-        )
-
-    def get_process_definition_info(self, process_definition_name: str) -> Dict:
-        """Get process definition info from java gateway, contains process definition id, name, code."""
-        if not self.process_definition:
-            raise PyDSProcessDefinitionNotAssignException(
-                "ProcessDefinition must be provider for task SubProcess."
-            )
-        return gateway.get_process_definition_info(
-            self.process_definition.user.name,
-            self.process_definition.project.name,
-            process_definition_name,
+        super().__init__(
+            name=name, workflow_name=process_definition_name, *args, **kwargs
         )

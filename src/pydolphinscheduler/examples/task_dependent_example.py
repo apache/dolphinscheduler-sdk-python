@@ -36,11 +36,11 @@ task_dependent:
 task_dependent(this task dependent on task_dependent_external.task_1 and task_dependent_external.task_2).
 """
 from pydolphinscheduler import configuration
-from pydolphinscheduler.core.process_definition import ProcessDefinition
+from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.tasks.dependent import And, Dependent, DependentItem, Or
 from pydolphinscheduler.tasks.shell import Shell
 
-with ProcessDefinition(
+with Workflow(
     name="task_dependent_external",
     tenant="tenant_exists",
 ) as pd:
@@ -49,7 +49,7 @@ with ProcessDefinition(
     task_3 = Shell(name="task_3", command="echo task 3")
     pd.submit()
 
-with ProcessDefinition(
+with Workflow(
     name="task_dependent_example",
     tenant="tenant_exists",
 ) as pd:
@@ -59,12 +59,12 @@ with ProcessDefinition(
             Or(
                 DependentItem(
                     project_name=configuration.WORKFLOW_PROJECT,
-                    process_definition_name="task_dependent_external",
+                    workflow_name="task_dependent_external",
                     dependent_task_name="task_1",
                 ),
                 DependentItem(
                     project_name=configuration.WORKFLOW_PROJECT,
-                    process_definition_name="task_dependent_external",
+                    workflow_name="task_dependent_external",
                     dependent_task_name="task_2",
                 ),
             )

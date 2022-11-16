@@ -18,12 +18,12 @@
 # [start workflow_declare]
 """A example workflow for task dvc."""
 
-from pydolphinscheduler.core.process_definition import ProcessDefinition
+from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.tasks import DVCDownload, DVCInit, DVCUpload
 
 repository = "git@github.com:<YOUR-NAME-OR-ORG>/dvc-data-repository-example.git"
 
-with ProcessDefinition(
+with Workflow(
     name="task_dvc_example",
     tenant="tenant_exists",
 ) as pd:

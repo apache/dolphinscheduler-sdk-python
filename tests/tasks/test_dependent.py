@@ -17,6 +17,7 @@
 
 """Test Task dependent."""
 import itertools
+import warnings
 from typing import Dict, List, Optional, Tuple, Union
 from unittest.mock import patch
 
@@ -33,7 +34,7 @@ from pydolphinscheduler.tasks.dependent import (
 )
 
 TEST_PROJECT = "test-project"
-TEST_PROCESS_DEFINITION = "test-process-definition"
+TEST_WORKFLOW = "test-workflow"
 TEST_TASK = "test-task"
 TEST_PROJECT_CODE, TEST_DEFINITION_CODE, TEST_TASK_CODE = 12345, 123456, 1234567
 
@@ -96,7 +97,7 @@ def test_dependent_item_get_define(mock_task_info, dep_date, dep_cycle):
     """
     attr = {
         "project_name": TEST_PROJECT,
-        "process_definition_name": TEST_PROCESS_DEFINITION,
+        "workflow_name": TEST_WORKFLOW,
         "dependent_task_name": TEST_TASK,
         "dependent_date": dep_date,
     }
@@ -111,6 +112,37 @@ def test_dependent_item_get_define(mock_task_info, dep_date, dep_cycle):
     assert expect == task.get_define()
 
 
+@patch(
+    "pydolphinscheduler.tasks.dependent.DependentItem.get_code_from_gateway",
+    return_value={
+        "projectCode": TEST_PROJECT_CODE,
+        "processDefinitionCode": TEST_DEFINITION_CODE,
+        "taskDefinitionCode": TEST_TASK_CODE,
+    },
+)
+def test_deprecated_dependent_when_process_definition_name(mock_task_info):
+    """Test deprecated task dependent DependentItem get define still work and raise warning."""
+    attr = {
+        "project_name": TEST_PROJECT,
+        "process_definition_name": TEST_WORKFLOW,
+        "dependent_task_name": TEST_TASK,
+        "dependent_date": DependentDate.THIS_WEEK,
+    }
+    expect = {
+        "projectCode": TEST_PROJECT_CODE,
+        "definitionCode": TEST_DEFINITION_CODE,
+        "depTaskCode": TEST_TASK_CODE,
+        "cycle": "week",
+        "dateValue": DependentDate.THIS_WEEK,
+    }
+    with warnings.catch_warnings(record=True) as w:
+        task = DependentItem(**attr)
+        assert len(w) == 1
+        assert issubclass(w[-1].category, DeprecationWarning)
+        assert "deprecated" in str(w[-1].message)
+        assert expect == task.get_define()
+
+
 def test_dependent_item_date_error():
     """Test error when pass None to dependent_date."""
     with pytest.raises(
@@ -118,7 +150,7 @@ def test_dependent_item_date_error():
     ):
         DependentItem(
             project_name=TEST_PROJECT,
-            process_definition_name=TEST_PROCESS_DEFINITION,
+            workflow_name=TEST_WORKFLOW,
             dependent_date=None,
         )
 
@@ -134,10 +166,10 @@ def test_dependent_item_code_parameter(task_name: dict, result: Optional[str]):
     """Test dependent item property code_parameter."""
     dependent_item = DependentItem(
         project_name=TEST_PROJECT,
-        process_definition_name=TEST_PROCESS_DEFINITION,
+        workflow_name=TEST_WORKFLOW,
         **task_name,
     )
-    expect = (TEST_PROJECT, TEST_PROCESS_DEFINITION, result)
+    expect = (TEST_PROJECT, TEST_WORKFLOW, result)
     assert dependent_item.code_parameter == expect
 
 
@@ -148,7 +180,7 @@ def test_dependent_item_code_parameter(task_name: dict, result: Optional[str]):
         [
             DependentItem(
                 project_name=TEST_PROJECT,
-                process_definition_name=TEST_PROCESS_DEFINITION,
+                workflow_name=TEST_WORKFLOW,
             ),
             1,
         ],
@@ -156,7 +188,7 @@ def test_dependent_item_code_parameter(task_name: dict, result: Optional[str]):
             And(
                 DependentItem(
                     project_name=TEST_PROJECT,
-                    process_definition_name=TEST_PROCESS_DEFINITION,
+                    workflow_name=TEST_WORKFLOW,
                 )
             ),
             1,
@@ -164,12 +196,12 @@ def test_dependent_item_code_parameter(task_name: dict, result: Optional[str]):
         [
             DependentItem(
                 project_name=TEST_PROJECT,
-                process_definition_name=TEST_PROCESS_DEFINITION,
+                workflow_name=TEST_WORKFLOW,
             ),
             And(
                 DependentItem(
                     project_name=TEST_PROJECT,
-                    process_definition_name=TEST_PROCESS_DEFINITION,
+                    workflow_name=TEST_WORKFLOW,
                 )
             ),
         ],
@@ -200,7 +232,7 @@ def test_dependent_operator_set_define_error(mock_code, arg_list):
             (
                 {
                     "project_name": TEST_PROJECT,
-                    "process_definition_name": TEST_PROCESS_DEFINITION,
+                    "workflow_name": TEST_WORKFLOW,
                     "dependent_task_name": TEST_TASK,
                     "dependent_date": DependentDate.LAST_MONTH_END,
                 },
@@ -227,13 +259,13 @@ def test_dependent_operator_set_define_error(mock_code, arg_list):
             (
                 {
                     "project_name": TEST_PROJECT,
-                    "process_definition_name": TEST_PROCESS_DEFINITION,
+                    "workflow_name": TEST_WORKFLOW,
                     "dependent_task_name": TEST_TASK,
                     "dependent_date": DependentDate.LAST_MONTH_END,
                 },
                 {
                     "project_name": TEST_PROJECT,
-                    "process_definition_name": TEST_PROCESS_DEFINITION,
+                    "workflow_name": TEST_WORKFLOW,
                     "dependent_task_name": TEST_TASK,
                     "dependent_date": DependentDate.LAST_WEEK,
                 },
@@ -267,19 +299,19 @@ def test_dependent_operator_set_define_error(mock_code, arg_list):
             (
                 {
                     "project_name": TEST_PROJECT,
-                    "process_definition_name": TEST_PROCESS_DEFINITION,
+                    "workflow_name": TEST_WORKFLOW,
                     "dependent_task_name": TEST_TASK,
                     "dependent_date": DependentDate.LAST_MONTH_END,
                 },
                 {
                     "project_name": TEST_PROJECT,
-                    "process_definition_name": TEST_PROCESS_DEFINITION,
+                    "workflow_name": TEST_WORKFLOW,
                     "dependent_task_name": TEST_TASK,
                     "dependent_date": DependentDate.LAST_WEEK,
                 },
                 {
                     "project_name": TEST_PROJECT,
-                    "process_definition_name": TEST_PROCESS_DEFINITION,
+                    "workflow_name": TEST_WORKFLOW,
                     "dependent_task_name": TEST_TASK,
                     "dependent_date": DependentDate.LAST_ONE_DAYS,
                 },
@@ -371,7 +403,7 @@ def test_operator_dependent_item(
                 (
                     {
                         "project_name": TEST_PROJECT,
-                        "process_definition_name": TEST_PROCESS_DEFINITION,
+                        "workflow_name": TEST_WORKFLOW,
                         "dependent_task_name": TEST_TASK,
                         "dependent_date": DependentDate.LAST_MONTH_END,
                     },
@@ -408,13 +440,13 @@ def test_operator_dependent_item(
                 (
                     {
                         "project_name": TEST_PROJECT,
-                        "process_definition_name": TEST_PROCESS_DEFINITION,
+                        "workflow_name": TEST_WORKFLOW,
                         "dependent_task_name": TEST_TASK,
                         "dependent_date": DependentDate.LAST_MONTH_END,
                     },
                     {
                         "project_name": TEST_PROJECT,
-                        "process_definition_name": TEST_PROCESS_DEFINITION,
+                        "workflow_name": TEST_WORKFLOW,
                         "dependent_task_name": TEST_TASK,
                         "dependent_date": DependentDate.LAST_WEEK,
                     },
@@ -458,19 +490,19 @@ def test_operator_dependent_item(
                 (
                     {
                         "project_name": TEST_PROJECT,
-                        "process_definition_name": TEST_PROCESS_DEFINITION,
+                        "workflow_name": TEST_WORKFLOW,
                         "dependent_task_name": TEST_TASK,
                         "dependent_date": DependentDate.LAST_MONTH_END,
                     },
                     {
                         "project_name": TEST_PROJECT,
-                        "process_definition_name": TEST_PROCESS_DEFINITION,
+                        "workflow_name": TEST_WORKFLOW,
                         "dependent_task_name": TEST_TASK,
                         "dependent_date": DependentDate.LAST_WEEK,
                     },
                     {
                         "project_name": TEST_PROJECT,
-                        "process_definition_name": TEST_PROCESS_DEFINITION,
+                        "workflow_name": TEST_WORKFLOW,
                         "dependent_task_name": TEST_TASK,
                         "dependent_date": DependentDate.LAST_ONE_DAYS,
                     },
@@ -604,7 +636,7 @@ def get_dep_task_list(*operator):
                 ((And, And), (And, Or), (Or, And), (Or, Or)),
                 {
                     "project_name": TEST_PROJECT,
-                    "process_definition_name": TEST_PROCESS_DEFINITION,
+                    "workflow_name": TEST_WORKFLOW,
                     "dependent_task_name": TEST_TASK,
                     "dependent_date": DependentDate.LAST_MONTH_END,
                 },
@@ -625,7 +657,7 @@ def get_dep_task_list(*operator):
                 ((And, And, And), (And, And, And, And), (And, And, And, And, And)),
                 {
                     "project_name": TEST_PROJECT,
-                    "process_definition_name": TEST_PROCESS_DEFINITION,
+                    "workflow_name": TEST_WORKFLOW,
                     "dependent_task_name": TEST_TASK,
                     "dependent_date": DependentDate.LAST_MONTH_END,
                 },
@@ -716,21 +748,21 @@ def test_operator_dependent_task_list_multi_dependent_list(
 def test_dependent_get_define(mock_code_version, mock_dep_code):
     """Test task dependent function get_define."""
     project_name = "test-dep-project"
-    process_definition_name = "test-dep-definition"
+    workflow_name = "test-dep-definition"
     dependent_task_name = "test-dep-task"
     dep_operator = And(
         Or(
             # test dependence with add tasks
             DependentItem(
                 project_name=project_name,
-                process_definition_name=process_definition_name,
+                workflow_name=workflow_name,
             )
         ),
         And(
             # test dependence with specific task
             DependentItem(
                 project_name=project_name,
-                process_definition_name=process_definition_name,
+                workflow_name=workflow_name,
                 dependent_task_name=dependent_task_name,
             )
         ),

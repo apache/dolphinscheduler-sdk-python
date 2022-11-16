@@ -22,10 +22,18 @@ under the License.
 Updating is try to document non-backward compatible updates which notice users the detail changes about pydolphinscheduler.
 It started after version 2.0.5 released
 
-## dev
+## Main
+
+* Remove the spark version of spark task ([#11860](https://github.com/apache/dolphinscheduler/pull/11860)).
+* Change class name from process definition to workflow ([#26](https://github.com/apache/dolphinscheduler-sdk-python/pull/26))
+  * Deprecated class `ProcessDefinition` to `Workflow`
+  * Deprecated class `SubProcess` to `SubWorkflow`, and change parameter name from `process_definition_name` to `workflow_name`
+  * Deprecated class `Dependent` parameter from `process_definition_name` to `workflow_name`
+  * And all above deprecated will be remove in version 4.1.0
+
+## 3.1.0
 
 * Remove parameter ``task_location`` in process definition and Java Gateway service ([#11681](https://github.com/apache/dolphinscheduler/pull/11681))
-* Remove the spark version of spark task ([#11860](https://github.com/apache/dolphinscheduler/pull/11860)).
 
 ## 3.0.0
 

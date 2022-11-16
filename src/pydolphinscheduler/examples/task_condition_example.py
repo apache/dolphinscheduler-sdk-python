@@ -31,11 +31,11 @@ pre_task_3 ->                     -> fail_branch
 .
 """
 
-from pydolphinscheduler.core.process_definition import ProcessDefinition
+from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.tasks.condition import FAILURE, SUCCESS, And, Condition
 from pydolphinscheduler.tasks.shell import Shell
 
-with ProcessDefinition(name="task_condition_example", tenant="tenant_exists") as pd:
+with Workflow(name="task_condition_example", tenant="tenant_exists") as pd:
     pre_task_1 = Shell(name="pre_task_1", command="echo pre_task_1")
     pre_task_2 = Shell(name="pre_task_2", command="echo pre_task_2")
     pre_task_3 = Shell(name="pre_task_3", command="echo pre_task_3")

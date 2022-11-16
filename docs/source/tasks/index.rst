@@ -40,7 +40,7 @@ In this section
    kubernetes
 
    datax
-   sub_process
+   sub_workflow
 
    sagemaker
    mlflow

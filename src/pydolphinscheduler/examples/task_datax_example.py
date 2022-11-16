@@ -25,7 +25,7 @@ You can create data sources `first_mysql` and `first_mysql` through UI.
 It creates a task to synchronize datax from the source database to the target database.
 """
 
-from pydolphinscheduler.core.process_definition import ProcessDefinition
+from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.tasks.datax import CustomDataX, DataX
 
 # datax json template
@@ -72,7 +72,7 @@ JSON_TEMPLATE = {
     }
 }
 
-with ProcessDefinition(
+with Workflow(
     name="task_datax_example",
     tenant="tenant_exists",
 ) as pd:

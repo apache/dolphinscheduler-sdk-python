@@ -5,6 +5,7 @@
 # Cache
 __pycache__/
 .tox/
+.pytest_cache/
 
 # Build
 build/

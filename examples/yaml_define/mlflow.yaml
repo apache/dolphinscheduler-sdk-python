@@ -23,7 +23,7 @@ mlflow_tracking_uri: &mlflow_tracking_uri "http://127.0.0.1:5000"
 workflow:
   name: "MLflow"
 
-# Define the tasks under the workflow
+# Define the tasks within the workflow
 tasks:
   - name: train_xgboost_native
     task_type: MLFlowProjectsCustom 

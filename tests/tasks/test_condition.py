@@ -21,7 +21,7 @@ from unittest.mock import patch
 
 import pytest
 
-from pydolphinscheduler.core.process_definition import ProcessDefinition
+from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.exceptions import PyDSParamException
 from pydolphinscheduler.tasks.condition import (
     FAILURE,
@@ -36,7 +36,7 @@ from tests.testing.task import Task
 
 TEST_NAME = "test-name"
 TEST_PROJECT = "test-project"
-TEST_PROCESS_DEFINITION = "test-process-definition"
+TEST_WORKFLOW = "test-workflow"
 TEST_TYPE = "test-type"
 TEST_PROJECT_CODE, TEST_DEFINITION_CODE, TEST_TASK_CODE = 12345, 123456, 1234567
 
@@ -401,7 +401,7 @@ def test_condition_get_define(mock_condition_code_version, mock_task_code_versio
 )
 def test_condition_set_dep_workflow(mock_task_code_version):
     """Test task condition set dependence in workflow level."""
-    with ProcessDefinition(name="test-condition-set-dep-workflow") as pd:
+    with Workflow(name="test-condition-set-dep-workflow") as pd:
         pre_task_1 = Task(name="pre_task_1", task_type=TEST_TYPE)
         pre_task_2 = Task(name="pre_task_2", task_type=TEST_TYPE)
         pre_task_3 = Task(name="pre_task_3", task_type=TEST_TYPE)
@@ -443,7 +443,7 @@ def test_condition_set_dep_workflow(mock_task_code_version):
             fail_branch.code,
         }
 
-        # Condition task dep after ProcessDefinition function get_define called
+        # Condition task dep after Workflow function get_define called
         assert condition._upstream_task_codes == {
             pre_task_1.code,
             pre_task_2.code,

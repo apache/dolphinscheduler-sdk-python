@@ -15,8 +15,8 @@
 # specific language governing permissions and limitations
 # under the License.
 
-"""Test process definition."""
-
+"""Test workflow."""
+import warnings
 from datetime import datetime
 from typing import Any, List
 from unittest.mock import patch
@@ -25,25 +25,23 @@ import pytest
 from freezegun import freeze_time
 
 from pydolphinscheduler import configuration
-from pydolphinscheduler.core.process_definition import ProcessDefinition
 from pydolphinscheduler.core.resource import Resource
+from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.exceptions import PyDSParamException
 from pydolphinscheduler.models import Project, Tenant, User
 from pydolphinscheduler.tasks.switch import Branch, Default, Switch, SwitchCondition
 from pydolphinscheduler.utils.date import conv_to_schedule
 from tests.testing.task import Task
 
-TEST_PROCESS_DEFINITION_NAME = "simple-test-process-definition"
+TEST_WORKFLOW_NAME = "simple-test-workflow"
 TEST_TASK_TYPE = "test-task-type"
 
 
 @pytest.mark.parametrize("func", ["run", "submit", "start"])
-def test_process_definition_key_attr(func):
-    """Test process definition have specific functions or attributes."""
-    with ProcessDefinition(TEST_PROCESS_DEFINITION_NAME) as pd:
-        assert hasattr(
-            pd, func
-        ), f"ProcessDefinition instance don't have attribute `{func}`"
+def test_workflow_key_attr(func):
+    """Test workflow have specific functions or attributes."""
+    with Workflow(TEST_WORKFLOW_NAME) as pd:
+        assert hasattr(pd, func), f"Workflow instance don't have attribute `{func}`"
 
 
 @pytest.mark.parametrize(
@@ -71,11 +69,11 @@ def test_process_definition_key_attr(func):
         ("release_state", 1),
     ],
 )
-def test_process_definition_default_value(name, value):
-    """Test process definition default attributes."""
-    with ProcessDefinition(TEST_PROCESS_DEFINITION_NAME) as pd:
+def test_workflow_default_value(name, value):
+    """Test workflow default attributes."""
+    with Workflow(TEST_WORKFLOW_NAME) as pd:
         assert getattr(pd, name) == value, (
-            f"ProcessDefinition instance attribute `{name}` not with "
+            f"Workflow instance attribute `{name}` not with "
             f"except default value `{getattr(pd, name)}`"
         )
 
@@ -101,12 +99,12 @@ def test_process_definition_default_value(name, value):
     ],
 )
 def test_set_attr(name, cls, expect):
-    """Test process definition set attributes which get with same type."""
-    with ProcessDefinition(TEST_PROCESS_DEFINITION_NAME) as pd:
+    """Test workflow set attributes which get with same type."""
+    with Workflow(TEST_WORKFLOW_NAME) as pd:
         setattr(pd, name, expect)
         assert (
             getattr(pd, name) == expect
-        ), f"ProcessDefinition set attribute `{name}` do not work expect"
+        ), f"Workflow set attribute `{name}` do not work expect"
 
 
 @pytest.mark.parametrize(
@@ -117,11 +115,11 @@ def test_set_attr(name, cls, expect):
     ],
 )
 def test_set_release_state(value, expect):
-    """Test process definition set release_state attributes."""
-    with ProcessDefinition(TEST_PROCESS_DEFINITION_NAME, release_state=value) as pd:
+    """Test workflow set release_state attributes."""
+    with Workflow(TEST_WORKFLOW_NAME, release_state=value) as pd:
         assert (
             getattr(pd, "release_state") == expect
-        ), "ProcessDefinition set attribute release_state do not return expect value."
+        ), "Workflow set attribute release_state do not return expect value."
 
 
 @pytest.mark.parametrize(
@@ -135,8 +133,8 @@ def test_set_release_state(value, expect):
     ],
 )
 def test_set_release_state_error(value):
-    """Test process definition set release_state attributes with error."""
-    pd = ProcessDefinition(TEST_PROCESS_DEFINITION_NAME, release_state=value)
+    """Test workflow set release_state attributes with error."""
+    pd = Workflow(TEST_WORKFLOW_NAME, release_state=value)
     with pytest.raises(
         PyDSParamException,
         match="Parameter release_state only support `online` or `offline` but get.*",
@@ -154,8 +152,8 @@ def test_set_release_state_error(value):
     ],
 )
 def test_set_attr_return_special_object(set_attr, set_val, get_attr, get_val):
-    """Test process definition set attributes which get with different type."""
-    with ProcessDefinition(TEST_PROCESS_DEFINITION_NAME) as pd:
+    """Test workflow set attributes which get with different type."""
+    with Workflow(TEST_WORKFLOW_NAME) as pd:
         setattr(pd, set_attr, set_val)
         assert get_val == getattr(
             pd, get_attr
@@ -172,11 +170,11 @@ def test_set_attr_return_special_object(set_attr, set_val, get_attr, get_val):
     ],
 )
 def test__parse_datetime(val, expect):
-    """Test process definition function _parse_datetime.
+    """Test workflow function _parse_datetime.
 
     Only two datetime test cases here because we have more test cases in tests/utils/test_date.py file.
     """
-    with ProcessDefinition(TEST_PROCESS_DEFINITION_NAME) as pd:
+    with Workflow(TEST_WORKFLOW_NAME) as pd:
         assert expect == pd._parse_datetime(
             val
         ), f"Function _parse_datetime with unexpect value by {val}."
@@ -191,8 +189,8 @@ def test__parse_datetime(val, expect):
     ],
 )
 def test__parse_datetime_not_support_type(val: Any):
-    """Test process definition function _parse_datetime not support type error."""
-    with ProcessDefinition(TEST_PROCESS_DEFINITION_NAME) as pd:
+    """Test workflow function _parse_datetime not support type error."""
+    with Workflow(TEST_WORKFLOW_NAME) as pd:
         with pytest.raises(PyDSParamException, match="Do not support value type.*?"):
             pd._parse_datetime(val)
 
@@ -205,11 +203,11 @@ def test__parse_datetime_not_support_type(val: Any):
     ],
 )
 def test_warn_type_not_support_type(val: str):
-    """Test process definition param warning_type not support type error."""
+    """Test workflow param warning_type not support type error."""
     with pytest.raises(
         PyDSParamException, match="Parameter `warning_type` with unexpect value.*?"
     ):
-        ProcessDefinition(TEST_PROCESS_DEFINITION_NAME, warning_type=val)
+        Workflow(TEST_WORKFLOW_NAME, warning_type=val)
 
 
 @pytest.mark.parametrize(
@@ -221,11 +219,11 @@ def test_warn_type_not_support_type(val: str):
     ],
 )
 def test_execute_type_not_support_type(val: str):
-    """Test process definition param execute_type not support type error."""
+    """Test workflow param execute_type not support type error."""
     with pytest.raises(
         PyDSParamException, match="Parameter `execution_type` with unexpect value.*?"
     ):
-        ProcessDefinition(TEST_PROCESS_DEFINITION_NAME, execution_type=val)
+        Workflow(TEST_WORKFLOW_NAME, execution_type=val)
 
 
 @pytest.mark.parametrize(
@@ -273,8 +271,8 @@ def test_execute_type_not_support_type(val: str):
     ],
 )
 def test_property_param_json(param, expect):
-    """Test ProcessDefinition's property param_json."""
-    pd = ProcessDefinition(TEST_PROCESS_DEFINITION_NAME, param=param)
+    """Test Workflow's property param_json."""
+    pd = Workflow(TEST_WORKFLOW_NAME, param=param)
     assert pd.param_json == expect
 
 
@@ -283,8 +281,8 @@ def test_property_param_json(param, expect):
     return_value=(123, 1),
 )
 def test__pre_submit_check_switch_without_param(mock_code_version):
-    """Test :func:`_pre_submit_check` if process definition with switch but without attribute param."""
-    with ProcessDefinition(TEST_PROCESS_DEFINITION_NAME) as pd:
+    """Test :func:`_pre_submit_check` if workflow with switch but without attribute param."""
+    with Workflow(TEST_WORKFLOW_NAME) as pd:
         parent = Task(name="parent", task_type=TEST_TASK_TYPE)
         switch_child_1 = Task(name="switch_child_1", task_type=TEST_TASK_TYPE)
         switch_child_2 = Task(name="switch_child_2", task_type=TEST_TASK_TYPE)
@@ -298,7 +296,7 @@ def test__pre_submit_check_switch_without_param(mock_code_version):
         with pytest.raises(
             PyDSParamException,
             match="Parameter param or at least one local_param of task must "
-            "be provider if task Switch in process definition.",
+            "be provider if task Switch in workflow.",
         ):
             pd._pre_submit_check()
 
@@ -308,8 +306,8 @@ def test__pre_submit_check_switch_without_param(mock_code_version):
     return_value=(123, 1),
 )
 def test__pre_submit_check_switch_with_local_params(mock_code_version):
-    """Test :func:`_pre_submit_check` if process definition with switch with local params of task."""
-    with ProcessDefinition(TEST_PROCESS_DEFINITION_NAME) as pd:
+    """Test :func:`_pre_submit_check` if workflow with switch with local params of task."""
+    with Workflow(TEST_WORKFLOW_NAME) as pd:
         parent = Task(
             name="parent",
             task_type=TEST_TASK_TYPE,
@@ -329,10 +327,10 @@ def test__pre_submit_check_switch_with_local_params(mock_code_version):
         pd._pre_submit_check()
 
 
-def test_process_definition_get_define_without_task():
-    """Test process definition function get_define without task."""
+def test_workflow_get_define_without_task():
+    """Test workflow function get_define without task."""
     expect = {
-        "name": TEST_PROCESS_DEFINITION_NAME,
+        "name": TEST_WORKFLOW_NAME,
         "description": None,
         "project": configuration.WORKFLOW_PROJECT,
         "tenant": configuration.WORKFLOW_TENANT,
@@ -348,14 +346,14 @@ def test_process_definition_get_define_without_task():
         "taskRelationJson": [{}],
         "resourceList": [],
     }
-    with ProcessDefinition(TEST_PROCESS_DEFINITION_NAME) as pd:
+    with Workflow(TEST_WORKFLOW_NAME) as pd:
         assert pd.get_define() == expect
 
 
-def test_process_definition_simple_context_manager():
-    """Test simple create workflow in process definition context manager mode."""
+def test_workflow_simple_context_manager():
+    """Test simple create workflow in workflow context manager mode."""
     expect_tasks_num = 5
-    with ProcessDefinition(TEST_PROCESS_DEFINITION_NAME) as pd:
+    with Workflow(TEST_WORKFLOW_NAME) as pd:
         for i in range(expect_tasks_num):
             curr_task = Task(name=f"task-{i}", task_type=f"type-{i}")
             # Set deps task i as i-1 parent
@@ -364,9 +362,9 @@ def test_process_definition_simple_context_manager():
                 curr_task.set_upstream(pre_task)
         assert len(pd.tasks) == expect_tasks_num
 
-        # Test if task process_definition same as origin one
+        # Test if task workflow same as origin one
         task: Task = pd.get_one_task_by_name("task-0")
-        assert pd is task.process_definition
+        assert pd is task.workflow
 
         # Test if all tasks with expect deps
         for i in range(expect_tasks_num):
@@ -390,19 +388,65 @@ def test_process_definition_simple_context_manager():
                 }
 
 
-def test_process_definition_simple_separate():
-    """Test process definition simple create workflow in separate mode.
+def test_deprecated_workflow_simple_context_manager():
+    """Test deprecated class ProcessDefinition still work and will raise warning."""
+    expect_tasks_num = 5
+
+    with warnings.catch_warnings(record=True) as w:
+        from pydolphinscheduler.core.process_definition import ProcessDefinition
+
+        assert len(w) == 1
+        assert issubclass(w[-1].category, DeprecationWarning)
+        assert "deprecated" in str(w[-1].message)
+
+        with ProcessDefinition(TEST_WORKFLOW_NAME) as pd:
+            for i in range(expect_tasks_num):
+                curr_task = Task(name=f"task-{i}", task_type=f"type-{i}")
+                # Set deps task i as i-1 parent
+                if i > 0:
+                    pre_task = pd.get_one_task_by_name(f"task-{i - 1}")
+                    curr_task.set_upstream(pre_task)
+            assert len(pd.tasks) == expect_tasks_num
+
+            # Test if task workflow same as origin one
+            task: Task = pd.get_one_task_by_name("task-0")
+            assert pd is task.workflow
+
+            # Test if all tasks with expect deps
+            for i in range(expect_tasks_num):
+                task: Task = pd.get_one_task_by_name(f"task-{i}")
+                if i == 0:
+                    assert task._upstream_task_codes == set()
+                    assert task._downstream_task_codes == {
+                        pd.get_one_task_by_name("task-1").code
+                    }
+                elif i == expect_tasks_num - 1:
+                    assert task._upstream_task_codes == {
+                        pd.get_one_task_by_name(f"task-{i - 1}").code
+                    }
+                    assert task._downstream_task_codes == set()
+                else:
+                    assert task._upstream_task_codes == {
+                        pd.get_one_task_by_name(f"task-{i - 1}").code
+                    }
+                    assert task._downstream_task_codes == {
+                        pd.get_one_task_by_name(f"task-{i + 1}").code
+                    }
+
+
+def test_workflow_simple_separate():
+    """Test workflow simple create workflow in separate mode.
 
     This test just test basic information, cause most of test case is duplicate to
-    test_process_definition_simple_context_manager.
+    test_workflow_simple_context_manager.
     """
     expect_tasks_num = 5
-    pd = ProcessDefinition(TEST_PROCESS_DEFINITION_NAME)
+    pd = Workflow(TEST_WORKFLOW_NAME)
     for i in range(expect_tasks_num):
         curr_task = Task(
             name=f"task-{i}",
             task_type=f"type-{i}",
-            process_definition=pd,
+            workflow=pd,
         )
         # Set deps task i as i-1 parent
         if i > 0:
@@ -418,12 +462,12 @@ def test_process_definition_simple_separate():
         {"tenant": "tenant_specific"},
     ],
 )
-def test_set_process_definition_user_attr(user_attrs):
-    """Test user with correct attributes if we specific assigned to process definition object."""
+def test_set_workflow_user_attr(user_attrs):
+    """Test user with correct attributes if we specific assigned to workflow object."""
     default_value = {
         "tenant": configuration.WORKFLOW_TENANT,
     }
-    with ProcessDefinition(TEST_PROCESS_DEFINITION_NAME, **user_attrs) as pd:
+    with Workflow(TEST_WORKFLOW_NAME, **user_attrs) as pd:
         user = pd.user
         for attr in default_value:
             # Get assigned attribute if we specific, else get default value
@@ -439,8 +483,8 @@ def test_set_process_definition_user_attr(user_attrs):
 
 def test_schedule_json_none_schedule():
     """Test function schedule_json with None as schedule."""
-    with ProcessDefinition(
-        TEST_PROCESS_DEFINITION_NAME,
+    with Workflow(
+        TEST_WORKFLOW_NAME,
         schedule=None,
     ) as pd:
         assert pd.schedule_json is None
@@ -511,8 +555,8 @@ def test_schedule_json_start_and_end_time(start_time, end_time, expect_date):
         "endTime": expect_date["end_time"],
         "timezoneId": configuration.WORKFLOW_TIME_ZONE,
     }
-    with ProcessDefinition(
-        TEST_PROCESS_DEFINITION_NAME,
+    with Workflow(
+        TEST_WORKFLOW_NAME,
         schedule=schedule,
         start_time=start_time,
         end_time=end_time,

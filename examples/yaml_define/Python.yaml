@@ -19,7 +19,7 @@
 workflow:
   name: "Python"
 
-# Define the tasks under the workflow
+# Define the tasks within the workflow
 tasks:
   - name: python
     task_type: Python

@@ -22,7 +22,7 @@ from unittest.mock import patch
 
 import pytest
 
-from pydolphinscheduler.core.process_definition import ProcessDefinition
+from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.exceptions import PyDSParamException
 from pydolphinscheduler.tasks.switch import (
     Branch,
@@ -266,7 +266,7 @@ def test_switch_get_define(mock_task_code_version):
 )
 def test_switch_set_dep_workflow(mock_task_code_version):
     """Test task switch set dependence in workflow level."""
-    with ProcessDefinition(name="test-switch-set-dep-workflow") as pd:
+    with Workflow(name="test-switch-set-dep-workflow") as pd:
         parent = Task(name="parent", task_type=TEST_TYPE)
         switch_child_1 = Task(name="switch_child_1", task_type=TEST_TYPE)
         switch_child_2 = Task(name="switch_child_2", task_type=TEST_TYPE)
@@ -286,7 +286,7 @@ def test_switch_set_dep_workflow(mock_task_code_version):
         assert parent._downstream_task_codes == {switch.code}
         assert switch._upstream_task_codes == {parent.code}
 
-        # Switch task dep after ProcessDefinition function get_define called
+        # Switch task dep after Workflow function get_define called
         assert switch._downstream_task_codes == {
             switch_child_1.code,
             switch_child_2.code,

@@ -19,7 +19,7 @@
 workflow:
   name: "task_dependent_external"
 
-# Define the tasks under the workflow
+# Define the tasks within the workflow
 tasks:
   - { "task_type": "Shell", "name": "task_1", "command": "echo task 1" }
   - { "task_type": "Shell", "name": "task_2", "command": "echo task 2" }

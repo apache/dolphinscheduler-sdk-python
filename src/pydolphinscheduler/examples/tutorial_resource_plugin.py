@@ -27,8 +27,8 @@ from pathlib import Path
 
 # [start tutorial_resource_plugin]
 # [start package_import]
-# Import ProcessDefinition object to define your workflow attributes
-from pydolphinscheduler.core.process_definition import ProcessDefinition
+# Import Workflow object to define your workflow attributes
+from pydolphinscheduler.core.workflow import Workflow
 
 # Import task Shell object cause we would create some shell tasks later
 from pydolphinscheduler.resources_plugin.local import Local
@@ -37,13 +37,13 @@ from pydolphinscheduler.tasks.shell import Shell
 # [end package_import]
 
 # [start workflow_declare]
-with ProcessDefinition(
+with Workflow(
     name="tutorial_resource_plugin",
     schedule="0 0 0 * * ? *",
     start_time="2021-01-01",
     tenant="tenant_exists",
     resource_plugin=Local("/tmp"),
-) as process_definition:
+) as workflow:
     # [end workflow_declare]
     # [start task_declare]
     file = "resource.sh"
@@ -59,6 +59,6 @@ with ProcessDefinition(
     # [end task_declare]
 
     # [start submit_or_run]
-    process_definition.run()
+    workflow.run()
     # [end submit_or_run]
 # [end tutorial_resource_plugin]

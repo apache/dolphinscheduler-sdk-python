@@ -18,10 +18,10 @@
 # [start workflow_declare]
 """A example workflow for task spark."""
 
-from pydolphinscheduler.core.process_definition import ProcessDefinition
+from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.tasks.spark import DeployMode, ProgramType, Spark
 
-with ProcessDefinition(name="task_spark_example", tenant="tenant_exists") as pd:
+with Workflow(name="task_spark_example", tenant="tenant_exists") as pd:
     task = Spark(
         name="task_spark",
         main_class="org.apache.spark.examples.SparkPi",

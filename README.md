@@ -78,7 +78,7 @@ python ./tutorial.py
 > tenant value in `example/tutorial.py`. For now the value is `tenant_exists`, please change it to username exists
 > in you environment.
 
-After command execute, you could see a new project with single process definition named *tutorial* in the
+After command execute, you could see a new project with single workflow named *tutorial* in the
 [UI-project list](https://dolphinscheduler.apache.org/en-us/docs/latest/user_doc/guide/project/project-list.html).
 
 ## Develop

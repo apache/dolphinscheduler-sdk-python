@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-"""Parse YAML file to create process."""
+"""Parse YAML file to create workflow."""
 
 import logging
 import os
@@ -24,14 +24,14 @@ from pathlib import Path
 from typing import Any, Dict
 
 from pydolphinscheduler import configuration, tasks
-from pydolphinscheduler.core.process_definition import ProcessDefinition
 from pydolphinscheduler.core.task import Task
+from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.exceptions import PyDSTaskNoFoundException
 from pydolphinscheduler.utils.yaml_parser import YamlParser
 
 logger = logging.getLogger(__file__)
 
-KEY_PROCESS = "workflow"
+KEY_WORKFLOW = "workflow"
 KEY_TASK = "tasks"
 KEY_TASK_TYPE = "task_type"
 KEY_DEPS = "deps"
@@ -103,19 +103,19 @@ def get_task_cls(task_type) -> Task:
     return getattr(tasks, standard_name)
 
 
-class YamlProcess(YamlParser):
-    """Yaml parser for create process.
+class YamlWorkflow(YamlParser):
+    """Yaml parser for create workflow.
 
     :param yaml_file: yaml file path.
 
         examples1 ::
 
             parser = YamlParser(yaml_file=...)
-            parser.create_process_definition()
+            parser.create_workflow()
 
         examples2 ::
 
-            YamlParser(yaml_file=...).create_process_definition()
+            YamlParser(yaml_file=...).create_workflow()
 
     """
 
@@ -130,23 +130,23 @@ class YamlProcess(YamlParser):
             content = f.read()
 
         self._base_folder = Path(yaml_file).parent
-        content = self.prepare_refer_process(content)
+        content = self.prepare_refer_workflow(content)
         super().__init__(content)
 
-    def create_process_definition(self):
-        """Create process main function."""
-        # get process parameters with key "workflow"
-        process_params = self[KEY_PROCESS]
+    def create_workflow(self):
+        """Create workflow main function."""
+        # get workflow parameters with key "workflow"
+        workflow_params = self[KEY_WORKFLOW]
 
         # pop "run" parameter, used at the end
-        is_run = process_params.pop("run", False)
+        is_run = workflow_params.pop("run", False)
 
-        # use YamlProcess._parse_rules to parse special value of yaml file
-        process_params = self.parse_params(process_params)
+        # use YamlWorkflow._parse_rules to parse special value of yaml file
+        workflow_params = self.parse_params(workflow_params)
 
-        process_name = process_params["name"]
-        logger.info(f"Create Process: {process_name}")
-        with ProcessDefinition(**process_params) as pd:
+        workflow_name = workflow_params["name"]
+        logger.info(f"Create workflow: {workflow_name}")
+        with Workflow(**workflow_params) as pd:
 
             # save dependencies between tasks
             dependencies = {}
@@ -171,12 +171,12 @@ class YamlProcess(YamlParser):
                     upstream_task >> downstream_task
 
             pd.submit()
-            # if set is_run, run the process after submit
+            # if set is_run, run the workflow after submit
             if is_run:
                 logger.info(f"run workflow: {pd}")
                 pd.run()
 
-        return process_name
+        return workflow_name
 
     def parse_params(self, params: Any):
         """Recursively resolves the parameter values.
@@ -206,19 +206,21 @@ class YamlProcess(YamlParser):
 
         The function operates params only when it encounters a string; other types continue recursively.
         """
-        process_name = cls(yaml_file).create_process_definition()
-        return process_name
+        workflow_name = cls(yaml_file).create_workflow()
+        return workflow_name
 
-    def prepare_refer_process(self, content):
-        """Allow YAML files to reference process derived from other YAML files."""
-        process_paths = re.findall(r"\$WORKFLOW\{\"(.*?)\"\}", content)
-        for process_path in process_paths:
+    def prepare_refer_workflow(self, content):
+        """Allow YAML files to reference workflow derived from other YAML files."""
+        workflow_paths = re.findall(r"\$WORKFLOW\{\"(.*?)\"\}", content)
+        for workflow_path in workflow_paths:
             logger.info(
-                f"find special token {process_path}, load process form {process_path}"
+                f"find special token {workflow_path}, load workflow form {workflow_path}"
             )
-            possible_path = ParseTool.get_possible_path(process_path, self._base_folder)
-            process_name = YamlProcess.parse(possible_path)
-            content = content.replace('$WORKFLOW{"%s"}' % process_path, process_name)
+            possible_path = ParseTool.get_possible_path(
+                workflow_path, self._base_folder
+            )
+            workflow_name = YamlWorkflow.parse(possible_path)
+            content = content.replace('$WORKFLOW{"%s"}' % workflow_path, workflow_name)
 
         return content
 
@@ -246,7 +248,7 @@ class YamlProcess(YamlParser):
 
         task_cls = get_task_cls(task_type)
 
-        # use YamlProcess._parse_rules to parse special value of yaml file
+        # use YamlWorkflow._parse_rules to parse special value of yaml file
         task_params = self.parse_params(task_params)
 
         if task_cls == tasks.Switch:
@@ -404,7 +406,7 @@ class YamlProcess(YamlParser):
             Or,
         )
 
-        def process_dependent_date(dependent_date):
+        def workflow_dependent_date(dependent_date):
             """Parse dependent date (Compatible with key and value of DependentDate)."""
             dependent_date_upper = dependent_date.upper()
             if hasattr(DependentDate, dependent_date_upper):
@@ -425,19 +427,19 @@ class YamlProcess(YamlParser):
             """Parse dependent item.
 
             project_name: pydolphin
-            process_definition_name: task_dependent_external
+            workflow_name: task_dependent_external
             dependent_task_name: task_1
             dependent_date: LAST_WEDNESDAY
             """
             project_name = source_items["project_name"]
-            process_definition_name = source_items["process_definition_name"]
+            workflow_name = source_items["workflow_name"]
             dependent_task_name = source_items["dependent_task_name"]
             dependent_date = source_items.get("dependent_date", DependentDate.TODAY)
             dependent_item = DependentItem(
                 project_name=project_name,
-                process_definition_name=process_definition_name,
+                workflow_name=workflow_name,
                 dependent_task_name=dependent_task_name,
-                dependent_date=process_dependent_date(dependent_date),
+                dependent_date=workflow_dependent_date(dependent_date),
             )
 
             return dependent_item
@@ -461,6 +463,6 @@ class YamlProcess(YamlParser):
         return task
 
 
-def create_process_definition(yaml_file):
+def create_workflow(yaml_file):
     """CLI."""
-    YamlProcess.parse(yaml_file)
+    YamlWorkflow.parse(yaml_file)

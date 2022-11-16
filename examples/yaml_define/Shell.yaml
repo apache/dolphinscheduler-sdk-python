@@ -21,7 +21,7 @@ workflow:
   release_state: "offline"
   run: true
 
-# Define the tasks under the process
+# Define the tasks within the workflow
 tasks:
   - name: task_parent
     task_type: Shell

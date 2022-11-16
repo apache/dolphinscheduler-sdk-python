@@ -26,7 +26,7 @@ task:1-workflow:1 -> task:2-workflow:1 -> task:3-workflow:1
 Each workflow is linear since we set `IS_CHAIN=True`, you could change task to parallel by set it to `False`.
 """
 
-from pydolphinscheduler.core.process_definition import ProcessDefinition
+from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.tasks.shell import Shell
 
 NUM_WORKFLOWS = 10
@@ -41,7 +41,7 @@ IS_CHAIN = True
 for wf in range(0, NUM_WORKFLOWS):
     workflow_name = f"workflow:{wf}"
 
-    with ProcessDefinition(name=workflow_name, tenant=TENANT) as pd:
+    with Workflow(name=workflow_name, tenant=TENANT) as pd:
         for t in range(0, NUM_TASKS):
             task_name = f"task:{t}-{workflow_name}"
             command = f"echo This is task {task_name}"

@@ -18,7 +18,7 @@
 # [start workflow_declare]
 """A example workflow for task mlflow."""
 
-from pydolphinscheduler.core.process_definition import ProcessDefinition
+from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.tasks.mlflow import (
     MLflowDeployType,
     MLflowModels,
@@ -29,7 +29,7 @@ from pydolphinscheduler.tasks.mlflow import (
 
 mlflow_tracking_uri = "http://127.0.0.1:5000"
 
-with ProcessDefinition(
+with Workflow(
     name="task_mlflow_example",
     tenant="tenant_exists",
 ) as pd:

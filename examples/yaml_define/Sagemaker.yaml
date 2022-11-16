@@ -20,7 +20,7 @@ workflow:
   name: "Sagemaker"
   release_state: "offline"
 
-# Define the tasks under the process
+# Define the tasks within the workflow
 tasks:
   - name: sagemaker
     task_type: Sagemaker
