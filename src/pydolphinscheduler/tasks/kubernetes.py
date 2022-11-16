@@ -36,7 +36,6 @@ class Kubernetes(Task):
         "namespace",
         "min_cpu_cores",
         "min_memory_space",
-        "params_map",
     }
 
     def __init__(
