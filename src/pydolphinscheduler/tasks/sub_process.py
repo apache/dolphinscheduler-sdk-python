@@ -22,7 +22,7 @@ import warnings
 from pydolphinscheduler.tasks.sub_workflow import SubWorkflow
 
 warnings.warn(
-    "This module is deprecated. Please use `pydolphinscheduler.tasks.sub_workflow.SubWorkflow`.",
+    "This module is deprecated and will be remove in 4.1.0. Please use `pydolphinscheduler.tasks.sub_workflow.SubWorkflow`.",
     DeprecationWarning,
     stacklevel=2,
 )
@@ -31,7 +31,7 @@ warnings.warn(
 class SubProcess(SubWorkflow):
     """Task SubProcess object, declare behavior for SubProcess task to dolphinscheduler.
 
-    This module is deprecated. Please use `pydolphinscheduler.tasks.sub_workflow.SubWorkflow`.
+    This module is deprecated and will be remove in 4.1.0. Please use `pydolphinscheduler.tasks.sub_workflow.SubWorkflow`.
     """
 
     def __init__(self, name: str, process_definition_name: str, *args, **kwargs):
