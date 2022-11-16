@@ -16,8 +16,7 @@
 # under the License.
 
 """Test Task sub workflow."""
-
-
+import warnings
 from unittest.mock import patch
 
 import pytest
@@ -113,3 +112,58 @@ def test_sub_workflow_get_define(mock_workflow_definition):
         with Workflow(TEST_WORKFLOW_NAME):
             sub_workflow = SubWorkflow(name, TEST_SUB_WORKFLOW_NAME)
             assert sub_workflow.get_define() == expect
+
+
+@patch(
+    "pydolphinscheduler.tasks.sub_workflow.SubWorkflow.get_workflow_info",
+    return_value=(
+        {
+            "id": 1,
+            "name": TEST_SUB_WORKFLOW_NAME,
+            "code": TEST_SUB_WORKFLOW_CODE,
+        }
+    ),
+)
+def test_deprecated_sub_workflow_get_define(mock_workflow_definition):
+    """Test deprecated task sub_process still work and raise warning."""
+    code = 123
+    version = 1
+    name = "test_sub_workflow_get_define"
+    expect = {
+        "code": code,
+        "name": name,
+        "version": 1,
+        "description": None,
+        "delayTime": 0,
+        "taskType": "SUB_PROCESS",
+        "taskParams": {
+            "resourceList": [],
+            "localParams": [],
+            "processDefinitionCode": TEST_SUB_WORKFLOW_CODE,
+            "dependence": {},
+            "conditionResult": {"successNode": [""], "failedNode": [""]},
+            "waitStartTimeout": {},
+        },
+        "flag": "YES",
+        "taskPriority": "MEDIUM",
+        "workerGroup": "default",
+        "environmentCode": None,
+        "failRetryTimes": 0,
+        "failRetryInterval": 1,
+        "timeoutFlag": "CLOSE",
+        "timeoutNotifyStrategy": None,
+        "timeout": 0,
+    }
+    with patch(
+        "pydolphinscheduler.core.task.Task.gen_code_and_version",
+        return_value=(code, version),
+    ):
+        with warnings.catch_warnings(record=True) as w:
+            from pydolphinscheduler.tasks.sub_process import SubProcess
+            assert len(w) == 1
+            assert issubclass(w[-1].category, DeprecationWarning)
+            assert "deprecated" in str(w[-1].message)
+
+            with Workflow(TEST_WORKFLOW_NAME):
+                sub_workflow = SubProcess(name, TEST_SUB_WORKFLOW_NAME)
+                assert sub_workflow.get_define() == expect

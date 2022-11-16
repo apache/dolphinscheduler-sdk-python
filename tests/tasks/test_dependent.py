@@ -17,6 +17,7 @@
 
 """Test Task dependent."""
 import itertools
+import warnings
 from typing import Dict, List, Optional, Tuple, Union
 from unittest.mock import patch
 
@@ -109,6 +110,37 @@ def test_dependent_item_get_define(mock_task_info, dep_date, dep_cycle):
     }
     task = DependentItem(**attr)
     assert expect == task.get_define()
+
+
+@patch(
+    "pydolphinscheduler.tasks.dependent.DependentItem.get_code_from_gateway",
+    return_value={
+        "projectCode": TEST_PROJECT_CODE,
+        "processDefinitionCode": TEST_DEFINITION_CODE,
+        "taskDefinitionCode": TEST_TASK_CODE,
+    },
+)
+def test_deprecated_dependent_when_process_definition_name(mock_task_info):
+    """Test deprecated task dependent DependentItem get define still work and raise warning."""
+    attr = {
+        "project_name": TEST_PROJECT,
+        "process_definition_name": TEST_WORKFLOW,
+        "dependent_task_name": TEST_TASK,
+        "dependent_date": DependentDate.THIS_WEEK,
+    }
+    expect = {
+        "projectCode": TEST_PROJECT_CODE,
+        "definitionCode": TEST_DEFINITION_CODE,
+        "depTaskCode": TEST_TASK_CODE,
+        "cycle": "week",
+        "dateValue": DependentDate.THIS_WEEK,
+    }
+    with warnings.catch_warnings(record=True) as w:
+        task = DependentItem(**attr)
+        assert len(w) == 1
+        assert issubclass(w[-1].category, DeprecationWarning)
+        assert "deprecated" in str(w[-1].message)
+        assert expect == task.get_define()
 
 
 def test_dependent_item_date_error():

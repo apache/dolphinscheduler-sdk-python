@@ -91,7 +91,7 @@ class DependentItem(Base):
         self,
         project_name: str,
         # TODO zhongjiajie should be also depeloped in 4.1.0
-        workflow_name: str,
+        workflow_name: Optional[str] = None,
         dependent_task_name: Optional[str] = DEPENDENT_ALL_TASK_IN_WORKFLOW,
         dependent_date: Optional[DependentDate] = DependentDate.TODAY,
         *args,
@@ -102,14 +102,17 @@ class DependentItem(Base):
         )
         super().__init__(obj_name)
         self.project_name = project_name
-        self.workflow_name = workflow_name
-        if "process_definition_name" in kwargs and self.workflow_name is None:
+        if workflow_name is not None:
+            self.workflow_name = workflow_name
+        elif "process_definition_name" in kwargs:
             warnings.warn(
                 "Parameter name `process_definition_name` is deprecated, please use `workflow_name` instead.",
                 DeprecationWarning,
                 stacklevel=2,
             )
             self.workflow_name = kwargs.pop("process_definition_name")
+        else:
+            raise PyDSParamException("Parameter `workflow_name` or `process_definition_name` is required, but got None.")
         self.dependent_task_name = dependent_task_name
         if dependent_date is None:
             raise PyDSParamException(

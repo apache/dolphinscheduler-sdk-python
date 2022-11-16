@@ -16,7 +16,7 @@
 # under the License.
 
 """Test workflow."""
-
+import warnings
 from datetime import datetime
 from typing import Any, List
 from unittest.mock import patch
@@ -386,6 +386,51 @@ def test_workflow_simple_context_manager():
                 assert task._downstream_task_codes == {
                     pd.get_one_task_by_name(f"task-{i + 1}").code
                 }
+
+
+def test_deprecated_workflow_simple_context_manager():
+    """Test deprecated class ProcessDefinition still work and will raise warning."""
+    expect_tasks_num = 5
+
+    with warnings.catch_warnings(record=True) as w:
+        from pydolphinscheduler.core.process_definition import ProcessDefinition
+        assert len(w) == 1
+        assert issubclass(w[-1].category, DeprecationWarning)
+        assert "deprecated" in str(w[-1].message)
+
+        with ProcessDefinition(TEST_WORKFLOW_NAME) as pd:
+            for i in range(expect_tasks_num):
+                curr_task = Task(name=f"task-{i}", task_type=f"type-{i}")
+                # Set deps task i as i-1 parent
+                if i > 0:
+                    pre_task = pd.get_one_task_by_name(f"task-{i - 1}")
+                    curr_task.set_upstream(pre_task)
+            assert len(pd.tasks) == expect_tasks_num
+    
+            # Test if task workflow same as origin one
+            task: Task = pd.get_one_task_by_name("task-0")
+            assert pd is task.workflow
+    
+            # Test if all tasks with expect deps
+            for i in range(expect_tasks_num):
+                task: Task = pd.get_one_task_by_name(f"task-{i}")
+                if i == 0:
+                    assert task._upstream_task_codes == set()
+                    assert task._downstream_task_codes == {
+                        pd.get_one_task_by_name("task-1").code
+                    }
+                elif i == expect_tasks_num - 1:
+                    assert task._upstream_task_codes == {
+                        pd.get_one_task_by_name(f"task-{i - 1}").code
+                    }
+                    assert task._downstream_task_codes == set()
+                else:
+                    assert task._upstream_task_codes == {
+                        pd.get_one_task_by_name(f"task-{i - 1}").code
+                    }
+                    assert task._downstream_task_codes == {
+                        pd.get_one_task_by_name(f"task-{i + 1}").code
+                    }
 
 
 def test_workflow_simple_separate():

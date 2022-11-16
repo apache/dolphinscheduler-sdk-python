@@ -28,7 +28,7 @@ warnings.warn(
 )
 
 
-class SubWorkflow(SubWorkflow):
+class SubProcess(SubWorkflow):
     """Task SubProcess object, declare behavior for SubProcess task to dolphinscheduler.
 
     This module is deprecated. Please use `pydolphinscheduler.tasks.sub_workflow.SubWorkflow`.
