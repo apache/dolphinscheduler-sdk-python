@@ -22,7 +22,8 @@ import warnings
 from pydolphinscheduler.core.workflow import Workflow as ProcessDefinition  # noqa
 
 warnings.warn(
-    "This module is deprecated and will be remove in 4.1.0. Please use `pydolphinscheduler.core.workflow.Workflow`.",
+    "This module is deprecated and will be remove in 4.1.0. Please use"
+    "`pydolphinscheduler.core.workflow.Workflow` instead.",
     DeprecationWarning,
     stacklevel=2,
 )

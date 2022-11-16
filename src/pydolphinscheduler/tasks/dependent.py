@@ -106,7 +106,8 @@ class DependentItem(Base):
             self.workflow_name = workflow_name
         elif "process_definition_name" in kwargs:
             warnings.warn(
-                "Parameter name `process_definition_name` is deprecated and will be remove in 4.1.0, please use `workflow_name` instead.",
+                "Parameter name `process_definition_name` is deprecated and will be remove in 4.1.0, "
+                "please use `workflow_name` instead.",
                 DeprecationWarning,
                 stacklevel=2,
             )
