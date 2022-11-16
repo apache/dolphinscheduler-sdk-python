@@ -240,7 +240,7 @@ class GatewayEntryPoint:
 
     def get_workflow_info(self, user_name: str, project_name: str, workflow_name: str):
         """Get workflow info through java gateway."""
-        return self.gateway.entry_point.getProcessDefinitionInfo(
+        return self.gateway.entry_point.getWorkflowInfo(
             user_name, project_name, workflow_name
         )
 
@@ -264,7 +264,7 @@ class GatewayEntryPoint:
         other_params_json: Optional[str] = None,
     ):
         """Create or update workflow through java gateway."""
-        return self.gateway.entry_point.createOrUpdateProcessDefinition(
+        return self.gateway.entry_point.createOrUpdateWorkflow(
             user_name,
             project_name,
             name,
@@ -295,7 +295,7 @@ class GatewayEntryPoint:
         timeout: int,
     ):
         """Exec workflow instance through java gateway."""
-        return self.gateway.entry_point.execProcessInstance(
+        return self.gateway.entry_point.execWorkflowInstance(
             user_name,
             project_name,
             workflow_name,
