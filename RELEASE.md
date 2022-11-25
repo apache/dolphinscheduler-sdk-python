@@ -33,5 +33,41 @@ website.
 ## To PyPi
 
 [PyPI](https://pypi.org), Python Package Index, is a repository of software for the Python programming language.
-User could install Python package from it. Release to PyPi make user easier to install and try PyDolphinScheduler,
-There is an official way to package project from [PyPA](https://packaging.python.org/en/latest/tutorials/packaging-projects)
+
+### Install or Upgrade package
+
+We use [build](https://pypi.org/project/build/) to build package, and [twine](https://pypi.org/project/twine/) to
+upload package to PyPi. You could first install and upgrade them by:
+
+```bash
+python3 -m pip install --upgrade pip build twine
+```
+
+It is highly recommended [releasing package to TestPyPi](#release-to-testpypi) first, to check whether the
+package is correct, and then [release to PyPi](#release-to-pypi).
+
+### Release to TestPyPi
+
+TestPyPi is a test environment of PyPi, you could release to it to test whether the package is work or not.
+
+1. Create an account in [TestPyPi](https://test.pypi.org/account/register/).
+2. Clean unrelated files in `dist` directory, and build package `python3 setup.py pre_clean`.
+3. Build package `python3 -m build`, and you will see two new files in `dist` directory, with extension
+   `.tar.gz` and `.whl`.
+4. Upload to TestPyPi `python3 -m twine upload --repository testpypi dist/*`.
+5. Check the package in [TestPyPi](https://test.pypi.org/project/apache-dolphinscheduler/) and install it
+   by `python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps apache-dolphinscheduler` to
+   test whether it is work or not.
+
+### Release to PyPi
+
+PyPi is the official repository of Python packages, it is highly recommended [releasing package to TestPyPi](#release-to-testpypi)
+first to test whether the package is correct.
+
+1. Create an account in [PyPI](https://pypi.org/account/register/).
+2. Clean unrelated files in `dist` directory, and build package `python3 setup.py pre_clean`.
+3. Build package `python3 -m build`, and you will see two new files in `dist` directory, with extension
+   `.tar.gz` and `.whl`.
+4. Upload to TestPyPi `python3 -m twine upload dist/*`.
+5. Check the package in [PyPi](https://pypi.org/project/apache-dolphinscheduler/) and install it
+   by `python3 -m pip install apache-dolphinscheduler` to install it.
