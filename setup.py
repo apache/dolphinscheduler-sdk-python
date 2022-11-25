@@ -132,7 +132,7 @@ setup(
     long_description_content_type="text/markdown",
     author="Apache Software Foundation",
     author_email="dev@dolphinscheduler.apache.org",
-    url="https://dolphinscheduler.apache.org/",
+    url="https://dolphinscheduler.apache.org/python/main/index.html",
     python_requires=">=3.6",
     keywords=[
         "dolphinscheduler",

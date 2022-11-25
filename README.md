@@ -29,8 +29,8 @@ under the License.
 [![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat-square&labelColor=ef8336)](https://pycqa.github.io/isort)
 [![CI](https://github.com/apache/dolphinscheduler-sdk-python/actions/workflows/ci.yaml/badge.svg)](https://github.com/apache/dolphinscheduler-sdk-python/actions/workflows/ci.yaml)
 
-**PyDolphinScheduler** is python API for Apache DolphinScheduler, which allow you definition
-your workflow by python code, aka workflow-as-codes.
+**PyDolphinScheduler** is python API for [Apache DolphinScheduler](https://dolphinscheduler.apache.org/en-us/index.html),
+which allow you definition your workflow by python code, aka workflow-as-codes.
 
 ## Quick Start
 
@@ -55,41 +55,53 @@ pydolphinscheduler version
 
 Here we show you how to install and run a simple example of pydolphinscheduler
 
-### Start Server And Run Example
+### Start DolphinScheduler
 
-Before you run an example, you have to start backend server. You could follow
-[development setup](https://dolphinscheduler.apache.org/en-us/docs/dev/user_doc/contribute/development-environment-setup.html)
-section "DolphinScheduler Standalone Quick Start" to set up developer environment. You have to start backend
-and frontend server in this step, which mean that you could view DolphinScheduler UI in your browser with URL
-http://localhost:12345/dolphinscheduler
-
-After backend server is being start, all requests from `pydolphinscheduler` would be sent to backend server.
-And for now we could run a simple example by:
-
-<!-- TODO Add examples directory to dist package later. -->
+There are many ways to start DolphinScheduler, here we use docker to start and run it as a standalone server.
 
 ```shell
-# Please make sure your terminal could 
+# Change the version of dolphinscheduler to the version you want to use, here we use 3.1.1 as example
+DOLPHINSCHEDULER_VERSION=3.1.1
+docker run --name dolphinscheduler-standalone-server -p 12345:12345 -p 25333:25333 -d apache/dolphinscheduler-standalone-server:"${DOLPHINSCHEDULER_VERSION}"
+```
+
+After the container is started, you can access the DolphinScheduler UI via http://localhost:12345/dolphinscheduler.
+For more way to start DolphinScheduler and the more detail about DolphinScheduler, please refer to
+[DolphinScheduler](https://dolphinscheduler.apache.org/en-us/docs/latest/user_doc/about/introduction.html)
+
+### Run a simple example
+
+We have many examples in [examples](src/pydolphinscheduler/examples) directory, we here pick up a typical one
+to show how to run it.
+
+```shell
+# Get the latest code of example from github 
 curl https://raw.githubusercontent.com/apache/dolphinscheduler-sdk-python/main/src/pydolphinscheduler/examples/tutorial.py -o ./tutorial.py
+
+# Change tenant to real exists tenant in the host your DolphinScheduler running, by any editor you like 
+
+# Run the example
 python ./tutorial.py
 ```
 
-> **_NOTICE:_** Since Apache DolphinScheduler's tenant is requests while running command, you might need to change
-> tenant value in `example/tutorial.py`. For now the value is `tenant_exists`, please change it to username exists
-> in you environment.
+> **_NOTICE:_** Since Apache DolphinScheduler's tenant is requests while running command, you have to change
+> tenant value in tutorial.py`. The default value is `tenant_exists`, change it to username exists your host.
 
-After command execute, you could see a new project with single workflow named *tutorial* in the
-[UI-project list](https://dolphinscheduler.apache.org/en-us/docs/latest/user_doc/guide/project/project-list.html).
+After that, a new workflow will be created by PyDolphinScheduler, and you can see it in DolphinScheduler web
+UI's Project Management page. It will trigger the workflow automatically, so you can see the workflow running
+in DolphinScheduler web UI's Workflow Instance page too. For more detail about any function about DolphinScheduler
+Project Management, please refer to [DolphinScheduler Project Management](https://dolphinscheduler.apache.org/en-us/docs/latest/user_doc/guide/project/project-list.html)
 
-## Develop
+## Documentation
 
-Until now, we finish quick start by an example of pydolphinscheduler and run it. If you want to inspect or join
-pydolphinscheduler develop, you could take a look at [develop](./CONTRIBUTING.md) section.
+For full documentation visit [document](https://dolphinscheduler.apache.org/python/main/index.html). This
+documentation is generated from this repository so please raise issues or pull requests for any additions, corrections, or clarifications.
+
+## Contributing
+
+If you would like to contribute, check out the [open issues on GitHub](https://github.com/apache/dolphinscheduler-sdk-python/issues).
+You can also see the guide to [contributing](./CONTRIBUTING.md).
 
 ## Release
 
-If you are interested in how to release **PyDolphinScheduler**, you could go and see at [release](./RELEASE.md)
-
-## What's more
-
-For more detail information, please go to see **PyDolphinScheduler** latest(unreleased) [document](https://dolphinscheduler.apache.org/python/main/index.html)
+Follow the [release](./RELEASE.md) guide to release a new version of pydolphinscheduler.
