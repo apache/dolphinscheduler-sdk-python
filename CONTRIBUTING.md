@@ -46,7 +46,7 @@ define by code, user usually do not care user, tenant, or queue exists or not. A
 a new workflow according the code definition. So we have some **models object** in `pydolphinscheduler/models`
 directory, their only check object exists or not, and create them if not exists.
 
-More detail about core concept, please read [concept][https://dolphinscheduler.apache.org/python/main/concept.html]
+More detail about core concept, please read [concept](https://dolphinscheduler.apache.org/python/main/concept.html)
 in our documentation.
 
 ## Syntax To Trigger Specific CI During Pull Request

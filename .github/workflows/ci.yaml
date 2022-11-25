@@ -193,12 +193,16 @@ jobs:
     needs:
       - dead-link
       - local-ci
+      - integrate-test
     runs-on: ubuntu-latest
     steps:
       - name: Status
+        
+        success, failure, cancelled, or skipped
         run: |
           if [[ ${{ needs.dead-link.result }} != 'success' ]] || \
-            [[ ${{ needs.local-ci.result }} != 'success' ]]; then
+            [[ ${{ needs.local-ci.result }} != 'success' ]] || \
+            ([[ ${{ needs.integrate-test.result }} != 'skipped' ]] && [[ ${{ needs.integrate-test.result }} != 'success' ]]); then
             echo "CI Failed!"
             exit -1
           fi
