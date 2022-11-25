@@ -21,9 +21,9 @@ under the License.
 
 [![PyPi Version](https://img.shields.io/pypi/v/apache-dolphinscheduler.svg?style=flat-square&logo=PyPi)](https://pypi.org/project/apache-dolphinscheduler/)
 [![PyPi Python Versions](https://img.shields.io/pypi/pyversions/apache-dolphinscheduler.svg?style=flat-square&logo=python)](https://pypi.org/project/apache-dolphinscheduler/)
-[![PyPi License](https://img.shields.io/pypi/l/apache-dolphinscheduler.svg?style=flat-square)](https://pypi.org/project/apache-dolphinscheduler/)
+[![PyPi License](https://img.shields.io/pypi/l/apache-dolphinscheduler.svg?style=flat-square)](https://raw.githubusercontent.com/apache/dolphinscheduler-sdk-python/main/LICENSE)
 [![PyPi Status](https://img.shields.io/pypi/status/apache-dolphinscheduler.svg?style=flat-square)](https://pypi.org/project/apache-dolphinscheduler/)
-[![PyPi Downloads](https://img.shields.io/pypi/dm/apache-dolphinscheduler?style=flat-square)](https://pypi.org/project/apache-dolphinscheduler/)
+[![Downloads](https://pepy.tech/badge/apache-dolphinscheduler/month)](https://pepy.tech/project/apache-dolphinscheduler)
 [![Coverage Status](https://img.shields.io/codecov/c/github/apache/dolphinscheduler-sdk-python/main.svg?style=flat-square)](https://codecov.io/github/apache/dolphinscheduler-sdk-python?branch=main)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/psf/black)
 [![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat-square&labelColor=ef8336)](https://pycqa.github.io/isort)
