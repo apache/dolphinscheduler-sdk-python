@@ -17,7 +17,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# Develop
+# Contributing
 
 pydolphinscheduler is python API for Apache DolphinScheduler, it just defines what workflow look like instead of
 store or execute it. We here use [py4j][py4j] to dynamically access Java Virtual Machine.
@@ -43,19 +43,20 @@ instead of [IntelliJ IDEA][idea] to open it.
 
 Apache DolphinScheduler is design to define workflow by UI, and pydolphinscheduler try to define it by code. When
 define by code, user usually do not care user, tenant, or queue exists or not. All user care about is created
-a new workflow by the code his/her definition. So we have some **side object** in `pydolphinscheduler/side`
+a new workflow according the code definition. So we have some **models object** in `pydolphinscheduler/models`
 directory, their only check object exists or not, and create them if not exists.
 
-### Workflow
+More detail about core concept, please read [concept](https://dolphinscheduler.apache.org/python/main/concept.html)
+in our documentation.
 
-pydolphinscheduler workflow object name, workflow is also same name as Java object(maybe would be change to
-other word for more simple).
+## Syntax To Trigger Specific CI During Pull Request
 
-### Tasks
+We use [GitHub Actions][github-actions] to run CI, and it will run automatically when you push code to GitHub.
+But some CI we do not need to run them every time, or we have special rule to change our CI behavior.
 
-pydolphinscheduler tasks object, we use tasks to define exact job we want DolphinScheduler do for us. For now,
-we only support `shell` task to execute shell task. [This link][all-task] list all tasks support in DolphinScheduler
-and would be implemented in the further.
+* `[run-it]`: By default, we will skip all integration test in pull requests, if you want to run them, you should add this
+  syntax to your Git commit message. The common reason to run integration test is you change some code related to python gateway
+  service in repository [apache/dolphinscheduler](https://github.com/apache/dolphinscheduler). 
 
 ## Test Your Code
 
@@ -79,8 +80,8 @@ run tests. And it is scattered commands to reproduce each step of the integratio
 ### With GitHub Action
 
 GitHub Action test in various environment for pydolphinscheduler, including different python version in
-`3.6|3.7|3.8|3.9` and operating system `linux|macOS|windows`. It will trigger and run automatically when you
-submit pull requests to `apache/dolphinscheduler`.
+`3.6|3.7|3.8|3.9|3.10|3.11` and operating system `linux|macOS|windows`. It will trigger and run automatically when you
+submit pull requests to repository `apache/dolphinscheduler-sdk-python`.
 
 ### Automated Testing With tox
 
@@ -101,13 +102,24 @@ tox -e local-ci
 It will take a while when you run it the first time, because it has to install dependencies and make some prepare,
 and the next time you run it will be faster.
 
+The command `tox -e local-ci` will run all tests including code-style test, unit test, docs build test, which excepting
+integrate test, because it needs to run dolphinscheduler before the test, for more detail, please read [Integrate Test](#integrate-test).
+
 If you failed section `lint` when you run command `tox -e local-ci`, you could try to run command `tox -e auto-lint`
 which we provider fix as many lints as possible. When I finish, you could run command `tox -e local-ci` to see
 whether the linter pass or not, you have to fix it by yourself if linter still fail.
 
+> NOTE: You can add `-r` or `--recreate` to recreate the virtual environment of tox, it is useful when you change
+> our dependencies in `setup.py` or `tox.ini`, or some odd things happen.
+
 ### Manually
 
-#### Code Style
+* For code style lint, see [Code Style Using pre-commit](#code-style-using-pre-commit)
+* For unit test, see [Unit Test Manually](#unit-test-manually)
+* For document build, see [Build Document Manually](#build-document-manually)
+* For integrate test, see [Integrate Test](#integrate-test)
+
+## Code Style
 
 We use [isort][isort] to automatically keep Python imports alphabetically, and use [Black][black] for code
 formatter and [Flake8][flake8] for pep8 checker. If you use [pycharm][pycharm]or [IntelliJ IDEA][idea],
@@ -115,6 +127,14 @@ maybe you could follow [Black-integration][black-editor] to configure them in yo
 
 Our Python API CI would automatically run code style checker and unittest when you submit pull request in
 GitHub, you could also run static check locally.
+
+### Code Style Using tox
+
+The command `tox -e auto-lint` will run code style checker and formatter, and fix as many lints as possible(some
+flake8 linter can not auto fix). When it finishes, you could run command `tox -e local-ci` to see whether have
+some flake8 linter still fail, you have to fix it by yourself.
+
+### Code Style Using pre-commit
 
 We recommend [pre-commit](https://pre-commit.com/) to do the checker mentioned above before you develop locally.
 You should install `pre-commit` by running
@@ -126,6 +146,15 @@ python -m pip install pre-commit
 in your development environment and then run `pre-commit install` to set up the git hooks scripts. After finish
 above steps, each time you run `git commit` or `git push` would run pre-commit check to make basic check before
 you create pull requests in GitHub.
+
+### Code Style Manually
+
+If you do not want to use `tox` and `pre-commit`, you can run these lints command manually. First we should install
+dependencies for lints
+
+```shell
+python -m pip install '.[style]'
+```
 
 ```shell
 # We recommend you run isort and Black before Flake8, because Black could auto fix some code style issue
@@ -140,8 +169,6 @@ python -m black .
 # Run Flake8
 python -m flake8
 ```
-
-#### Testing
 
 ## Build Document
 
@@ -162,7 +189,7 @@ tox -e doc-build-multi
 
 ### Build Document Manually
 
-To build docs locally, install sphinx and related python modules first via:
+You can also build docs manually instead of using tox, in this case you should install dependencies first
 
 ```shell
 python -m pip install '.[doc]'
@@ -175,22 +202,39 @@ cd pydolphinscheduler/docs/
 make clean && make html
 ```
 
-> NOTE: We support build multiple versions of documents with [sphinx-multiversion](https://holzhaus.github.io/sphinx-multiversion/master/index.html),
-> you can build with command `git fetch --tags && make clean && make multiversion`
+or if you want to build history documents, you should execute the command below
 
-## Testing
+```shell
+# Fetch all history tags because we use tag to build history documents via [sphinx-multiversion](https://holzhaus.github.io/sphinx-multiversion/master/index.html)
+git fetch --tags
+cd pydolphinscheduler/docs/
+make clean && make multiversion
+```
+
+## Unit Test
 
 pydolphinscheduler using [pytest][pytest] to test our codebase. GitHub Action will run our test when you create
-pull request or commit to dev branch, with python version `3.6|3.7|3.8|3.9` and operating system `linux|macOS|windows`.
+pull request or commit to dev branch, with python version `3.6|3.7|3.8|3.9|3.10|3.11` and operating system `linux|macOS|windows`.
+
+### Unit Test Using tox
+
+We integrated unit test into tox, you can run all unit tests and check the code coverage via single command
+
+```shell
+# Run unit test base on current python version
+tox -e code-test
+```
+
+Besides run tests, it will also check the unit test [coverage][coverage] threshold, for now when test cover less than 90%
+will fail the coverage, as well as our GitHub Action.
+
+### Unit Test Manually
 
 pydolphinscheduler using [pytest][pytest] to run all tests in directory `tests`. You could run tests by the commands
 
 ```shell
 python -m pytest --cov=pydolphinscheduler --cov-config=.coveragerc tests/
 ```
-
-Besides run tests, it will also check the unit test [coverage][coverage] threshold, for now when test cover less than 90%
-will fail the coverage, as well as our GitHub Action.
 
 The command above will check test coverage automatically, and you could also test the coverage by command.
 
@@ -202,19 +246,20 @@ It would not only run unit test but also show each file coverage which cover rat
 line show you total coverage of you code. If your CI failed with coverage you could go and find some reason by
 this command output.
 
-### Integrate Test
+## Integrate Test
 
 Integrate Test can not run when you execute command `tox -e local-ci` because it needs external environment
 including [Docker](https://docs.docker.com/get-docker/) and specific image build by [maven](https://maven.apache.org/install.html).
 Here we would show you the step to run integrate test in directory `tests/integration`. There are two ways to run integrate tests.
 
-#### Method 1: Launch Docker Container Locally
+### Launch Docker Container Locally
 
 ```shell
-# Go to project root directory and build Docker image
-cd ../../
+# Clone apache/dolphinscheduler repository
+cd <SOMEWHERE-PUT-CODE>
+git clone git@github.com:apache/dolphinscheduler.git
 
-# Build Docker image
+# Build apache/dolphinscheduler-standalone-server docker image
 ./mvnw -B clean install \
     -Dmaven.test.skip \
     -Dmaven.javadoc.skip \
@@ -222,26 +267,34 @@ cd ../../
     -Pdocker,release -Ddocker.tag=ci \
     -pl dolphinscheduler-standalone-server -am
 
-# Go to pydolphinscheduler root directory and run integrate tests
+# Go to dolphinscheduler-sdk/python root directory and run integrate tests via tox
+cd dolphinscheduler-sdk/python
 tox -e integrate-test
 ```
 
-#### Method 2: Start Standalone Server in IntelliJ IDEA
+### Start Standalone Server in IntelliJ IDEA
 
 ```shell
-# Start the standalone server in IDEA
+# Clone apache/dolphinscheduler repository
+cd <SOMEWHERE-PUT-CODE>
+git clone git@github.com:apache/dolphinscheduler.git
 
-# Go to pydolphinscheduler root directory and run integrate tests
+# Run apache/dolphinscheduler's Standalone Server in IntelliJ IDEA according to
+# https://dolphinscheduler.apache.org/en-us/docs/dev/user_doc/contribute/development-environment-setup.html
+
+# Go to dolphinscheduler-sdk/python root directory and run integrate tests via tox
 tox -e local-integrate-test
 ```
+
+> NOTE: You can also run integrate test via command `python -m pytest tests/integration/` or run them in Pycharm,
+> after you start Standalone Server above.
 
 ## Add LICENSE When New Dependencies Adding
 
 When you add a new package in pydolphinscheduler, you should also add the package's LICENSE to directory
-`dolphinscheduler-dist/release-docs/licenses/python-api-licenses`, and also add a short description to
-`dolphinscheduler-dist/release-docs/LICENSE`.
+`licenses`, and also add a short description to `LICENSE` file.
 
-## Update `UPDATING.md` when public class, method or interface is be changed
+## Update `UPDATING.md` when public class, method or interface is being changed
 
 When you change public class, method or interface, you should change the [UPDATING.md](./UPDATING.md) to notice
 users who may use it in other way.
@@ -259,4 +312,3 @@ users who may use it in other way.
 [coverage]: https://coverage.readthedocs.io/en/stable/
 [isort]: https://pycqa.github.io/isort/index.html
 [sphinx]: https://www.sphinx-doc.org/en/master
-

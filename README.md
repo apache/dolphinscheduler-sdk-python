@@ -84,7 +84,7 @@ After command execute, you could see a new project with single workflow named *t
 ## Develop
 
 Until now, we finish quick start by an example of pydolphinscheduler and run it. If you want to inspect or join
-pydolphinscheduler develop, you could take a look at [develop](./DEVELOP.md)
+pydolphinscheduler develop, you could take a look at [develop](./CONTRIBUTING.md) section.
 
 ## Release
 

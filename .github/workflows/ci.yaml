@@ -150,6 +150,7 @@ jobs:
   integrate-test:
     needs: license
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'schedule' || contains(github.event.head_commit.message, '[run-it]') }}
     timeout-minutes: 30
     steps:
       - name: Checkout Dolphinscheduler SDK Python
@@ -196,15 +197,15 @@ jobs:
     if: always()
     needs:
       - dead-link
-      - integrate-test
       - local-ci
+      - integrate-test
     runs-on: ubuntu-latest
     steps:
       - name: Status
         run: |
           if [[ ${{ needs.dead-link.result }} != 'success' ]] || \
-            [[ ${{ needs.integrate-test.result }} != 'success' ]] || \
-            [[ ${{ needs.local-ci.result }} != 'success' ]]; then
+            [[ ${{ needs.local-ci.result }} != 'success' ]] || \
+            ([[ ${{ needs.integrate-test.result }} != 'skipped' ]] && [[ ${{ needs.integrate-test.result }} != 'success' ]]); then
             echo "CI Failed!"
             exit -1
           fi
