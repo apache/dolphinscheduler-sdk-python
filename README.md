@@ -17,17 +17,19 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-# pydolphinscheduler
+# PyDolphinScheduler
 
 [![PyPi Version](https://img.shields.io/pypi/v/apache-dolphinscheduler.svg?style=flat-square&logo=PyPi)](https://pypi.org/project/apache-dolphinscheduler/)
 [![PyPi Python Versions](https://img.shields.io/pypi/pyversions/apache-dolphinscheduler.svg?style=flat-square&logo=python)](https://pypi.org/project/apache-dolphinscheduler/)
-[![PyPi License](https://img.shields.io/pypi/l/apache-dolphinscheduler.svg?style=flat-square)](https://raw.githubusercontent.com/apache/dolphinscheduler-sdk-python/main/LICENSE)
+[![PyPi License](https://img.shields.io/:license-Apache%202-blue.svg?style=flat-square)](https://raw.githubusercontent.com/apache/dolphinscheduler-sdk-python/main/LICENSE)
 [![PyPi Status](https://img.shields.io/pypi/status/apache-dolphinscheduler.svg?style=flat-square)](https://pypi.org/project/apache-dolphinscheduler/)
 [![Downloads](https://pepy.tech/badge/apache-dolphinscheduler/month)](https://pepy.tech/project/apache-dolphinscheduler)
 [![Coverage Status](https://img.shields.io/codecov/c/github/apache/dolphinscheduler-sdk-python/main.svg?style=flat-square)](https://codecov.io/github/apache/dolphinscheduler-sdk-python?branch=main)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?style=flat-square)](https://github.com/psf/black)
 [![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat-square&labelColor=ef8336)](https://pycqa.github.io/isort)
 [![CI](https://github.com/apache/dolphinscheduler-sdk-python/actions/workflows/ci.yaml/badge.svg)](https://github.com/apache/dolphinscheduler-sdk-python/actions/workflows/ci.yaml)
+[![Twitter Follow](https://img.shields.io/twitter/follow/dolphinschedule.svg?style=social&label=Follow)](https://twitter.com/dolphinschedule)
+[![Slack Status](https://img.shields.io/badge/slack-join_chat-white.svg?logo=slack&style=social)](https://s.apache.org/dolphinscheduler-slack)
 
 **PyDolphinScheduler** is python API for [Apache DolphinScheduler](https://dolphinscheduler.apache.org/en-us/index.html),
 which allow you definition your workflow by python code, aka workflow-as-codes.
@@ -53,7 +55,7 @@ pydolphinscheduler version
 > NOTE: package apache-dolphinscheduler not work on above Python version 3.10(including itself) in Window operating system
 > due to dependence [py4j](https://pypi.org/project/py4j/) not work on those environments.
 
-Here we show you how to install and run a simple example of pydolphinscheduler
+Here we show you how to install and run a simple example of PyDolphinScheduler
 
 ### Start DolphinScheduler
 
@@ -84,7 +86,7 @@ curl https://raw.githubusercontent.com/apache/dolphinscheduler-sdk-python/main/s
 python ./tutorial.py
 ```
 
-> **_NOTICE:_** Since Apache DolphinScheduler's tenant is requests while running command, you have to change
+> NOTICE: Since Apache DolphinScheduler's tenant is requests while running command, you have to change
 > tenant value in tutorial.py`. The default value is `tenant_exists`, change it to username exists your host.
 
 After that, a new workflow will be created by PyDolphinScheduler, and you can see it in DolphinScheduler web
@@ -104,4 +106,4 @@ You can also see the guide to [contributing](./CONTRIBUTING.md).
 
 ## Release
 
-Follow the [release](./RELEASE.md) guide to release a new version of pydolphinscheduler.
+Follow the [release](./RELEASE.md) guide to release a new version of PyDolphinScheduler.
