@@ -141,8 +141,8 @@ setup(
         "taskflow",
     ],
     project_urls={
-        "Homepage": "https://dolphinscheduler.apache.org",
-        "Documentation": "https://dolphinscheduler.apache.org/python/dev/index.html",
+        "Homepage": "https://dolphinscheduler.apache.org/python/main/index.html",
+        "Documentation": "https://dolphinscheduler.apache.org/python/main/index.html",
         "Source": "https://github.com/apache/dolphinscheduler-sdk-python",
         "Issue Tracker": "https://github.com/apache/dolphinscheduler-sdk-python/issues",
         "Twitter": "https://twitter.com/dolphinschedule",
