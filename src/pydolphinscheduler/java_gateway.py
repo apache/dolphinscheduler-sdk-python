@@ -18,6 +18,7 @@
 """Module java gateway, contain gateway behavior."""
 
 import contextlib
+import warnings
 from logging import getLogger
 from typing import Any, Optional
 
@@ -70,12 +71,14 @@ class GatewayEntryPoint:
             # 1. Java gateway version is too old: doesn't have method 'getGatewayVersion()'
             # 2. Error connecting to Java gateway
             gateway_version = self.get_gateway_version()
-        if gateway_version != __version__:
-            logger.warning(
+        if not __version__.endswith("dev") and gateway_version != __version__:
+            warnings.warn(
                 f"Using unmatched version of pydolphinscheduler (version {__version__}) "
                 f"and Java gateway (version {gateway_version}) may cause errors. "
                 "We strongly recommend you to find the matched version "
-                "(check: https://pypi.org/project/apache-dolphinscheduler)"
+                "(check: https://pypi.org/project/apache-dolphinscheduler)",
+                UserWarning,
+                stacklevel=2,
             )
 
     @property
