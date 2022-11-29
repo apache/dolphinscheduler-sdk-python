@@ -77,7 +77,7 @@ def test_python_client_java_import_package():
 def test_gateway_entry_point_version_warning(
     mock_version, version: str, is_warning: bool
 ):
-    """Test whether gateway entry point will raise version warning or not"""
+    """Test whether gateway entry point will raise version warning or not."""
     mock_version.return_value = version
     mock_version.endswith.return_value = version.endswith("dev")
 
