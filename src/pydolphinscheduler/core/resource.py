@@ -55,9 +55,9 @@ class Resource(Base):
             )
         return gateway.query_resources_file_info(self.user_name, self.name)
 
-    def get_id_from_database(self):
-        """Get resource id from java gateway."""
-        return self.get_info_from_database().getId()
+    def get_fullname_from_database(self):
+        """Get resource fullname from java gateway."""
+        return self.get_info_from_database().getFullName()
 
     def create_or_update_resource(self):
         """Create or update resource via java gateway."""
@@ -65,9 +65,8 @@ class Resource(Base):
             raise PyDSParamException(
                 "`user_name` and `content` are required when create or update resource from python gate."
             )
-        gateway.create_or_update_resource(
+        return gateway.create_or_update_resource(
             self.user_name,
             self.name,
             self.content,
-            self.description,
         )

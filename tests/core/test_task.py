@@ -123,7 +123,7 @@ def test__get_attr(addition: Set, ignore: Set, expect: Set):
             },
             {
                 "localParams": ["foo", "bar"],
-                "resourceList": [{"id": 1}],
+                "resourceList": [{"resourceName": 1}],
                 "dependence": {"foo", "bar"},
                 "waitStartTimeout": {"foo", "bar"},
                 "conditionResult": {"foo": ["bar"]},
@@ -132,7 +132,7 @@ def test__get_attr(addition: Set, ignore: Set, expect: Set):
     ],
 )
 @patch(
-    "pydolphinscheduler.core.resource.Resource.get_id_from_database",
+    "pydolphinscheduler.core.resource.Resource.get_fullname_from_database",
     return_value=1,
 )
 @patch(
@@ -438,11 +438,11 @@ def test_task_obtain_res_plugin_exception(m_get_content, m_code_version, attr):
     [
         (
             ["/dev/test.py"],
-            [{"id": 1}],
+            [{"resourceName": 1}],
         ),
         (
-            ["/dev/test.py", {"id": 2}],
-            [{"id": 1}, {"id": 2}],
+            ["/dev/test.py", {"resourceName": 2}],
+            [{"resourceName": 1}, {"resourceName": 2}],
         ),
     ],
 )
@@ -451,7 +451,7 @@ def test_task_obtain_res_plugin_exception(m_get_content, m_code_version, attr):
     return_value=(123, 1),
 )
 @patch(
-    "pydolphinscheduler.core.resource.Resource.get_id_from_database",
+    "pydolphinscheduler.core.resource.Resource.get_fullname_from_database",
     return_value=1,
 )
 @patch(
