@@ -18,6 +18,7 @@
 """DolphinScheduler Task and TaskRelation object."""
 import copy
 import types
+import warnings
 from logging import getLogger
 from typing import Dict, List, Optional, Sequence, Set, Tuple, Union
 
@@ -190,7 +191,7 @@ class Task(Base):
         self._workflow = workflow
 
     @property
-    def resource_list(self) -> List:
+    def resource_list(self) -> List[Dict[str, Resource]]:
         """Get task define attribute `resource_list`."""
         resources = set()
         for res in self._resource_list:
@@ -199,17 +200,19 @@ class Task(Base):
                     Resource(name=res, user_name=self.user_name).get_id_from_database()
                 )
             elif type(res) == dict and res.get(ResourceKey.ID) is not None:
-                logger.warning(
+                warnings.warn(
                     """`resource_list` should be defined using List[str] with resource paths,
                        the use of ids to define resources will be remove in version 3.2.0.
-                    """
+                    """,
+                    DeprecationWarning,
+                    stacklevel=2,
                 )
                 resources.add(res.get(ResourceKey.ID))
         return [{ResourceKey.ID: r} for r in resources]
 
     @property
     def user_name(self) -> Optional[str]:
-        """Return user name of workflow."""
+        """Return username of workflow."""
         if self.workflow:
             return self.workflow.user.name
         else:

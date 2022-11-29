@@ -49,3 +49,6 @@ DEV_MODE = str(
 
 # default token
 TOKEN = "jwUDzpLsNKEFER4*a8gruBH_GsAurNxU7A@Xc"
+
+UNIT_TEST_USER_NAME = "unittest_user"
+UNIT_TEST_TENANT = "unittest_tenant"

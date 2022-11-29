@@ -419,6 +419,12 @@ class Workflow(Base):
         self._ensure_side_model_exists()
         self._pre_submit_check()
 
+        # resource should be created before workflow
+        if len(self.resource_list) > 0:
+            for res in self.resource_list:
+                res.user_name = self._user
+                res.create_or_update_resource()
+
         self._workflow_code = gateway.create_or_update_workflow(
             self._user,
             self._project,
@@ -438,10 +444,6 @@ class Workflow(Base):
             json.dumps(self.schedule_json) if self.schedule_json else None,
             None,
         )
-        if len(self.resource_list) > 0:
-            for res in self.resource_list:
-                res.user_name = self._user
-                res.create_or_update_resource()
         return self._workflow_code
 
     def start(self) -> None:
