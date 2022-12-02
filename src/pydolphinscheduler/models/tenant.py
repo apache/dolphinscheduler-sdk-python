@@ -46,7 +46,7 @@ class Tenant(BaseSide):
         self, queue_name: str, user=configuration.USER_NAME
     ) -> None:
         """Create Tenant if not exists."""
-        tenant = gateway.create_tenant(self.name, self.description, queue_name)
+        tenant = gateway.create_tenant(self.name, queue_name, self.description)
         self.tenant_id = tenant.getId()
         self.code = tenant.getTenantCode()
         # gateway_result_checker(result, None)
