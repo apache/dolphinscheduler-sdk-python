@@ -21,6 +21,7 @@ import os
 
 import pytest
 
+from tests.testing.constants import JAVA_OPTS
 from tests.testing.docker_wrapper import DockerWrapper
 
 
@@ -44,7 +45,11 @@ def docker_setup_teardown():
         )
         ports = {"25333/tcp": 25333, "12345/tcp": 12345}
         container = docker_wrapper.run_until_log(
-            log="Started StandaloneServer in", tty=True, ports=ports
+            log="Started StandaloneServer in",
+            tty=True,
+            ports=ports,
+            # FIXME: To turn on resource center by Java properties, until support local type default.
+            environment={"JAVA_OPTS": JAVA_OPTS},
         )
         assert container is not None
         yield
