@@ -54,10 +54,8 @@ UNIT_TEST_USER_NAME = "unittest_user"
 UNIT_TEST_TENANT = "unittest_tenant"
 
 # JAVA Side
-JAVA_OPTS = (
-    "-server -Duser.timezone=UTC "
-    "resource_storage_type=HDFS resource.hdfs.fs.defaultfs=file:/// "
-    "resource.storage.upload.base.path=/tmp/dolphinscheduler "
-    "-Xms1g -Xmx1g -Xmn512m -XX:+PrintGCDetails -Xloggc:gc.log -XX:+HeapDumpOnOutOfMemoryError "
-    "-XX:HeapDumpPath=dump.hprof  -XX:-UseContainerSupport"
-)
+JAVA_OPTS = "-server -Duser.timezone=UTC " \
+            "resource_storage_type=HDFS resource.hdfs.fs.defaultfs=file:/// " \
+            "resource.storage.upload.base.path=/tmp/dolphinscheduler " \
+            "-Xms1g -Xmx1g -Xmn512m -XX:+PrintGCDetails -Xloggc:gc.log -XX:+HeapDumpOnOutOfMemoryError " \
+            "-XX:HeapDumpPath=dump.hprof  -XX:-UseContainerSupport"
