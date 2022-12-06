@@ -45,6 +45,7 @@ def tmp_user():
     user.delete()
 
 
+# @pytest.skip("activate when dolphinscheduler use local as default resource center")
 def test_create_or_update(tmp_user):
     """Test create or update resource to java gateway."""
     resource = Resource(name=name, content=content, user_name=UNIT_TEST_USER_NAME)
@@ -53,6 +54,7 @@ def test_create_or_update(tmp_user):
     assert result.getAlias() == name
 
 
+# @pytest.skip("activate when dolphinscheduler use local as default resource center")
 def test_get_resource_info(tmp_user):
     """Test get resource info from java gateway."""
     resource = Resource(name=name, user_name=UNIT_TEST_USER_NAME)
