@@ -17,7 +17,7 @@
 
 github:
   description: Apache DolphinScheduler Python API, aka PyDolphinscheduler.
-  homepage: https://dolphinscheduler.apache.org/python/dev
+  homepage: https://dolphinscheduler.apache.org/python/main
   labels:
     - dolphinscheduler
     - workflow
