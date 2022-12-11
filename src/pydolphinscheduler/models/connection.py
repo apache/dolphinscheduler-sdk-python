@@ -15,14 +15,20 @@
 # specific language governing permissions and limitations
 # under the License.
 
-"""Init pydolphinscheduler.core package."""
 
-from pydolphinscheduler.core.engine import Engine
-from pydolphinscheduler.core.task import Task
-from pydolphinscheduler.core.workflow import Workflow
+"""DolphinScheduler Connection object.
 
-__all__ = [
-    "Engine",
-    "Workflow",
-    "Task",
-]
+Including the basic information of database connection.
+"""
+
+from typing import NamedTuple
+
+
+class Connection(NamedTuple):
+    """Basic information of database connection."""
+
+    host: str
+    port: int
+    schema: str
+    username: str
+    password: str

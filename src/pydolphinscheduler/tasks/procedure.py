@@ -20,8 +20,8 @@
 from typing import Dict
 
 from pydolphinscheduler.constants import TaskType
-from pydolphinscheduler.core.database import Database
 from pydolphinscheduler.core.task import Task
+from pydolphinscheduler.models.datasource import Datasource
 
 
 class Procedure(Task):
@@ -42,10 +42,30 @@ class Procedure(Task):
 
     _task_custom_attr = {"method"}
 
-    def __init__(self, name: str, datasource_name: str, method: str, *args, **kwargs):
+    def __init__(
+        self,
+        name: str,
+        datasource_name: str,
+        method: str,
+        datasource_type: str | None = None,
+        *args,
+        **kwargs
+    ):
         super().__init__(name, TaskType.PROCEDURE, *args, **kwargs)
         self.datasource_name = datasource_name
+        self.datasource_type = datasource_type
         self.method = method
+
+    @property
+    def datasource(self) -> Dict:
+        """Get datasource for procedure task."""
+        datasource_task_u = Datasource.get_task_usage_4j(
+            self.datasource_name, self.datasource_type
+        )
+        return {
+            "datasource": datasource_task_u.id,
+            "type": datasource_task_u.type,
+        }
 
     @property
     def task_params(self, camel_attr: bool = True, custom_attr: set = None) -> Dict:
@@ -55,6 +75,5 @@ class Procedure(Task):
         directly set as python property, so we Override Task.task_params here.
         """
         params = super().task_params
-        datasource = Database(self.datasource_name, "type", "datasource")
-        params.update(datasource)
+        params.update(self.datasource)
         return params

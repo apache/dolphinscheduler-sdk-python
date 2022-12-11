@@ -19,11 +19,11 @@
 
 import logging
 import re
-from typing import Dict, List, Optional, Sequence, Union
+from typing import Dict, List, Sequence, Union
 
 from pydolphinscheduler.constants import TaskType
-from pydolphinscheduler.core.database import Database
 from pydolphinscheduler.core.task import Task
+from pydolphinscheduler.models.datasource import Datasource
 
 log = logging.getLogger(__file__)
 
@@ -79,10 +79,11 @@ class Sql(Task):
         name: str,
         datasource_name: str,
         sql: str,
-        sql_type: Optional[str] = None,
-        pre_statements: Optional[Union[str, Sequence[str]]] = None,
-        post_statements: Optional[Union[str, Sequence[str]]] = None,
-        display_rows: Optional[int] = 10,
+        datasource_type: str | None = None,
+        sql_type: str | None = None,
+        pre_statements: str | Sequence[str] | None = None,
+        post_statements: str | Sequence[str] | None = None,
+        display_rows: int | None = 10,
         *args,
         **kwargs
     ):
@@ -90,6 +91,7 @@ class Sql(Task):
         super().__init__(name, TaskType.SQL, *args, **kwargs)
         self.param_sql_type = sql_type
         self.datasource_name = datasource_name
+        self.datasource_type = datasource_type
         self.pre_statements = self.get_stm_list(pre_statements)
         self.post_statements = self.get_stm_list(post_statements)
         self.display_rows = display_rows
@@ -135,6 +137,17 @@ class Sql(Task):
             return SqlType.SELECT
 
     @property
+    def datasource(self) -> Dict:
+        """Get datasource for procedure sql."""
+        datasource_task_u = Datasource.get_task_usage_4j(
+            self.datasource_name, self.datasource_type
+        )
+        return {
+            "datasource": datasource_task_u.id,
+            "type": datasource_task_u.type,
+        }
+
+    @property
     def task_params(self, camel_attr: bool = True, custom_attr: set = None) -> Dict:
         """Override Task.task_params for sql task.
 
@@ -142,6 +155,5 @@ class Sql(Task):
         directly set as python property, so we Override Task.task_params here.
         """
         params = super().task_params
-        datasource = Database(self.datasource_name, "type", "datasource")
-        params.update(datasource)
+        params.update(self.datasource)
         return params
