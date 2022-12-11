@@ -15,72 +15,61 @@
 # specific language governing permissions and limitations
 # under the License.
 
-"""Test pydolphinscheduler tenant."""
+"""Test pydolphinscheduler models tenant."""
+
+from typing import Dict
+
 import pytest
 
 from pydolphinscheduler.models import Tenant, User
 
-
-def get_user(
-    name="test-name",
-    password="test-password",
-    email="test-email@abc.com",
-    phone="17366637777",
-    tenant="test-tenant",
-    queue="test-queue",
-    status=1,
-):
-    """Get a test user."""
-    user = User(name, password, email, phone, tenant, queue, status)
-    user.create_if_not_exists()
-    return user
+tenant_code = "tenant-code"
+queue_name = "tenant-name"
+description = "description-of-this-tenant"
 
 
-def get_tenant(
-    name="test-name-1",
-    queue="test-queue-1",
-    description="test-description",
-    tenant_code="test-tenant-code",
-    user_name=None,
-):
-    """Get a test tenant."""
-    tenant = Tenant(name, queue, description, code=tenant_code, user_name=user_name)
-    tenant.create_if_not_exists(name)
-    return tenant
+def test_create():
+    """Test create tenant."""
+    tenant = Tenant.create(tenant_code, queue_name, description)
+    assert tenant is not None
+    assert tenant.id is not None and tenant.tenant_code == tenant_code and tenant.queue_name == queue_name and tenant.description == description
 
 
-def test_create_tenant():
-    """Test create tenant from java gateway."""
-    tenant = get_tenant()
-    assert tenant.tenant_id is not None
+def test_get():
+    """Test get tenant."""
+    tenant = Tenant.get(tenant_code)
+    assert tenant is not None
+    assert tenant.id is not None and tenant.tenant_code == tenant_code and tenant.queue_name == queue_name and tenant.description == description
 
 
-def test_get_tenant():
-    """Test get tenant from java gateway."""
-    tenant = get_tenant()
-    tenant_ = Tenant.get_tenant(tenant.code)
-    assert tenant_.tenant_id == tenant.tenant_id
+def test_get_error():
+    """Test get tenant error."""
+    with pytest.raises(ValueError, match="Tenant.*not found."):
+        Tenant.get(tenant_code="not-exists-tenant")
 
 
-def test_update_tenant():
-    """Test update tenant from java gateway."""
-    tenant = get_tenant(user_name="admin")
-    tenant.update(
-        user="admin",
-        code="test-code-updated",
-        queue_id=1,
-        description="test-description-updated",
-    )
-    tenant_ = Tenant.get_tenant(code=tenant.code)
-    assert tenant_.code == "test-code-updated"
-    assert tenant_.queue == 1
+@pytest.mark.parametrize(
+    "update_params, expected",
+    [
+        ({"queue_name": "new_queue_name"}, {"queue_name": "new_queue_name"}),
+        ({"description": "new_description"}, {"description": "new_description"}),
+        ({"queue_name": "new_queue_name", "description": "new_description"}, {"queue_name": "new_queue_name", "description": "new_description"}),
+    ]
+)
+def test_update(update_params: Dict, expected: Dict):
+    """Test update tenant."""
+    # previous user attributes not equal to expected
+    original_tenant = Tenant.get(tenant_code=tenant_code)
+    assert all([getattr(original_tenant, exp) != expected.get(exp) for exp in expected])
+
+    # post user attributes equal to expected
+    update_tenant = Tenant.update(tenant_code, **update_params)
+    assert update_tenant is not None and update_tenant.id is not None and update_tenant.id == original_tenant.id and update_tenant.tenant_code == original_tenant.tenant_code
+    assert update_tenant.id is not None and update_tenant.tenant_code == tenant_code and update_tenant.queue_name == queue_name and update_tenant.description == description
 
 
-def test_delete_tenant():
-    """Test delete tenant from java gateway."""
-    tenant = get_tenant(user_name="admin")
-    tenant.delete()
-    with pytest.raises(AttributeError) as excinfo:
-        _ = tenant.tenant_id
-
-    assert excinfo.type == AttributeError
+def test_delete():
+    """Test delete tenant."""
+    tenant = Tenant.update(tenant_code)
+    assert tenant is not None
+    assert tenant.id is not None and tenant.tenant_code == tenant_code and tenant.queue_name == queue_name and tenant.description == description

@@ -424,7 +424,7 @@ def test_condition_set_dep_workflow(mock_task_code_version):
 
         # General tasks test
         assert len(pd.tasks) == 6
-        assert sorted(pd.task_list, key=lambda t: t.name) == sorted(
+        assert sorted(pd.task_list, key=lambda t: t.name_chd) == sorted(
             [
                 pre_task_1,
                 pre_task_2,
@@ -433,7 +433,7 @@ def test_condition_set_dep_workflow(mock_task_code_version):
                 fail_branch,
                 condition,
             ],
-            key=lambda t: t.name,
+            key=lambda t: t.name_chd,
         )
         # Task dep test
         assert success_branch._upstream_task_codes == {condition.code}

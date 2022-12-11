@@ -48,7 +48,7 @@ def test_single_task_outside(mock_code):
     assert len(pd.tasks) == 1
 
     pd_task = pd.tasks[12345]
-    assert pd_task.name == "foo"
+    assert pd_task.name_chd == "foo"
     assert pd_task.raw_script == "def foo():\n    print(TASK_NAME)\nfoo()"
 
 
@@ -69,7 +69,7 @@ def test_single_task_inside(mock_code):
     assert len(pd.tasks) == 1
 
     pd_task = pd.tasks[12345]
-    assert pd_task.name == "foo"
+    assert pd_task.name_chd == "foo"
     assert pd_task.raw_script == "def foo():\n    print(TASK_NAME)\nfoo()"
 
 

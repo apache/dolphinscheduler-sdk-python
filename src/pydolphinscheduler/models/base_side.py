@@ -35,14 +35,8 @@ class BaseSide(Base):
         # TODO comment for avoiding cycle import
         # user: Optional[User] = ProcessDefinitionDefault.USER
         user=configuration.WORKFLOW_USER,
+        *args,
+        **kwargs,
     ):
         """Create Base if not exists."""
         raise NotImplementedError
-
-    def delete_all(self):
-        """Delete all method."""
-        if not self:
-            return
-        list_pro = [key for key in self.__dict__.keys()]
-        for key in list_pro:
-            self.__delattr__(key)

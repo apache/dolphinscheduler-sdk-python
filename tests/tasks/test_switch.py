@@ -279,8 +279,8 @@ def test_switch_set_dep_workflow(mock_task_code_version):
         parent >> switch
         # General tasks test
         assert len(pd.tasks) == 4
-        assert sorted(pd.task_list, key=lambda t: t.name) == sorted(
-            [parent, switch, switch_child_1, switch_child_2], key=lambda t: t.name
+        assert sorted(pd.task_list, key=lambda t: t.name_chd) == sorted(
+            [parent, switch, switch_child_1, switch_child_2], key=lambda t: t.name_chd
         )
         # Task dep test
         assert parent._downstream_task_codes == {switch.code}

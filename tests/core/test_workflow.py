@@ -28,7 +28,7 @@ from pydolphinscheduler import configuration
 from pydolphinscheduler.core.resource import Resource
 from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.exceptions import PyDSParamException
-from pydolphinscheduler.models import Project, Tenant, User
+from pydolphinscheduler.models import Project, User
 from pydolphinscheduler.tasks.switch import Branch, Default, Switch, SwitchCondition
 from pydolphinscheduler.utils.date import conv_to_schedule
 from tests.testing.task import Task
@@ -49,7 +49,6 @@ def test_workflow_key_attr(func):
     [
         ("timezone", configuration.WORKFLOW_TIME_ZONE),
         ("project", Project(configuration.WORKFLOW_PROJECT)),
-        ("tenant", Tenant(configuration.WORKFLOW_TENANT)),
         (
             "user",
             User(
@@ -57,7 +56,6 @@ def test_workflow_key_attr(func):
                 configuration.USER_PASSWORD,
                 configuration.USER_EMAIL,
                 configuration.USER_PHONE,
-                configuration.WORKFLOW_TENANT,
                 configuration.WORKFLOW_QUEUE,
                 configuration.USER_STATE,
             ),
@@ -146,7 +144,6 @@ def test_set_release_state_error(value):
     "set_attr,set_val,get_attr,get_val",
     [
         ("_project", "project", "project", Project("project")),
-        ("_tenant", "tenant", "tenant", Tenant("tenant")),
         ("_start_time", "2021-01-01", "start_time", datetime(2021, 1, 1)),
         ("_end_time", "2021-01-01", "end_time", datetime(2021, 1, 1)),
     ],
@@ -333,7 +330,6 @@ def test_workflow_get_define_without_task():
         "name": TEST_WORKFLOW_NAME,
         "description": None,
         "project": configuration.WORKFLOW_PROJECT,
-        "tenant": configuration.WORKFLOW_TENANT,
         "workerGroup": configuration.WORKFLOW_WORKER_GROUP,
         "warningType": configuration.WORKFLOW_WARNING_TYPE,
         "warningGroupId": 0,
@@ -453,32 +449,7 @@ def test_workflow_simple_separate():
             pre_task = pd.get_one_task_by_name(f"task-{i - 1}")
             curr_task.set_upstream(pre_task)
     assert len(pd.tasks) == expect_tasks_num
-    assert all(["task-" in task.name for task in pd.task_list])
-
-
-@pytest.mark.parametrize(
-    "user_attrs",
-    [
-        {"tenant": "tenant_specific"},
-    ],
-)
-def test_set_workflow_user_attr(user_attrs):
-    """Test user with correct attributes if we specific assigned to workflow object."""
-    default_value = {
-        "tenant": configuration.WORKFLOW_TENANT,
-    }
-    with Workflow(TEST_WORKFLOW_NAME, **user_attrs) as pd:
-        user = pd.user
-        for attr in default_value:
-            # Get assigned attribute if we specific, else get default value
-            except_attr = (
-                user_attrs[attr] if attr in user_attrs else default_value[attr]
-            )
-            # Get actually attribute of user object
-            actual_attr = getattr(user, attr)
-            assert (
-                except_attr == actual_attr
-            ), f"Except attribute is {except_attr} but get {actual_attr}"
+    assert all(["task-" in task.name_chd for task in pd.task_list])
 
 
 def test_schedule_json_none_schedule():
