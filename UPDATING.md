@@ -24,6 +24,7 @@ It started after version 2.0.5 released
 
 ## Main
 
+* Change Task attr ``timeout`` type from int to timedelta and use timeout determine attr ``timeout_flag`` value ([#41](https://github.com/apache/dolphinscheduler-sdk-python/pull/41)) 
 * Remove the spark version of spark task ([#11860](https://github.com/apache/dolphinscheduler/pull/11860)).
 * Change class name from process definition to workflow ([#26](https://github.com/apache/dolphinscheduler-sdk-python/pull/26))
   * Deprecated class `ProcessDefinition` to `Workflow`
