@@ -31,7 +31,7 @@ under the License.
 [![Twitter Follow](https://img.shields.io/twitter/follow/dolphinschedule.svg?style=social&label=Follow)](https://twitter.com/dolphinschedule)
 [![Slack Status](https://img.shields.io/badge/slack-join_chat-white.svg?logo=slack&style=social)](https://s.apache.org/dolphinscheduler-slack)
 
-**PyDolphinScheduler** is python API for [Apache DolphinScheduler](https://dolphinscheduler.apache.org/en-us/index.html),
+**PyDolphinScheduler** is python API for [Apache DolphinScheduler](https://dolphinscheduler.apache.org),
 which allow you definition your workflow by python code, aka workflow-as-codes.
 
 ## Quick Start
@@ -69,7 +69,7 @@ docker run --name dolphinscheduler-standalone-server -p 12345:12345 -p 25333:253
 
 After the container is started, you can access the DolphinScheduler UI via http://localhost:12345/dolphinscheduler.
 For more way to start DolphinScheduler and the more detail about DolphinScheduler, please refer to
-[DolphinScheduler](https://dolphinscheduler.apache.org/en-us/docs/latest/user_doc/about/introduction.html)
+[DolphinScheduler](https://dolphinscheduler.apache.org/#/en-us/docs/3.1.2/guide/start/quick-start)
 
 ### Run a simple example
 
@@ -92,7 +92,7 @@ python ./tutorial.py
 After that, a new workflow will be created by PyDolphinScheduler, and you can see it in DolphinScheduler web
 UI's Project Management page. It will trigger the workflow automatically, so you can see the workflow running
 in DolphinScheduler web UI's Workflow Instance page too. For more detail about any function about DolphinScheduler
-Project Management, please refer to [DolphinScheduler Project Management](https://dolphinscheduler.apache.org/en-us/docs/latest/user_doc/guide/project/project-list.html)
+Project Management, please refer to [DolphinScheduler Workflow](https://dolphinscheduler.apache.org/#/en-us/docs/3.1.2/guide/project/workflow-definition)
 
 ## Documentation
 
