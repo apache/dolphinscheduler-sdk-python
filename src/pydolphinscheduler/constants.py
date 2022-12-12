@@ -38,7 +38,8 @@ class TaskFlag(str):
 class TaskTimeoutFlag(str):
     """Constants for task timeout flag."""
 
-    CLOSE = "CLOSE"
+    OFF = "CLOSE"
+    ON = "OPEN"
 
 
 class TaskType(str):

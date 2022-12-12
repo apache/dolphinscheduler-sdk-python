@@ -17,7 +17,8 @@
 
 """Date util function collections."""
 
-from datetime import datetime
+from datetime import datetime, timedelta
+from math import ceil
 
 from pydolphinscheduler.constants import Delimiter, Time
 
@@ -80,3 +81,14 @@ def conv_from_str(src: str) -> datetime:
             )
     else:
         raise NotImplementedError("%s could not be convert to datetime for now.", src)
+
+
+def timedelta2timeout(td: timedelta) -> int:
+    """Convert timedelta to workflow timeout, only keep ``math.ceil`` integer in minutes.
+
+    Because dolphinscheduler timeout attribute only supported in minutes, so we need to convert timedelta
+    into minutes. And will use ``math.ceil`` to keep it integer and not less than 1 if it configured.
+
+    :param td: timedelta object want to convert
+    """
+    return ceil(td.total_seconds() / 60)

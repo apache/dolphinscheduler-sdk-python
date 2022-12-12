@@ -19,6 +19,7 @@
 import copy
 import types
 import warnings
+from datetime import timedelta
 from logging import getLogger
 from typing import Dict, List, Optional, Sequence, Set, Tuple, Union
 
@@ -37,6 +38,7 @@ from pydolphinscheduler.core.workflow import Workflow, WorkflowContext
 from pydolphinscheduler.exceptions import PyDSParamException, PyResPluginException
 from pydolphinscheduler.java_gateway import gateway
 from pydolphinscheduler.models import Base
+from pydolphinscheduler.utils.date import timedelta2timeout
 
 logger = getLogger(__name__)
 
@@ -130,9 +132,8 @@ class Task(Base):
         delay_time: Optional[int] = 0,
         fail_retry_times: Optional[int] = 0,
         fail_retry_interval: Optional[int] = 1,
-        timeout_flag: Optional[int] = TaskTimeoutFlag.CLOSE,
         timeout_notify_strategy: Optional = None,
-        timeout: Optional[int] = 0,
+        timeout: Optional[timedelta] = None,
         workflow: Optional[Workflow] = None,
         local_params: Optional[List] = None,
         resource_list: Optional[List] = None,
@@ -151,9 +152,8 @@ class Task(Base):
         self.fail_retry_times = fail_retry_times
         self.fail_retry_interval = fail_retry_interval
         self.delay_time = delay_time
-        self.timeout_flag = timeout_flag
         self.timeout_notify_strategy = timeout_notify_strategy
-        self.timeout = timeout
+        self._timeout: timedelta = timeout
         self._workflow = None
         self.workflow: Workflow = workflow or WorkflowContext.get()
         self._upstream_task_codes: Set[int] = set()
@@ -189,6 +189,21 @@ class Task(Base):
     def workflow(self, workflow: Optional[Workflow]):
         """Set attribute workflow."""
         self._workflow = workflow
+
+    @property
+    def timeout(self) -> int:
+        """Get attribute timeout."""
+        return timedelta2timeout(self._timeout) if self._timeout else 0
+
+    @timeout.setter
+    def timeout(self, val: timedelta) -> None:
+        """Set attribute timeout."""
+        self._timeout = val
+
+    @property
+    def timeout_flag(self) -> str:
+        """Whether the timeout attribute is being set or not."""
+        return TaskTimeoutFlag.ON if self._timeout else TaskTimeoutFlag.OFF
 
     @property
     def resource_list(self) -> List[Dict[str, Resource]]:
