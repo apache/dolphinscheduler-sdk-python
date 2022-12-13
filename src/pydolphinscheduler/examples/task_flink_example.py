@@ -21,7 +21,7 @@
 from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.tasks.flink import DeployMode, Flink, ProgramType
 
-with Workflow(name="task_flink_example", tenant="tenant_exists") as pd:
+with Workflow(name="task_flink_example", tenant="tenant_exists") as workflow:
     task = Flink(
         name="task_flink",
         main_class="org.apache.flink.streaming.examples.wordcount.WordCount",
@@ -29,5 +29,5 @@ with Workflow(name="task_flink_example", tenant="tenant_exists") as pd:
         program_type=ProgramType.JAVA,
         deploy_mode=DeployMode.LOCAL,
     )
-    pd.run()
+    workflow.run()
 # [end workflow_declare]

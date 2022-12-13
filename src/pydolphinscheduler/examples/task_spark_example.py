@@ -21,7 +21,7 @@
 from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.tasks.spark import DeployMode, ProgramType, Spark
 
-with Workflow(name="task_spark_example", tenant="tenant_exists") as pd:
+with Workflow(name="task_spark_example", tenant="tenant_exists") as workflow:
     task = Spark(
         name="task_spark",
         main_class="org.apache.spark.examples.SparkPi",
@@ -29,5 +29,5 @@ with Workflow(name="task_spark_example", tenant="tenant_exists") as pd:
         program_type=ProgramType.JAVA,
         deploy_mode=DeployMode.LOCAL,
     )
-    pd.run()
+    workflow.run()
 # [end workflow_declare]

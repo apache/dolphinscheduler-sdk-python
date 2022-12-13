@@ -72,7 +72,7 @@ with Workflow(
         Resource(name=main, content="from dependence import now\nprint(now)"),
     ],
     # [end create_new_resources]
-) as pd:
+) as workflow:
     # [start use_exists_resources]
     task_use_resource = Shell(
         name="use-resource",
@@ -84,5 +84,5 @@ with Workflow(
     )
     # [end use_exists_resources]
 
-    pd.run()
+    workflow.run()
 # [end workflow]

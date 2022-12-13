@@ -37,9 +37,9 @@ class WorkflowContext:
     _context_managed_workflow: Optional["Workflow"] = None
 
     @classmethod
-    def set(cls, pd: "Workflow") -> None:
+    def set(cls, workflow: "Workflow") -> None:
         """Set attribute self._context_managed_workflow."""
-        cls._context_managed_workflow = pd
+        cls._context_managed_workflow = workflow
 
     @classmethod
     def get(cls) -> Optional["Workflow"]:

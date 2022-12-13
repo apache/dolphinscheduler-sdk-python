@@ -40,8 +40,10 @@ TEST_TASK_TYPE = "test-task-type"
 @pytest.mark.parametrize("func", ["run", "submit", "start"])
 def test_workflow_key_attr(func):
     """Test workflow have specific functions or attributes."""
-    with Workflow(TEST_WORKFLOW_NAME) as pd:
-        assert hasattr(pd, func), f"Workflow instance don't have attribute `{func}`"
+    with Workflow(TEST_WORKFLOW_NAME) as workflow:
+        assert hasattr(
+            workflow, func
+        ), f"Workflow instance don't have attribute `{func}`"
 
 
 @pytest.mark.parametrize(
@@ -71,10 +73,10 @@ def test_workflow_key_attr(func):
 )
 def test_workflow_default_value(name, value):
     """Test workflow default attributes."""
-    with Workflow(TEST_WORKFLOW_NAME) as pd:
-        assert getattr(pd, name) == value, (
+    with Workflow(TEST_WORKFLOW_NAME) as workflow:
+        assert getattr(workflow, name) == value, (
             f"Workflow instance attribute `{name}` not with "
-            f"except default value `{getattr(pd, name)}`"
+            f"except default value `{getattr(workflow, name)}`"
         )
 
 
@@ -100,10 +102,10 @@ def test_workflow_default_value(name, value):
 )
 def test_set_attr(name, cls, expect):
     """Test workflow set attributes which get with same type."""
-    with Workflow(TEST_WORKFLOW_NAME) as pd:
-        setattr(pd, name, expect)
+    with Workflow(TEST_WORKFLOW_NAME) as workflow:
+        setattr(workflow, name, expect)
         assert (
-            getattr(pd, name) == expect
+            getattr(workflow, name) == expect
         ), f"Workflow set attribute `{name}` do not work expect"
 
 
@@ -116,9 +118,9 @@ def test_set_attr(name, cls, expect):
 )
 def test_set_release_state(value, expect):
     """Test workflow set release_state attributes."""
-    with Workflow(TEST_WORKFLOW_NAME, release_state=value) as pd:
+    with Workflow(TEST_WORKFLOW_NAME, release_state=value) as workflow:
         assert (
-            getattr(pd, "release_state") == expect
+            getattr(workflow, "release_state") == expect
         ), "Workflow set attribute release_state do not return expect value."
 
 
@@ -134,12 +136,12 @@ def test_set_release_state(value, expect):
 )
 def test_set_release_state_error(value):
     """Test workflow set release_state attributes with error."""
-    pd = Workflow(TEST_WORKFLOW_NAME, release_state=value)
+    workflow = Workflow(TEST_WORKFLOW_NAME, release_state=value)
     with pytest.raises(
         PyDSParamException,
         match="Parameter release_state only support `online` or `offline` but get.*",
     ):
-        pd.release_state
+        workflow.release_state
 
 
 @pytest.mark.parametrize(
@@ -153,10 +155,10 @@ def test_set_release_state_error(value):
 )
 def test_set_attr_return_special_object(set_attr, set_val, get_attr, get_val):
     """Test workflow set attributes which get with different type."""
-    with Workflow(TEST_WORKFLOW_NAME) as pd:
-        setattr(pd, set_attr, set_val)
+    with Workflow(TEST_WORKFLOW_NAME) as workflow:
+        setattr(workflow, set_attr, set_val)
         assert get_val == getattr(
-            pd, get_attr
+            workflow, get_attr
         ), f"Set attribute {set_attr} can not get back with {get_val}."
 
 
@@ -174,8 +176,8 @@ def test__parse_datetime(val, expect):
 
     Only two datetime test cases here because we have more test cases in tests/utils/test_date.py file.
     """
-    with Workflow(TEST_WORKFLOW_NAME) as pd:
-        assert expect == pd._parse_datetime(
+    with Workflow(TEST_WORKFLOW_NAME) as workflow:
+        assert expect == workflow._parse_datetime(
             val
         ), f"Function _parse_datetime with unexpect value by {val}."
 
@@ -190,9 +192,9 @@ def test__parse_datetime(val, expect):
 )
 def test__parse_datetime_not_support_type(val: Any):
     """Test workflow function _parse_datetime not support type error."""
-    with Workflow(TEST_WORKFLOW_NAME) as pd:
+    with Workflow(TEST_WORKFLOW_NAME) as workflow:
         with pytest.raises(PyDSParamException, match="Do not support value type.*?"):
-            pd._parse_datetime(val)
+            workflow._parse_datetime(val)
 
 
 @pytest.mark.parametrize(
@@ -272,8 +274,8 @@ def test_execute_type_not_support_type(val: str):
 )
 def test_property_param_json(param, expect):
     """Test Workflow's property param_json."""
-    pd = Workflow(TEST_WORKFLOW_NAME, param=param)
-    assert pd.param_json == expect
+    workflow = Workflow(TEST_WORKFLOW_NAME, param=param)
+    assert workflow.param_json == expect
 
 
 @patch(
@@ -282,7 +284,7 @@ def test_property_param_json(param, expect):
 )
 def test__pre_submit_check_switch_without_param(mock_code_version):
     """Test :func:`_pre_submit_check` if workflow with switch but without attribute param."""
-    with Workflow(TEST_WORKFLOW_NAME) as pd:
+    with Workflow(TEST_WORKFLOW_NAME) as workflow:
         parent = Task(name="parent", task_type=TEST_TASK_TYPE)
         switch_child_1 = Task(name="switch_child_1", task_type=TEST_TASK_TYPE)
         switch_child_2 = Task(name="switch_child_2", task_type=TEST_TASK_TYPE)
@@ -298,7 +300,7 @@ def test__pre_submit_check_switch_without_param(mock_code_version):
             match="Parameter param or at least one local_param of task must "
             "be provider if task Switch in workflow.",
         ):
-            pd._pre_submit_check()
+            workflow._pre_submit_check()
 
 
 @patch(
@@ -307,7 +309,7 @@ def test__pre_submit_check_switch_without_param(mock_code_version):
 )
 def test__pre_submit_check_switch_with_local_params(mock_code_version):
     """Test :func:`_pre_submit_check` if workflow with switch with local params of task."""
-    with Workflow(TEST_WORKFLOW_NAME) as pd:
+    with Workflow(TEST_WORKFLOW_NAME) as workflow:
         parent = Task(
             name="parent",
             task_type=TEST_TASK_TYPE,
@@ -324,7 +326,7 @@ def test__pre_submit_check_switch_with_local_params(mock_code_version):
 
         switch = Switch(name="switch", condition=switch_condition)
         parent >> switch
-        pd._pre_submit_check()
+        workflow._pre_submit_check()
 
 
 def test_workflow_get_define_without_task():
@@ -346,45 +348,45 @@ def test_workflow_get_define_without_task():
         "taskRelationJson": [{}],
         "resourceList": [],
     }
-    with Workflow(TEST_WORKFLOW_NAME) as pd:
-        assert pd.get_define() == expect
+    with Workflow(TEST_WORKFLOW_NAME) as workflow:
+        assert workflow.get_define() == expect
 
 
 def test_workflow_simple_context_manager():
     """Test simple create workflow in workflow context manager mode."""
     expect_tasks_num = 5
-    with Workflow(TEST_WORKFLOW_NAME) as pd:
+    with Workflow(TEST_WORKFLOW_NAME) as workflow:
         for i in range(expect_tasks_num):
             curr_task = Task(name=f"task-{i}", task_type=f"type-{i}")
             # Set deps task i as i-1 parent
             if i > 0:
-                pre_task = pd.get_one_task_by_name(f"task-{i - 1}")
+                pre_task = workflow.get_one_task_by_name(f"task-{i - 1}")
                 curr_task.set_upstream(pre_task)
-        assert len(pd.tasks) == expect_tasks_num
+        assert len(workflow.tasks) == expect_tasks_num
 
         # Test if task workflow same as origin one
-        task: Task = pd.get_one_task_by_name("task-0")
-        assert pd is task.workflow
+        task: Task = workflow.get_one_task_by_name("task-0")
+        assert workflow is task.workflow
 
         # Test if all tasks with expect deps
         for i in range(expect_tasks_num):
-            task: Task = pd.get_one_task_by_name(f"task-{i}")
+            task: Task = workflow.get_one_task_by_name(f"task-{i}")
             if i == 0:
                 assert task._upstream_task_codes == set()
                 assert task._downstream_task_codes == {
-                    pd.get_one_task_by_name("task-1").code
+                    workflow.get_one_task_by_name("task-1").code
                 }
             elif i == expect_tasks_num - 1:
                 assert task._upstream_task_codes == {
-                    pd.get_one_task_by_name(f"task-{i - 1}").code
+                    workflow.get_one_task_by_name(f"task-{i - 1}").code
                 }
                 assert task._downstream_task_codes == set()
             else:
                 assert task._upstream_task_codes == {
-                    pd.get_one_task_by_name(f"task-{i - 1}").code
+                    workflow.get_one_task_by_name(f"task-{i - 1}").code
                 }
                 assert task._downstream_task_codes == {
-                    pd.get_one_task_by_name(f"task-{i + 1}").code
+                    workflow.get_one_task_by_name(f"task-{i + 1}").code
                 }
 
 
@@ -399,38 +401,38 @@ def test_deprecated_workflow_simple_context_manager():
         assert issubclass(w[-1].category, DeprecationWarning)
         assert "deprecated" in str(w[-1].message)
 
-        with ProcessDefinition(TEST_WORKFLOW_NAME) as pd:
+        with ProcessDefinition(TEST_WORKFLOW_NAME) as workflow:
             for i in range(expect_tasks_num):
                 curr_task = Task(name=f"task-{i}", task_type=f"type-{i}")
                 # Set deps task i as i-1 parent
                 if i > 0:
-                    pre_task = pd.get_one_task_by_name(f"task-{i - 1}")
+                    pre_task = workflow.get_one_task_by_name(f"task-{i - 1}")
                     curr_task.set_upstream(pre_task)
-            assert len(pd.tasks) == expect_tasks_num
+            assert len(workflow.tasks) == expect_tasks_num
 
             # Test if task workflow same as origin one
-            task: Task = pd.get_one_task_by_name("task-0")
-            assert pd is task.workflow
+            task: Task = workflow.get_one_task_by_name("task-0")
+            assert workflow is task.workflow
 
             # Test if all tasks with expect deps
             for i in range(expect_tasks_num):
-                task: Task = pd.get_one_task_by_name(f"task-{i}")
+                task: Task = workflow.get_one_task_by_name(f"task-{i}")
                 if i == 0:
                     assert task._upstream_task_codes == set()
                     assert task._downstream_task_codes == {
-                        pd.get_one_task_by_name("task-1").code
+                        workflow.get_one_task_by_name("task-1").code
                     }
                 elif i == expect_tasks_num - 1:
                     assert task._upstream_task_codes == {
-                        pd.get_one_task_by_name(f"task-{i - 1}").code
+                        workflow.get_one_task_by_name(f"task-{i - 1}").code
                     }
                     assert task._downstream_task_codes == set()
                 else:
                     assert task._upstream_task_codes == {
-                        pd.get_one_task_by_name(f"task-{i - 1}").code
+                        workflow.get_one_task_by_name(f"task-{i - 1}").code
                     }
                     assert task._downstream_task_codes == {
-                        pd.get_one_task_by_name(f"task-{i + 1}").code
+                        workflow.get_one_task_by_name(f"task-{i + 1}").code
                     }
 
 
@@ -441,19 +443,19 @@ def test_workflow_simple_separate():
     test_workflow_simple_context_manager.
     """
     expect_tasks_num = 5
-    pd = Workflow(TEST_WORKFLOW_NAME)
+    workflow = Workflow(TEST_WORKFLOW_NAME)
     for i in range(expect_tasks_num):
         curr_task = Task(
             name=f"task-{i}",
             task_type=f"type-{i}",
-            workflow=pd,
+            workflow=workflow,
         )
         # Set deps task i as i-1 parent
         if i > 0:
-            pre_task = pd.get_one_task_by_name(f"task-{i - 1}")
+            pre_task = workflow.get_one_task_by_name(f"task-{i - 1}")
             curr_task.set_upstream(pre_task)
-    assert len(pd.tasks) == expect_tasks_num
-    assert all(["task-" in task.name for task in pd.task_list])
+    assert len(workflow.tasks) == expect_tasks_num
+    assert all(["task-" in task.name for task in workflow.task_list])
 
 
 @pytest.mark.parametrize(
@@ -467,8 +469,8 @@ def test_set_workflow_user_attr(user_attrs):
     default_value = {
         "tenant": configuration.WORKFLOW_TENANT,
     }
-    with Workflow(TEST_WORKFLOW_NAME, **user_attrs) as pd:
-        user = pd.user
+    with Workflow(TEST_WORKFLOW_NAME, **user_attrs) as workflow:
+        user = workflow.user
         for attr in default_value:
             # Get assigned attribute if we specific, else get default value
             except_attr = (
@@ -486,8 +488,8 @@ def test_schedule_json_none_schedule():
     with Workflow(
         TEST_WORKFLOW_NAME,
         schedule=None,
-    ) as pd:
-        assert pd.schedule_json is None
+    ) as workflow:
+        assert workflow.schedule_json is None
 
 
 # We freeze time here, because we test start_time with None, and if will get datetime.datetime.now. If we do
@@ -561,5 +563,5 @@ def test_schedule_json_start_and_end_time(start_time, end_time, expect_date):
         start_time=start_time,
         end_time=end_time,
         timezone=configuration.WORKFLOW_TIME_ZONE,
-    ) as pd:
-        assert pd.schedule_json == expect
+    ) as workflow:
+        assert workflow.schedule_json == expect

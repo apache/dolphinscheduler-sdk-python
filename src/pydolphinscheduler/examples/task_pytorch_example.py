@@ -24,7 +24,7 @@ from pydolphinscheduler.tasks.pytorch import Pytorch
 with Workflow(
     name="task_pytorch_example",
     tenant="tenant_exists",
-) as pd:
+) as workflow:
 
     # run project with existing environment
     task_existing_env = Pytorch(
@@ -58,5 +58,5 @@ with Workflow(
         requirements="requirements.txt",
     )
 
-    pd.submit()
+    workflow.submit()
 # [end workflow_declare]

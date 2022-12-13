@@ -24,7 +24,7 @@ from pydolphinscheduler.tasks.kubernetes import Kubernetes
 with Workflow(
     name="task_kubernetes_example",
     tenant="tenant_exists",
-) as pd:
+) as workflow:
     task_k8s = Kubernetes(
         name="task_k8s",
         image="ds-dev",
@@ -32,5 +32,5 @@ with Workflow(
         min_cpu_cores=2.0,
         min_memory_space=10.0,
     )
-    pd.submit()
+    workflow.submit()
 # [end workflow_declare]

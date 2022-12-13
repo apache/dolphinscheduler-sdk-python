@@ -43,16 +43,16 @@ from pydolphinscheduler.tasks.shell import Shell
 with Workflow(
     name="task_dependent_external",
     tenant="tenant_exists",
-) as pd:
+) as workflow:
     task_1 = Shell(name="task_1", command="echo task 1")
     task_2 = Shell(name="task_2", command="echo task 2")
     task_3 = Shell(name="task_3", command="echo task 3")
-    pd.submit()
+    workflow.submit()
 
 with Workflow(
     name="task_dependent_example",
     tenant="tenant_exists",
-) as pd:
+) as workflow:
     task = Dependent(
         name="task_dependent",
         dependence=And(
@@ -70,5 +70,5 @@ with Workflow(
             )
         ),
     )
-    pd.submit()
+    workflow.submit()
 # [end workflow_declare]

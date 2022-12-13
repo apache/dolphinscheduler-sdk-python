@@ -41,7 +41,7 @@ IS_CHAIN = True
 for wf in range(0, NUM_WORKFLOWS):
     workflow_name = f"workflow:{wf}"
 
-    with Workflow(name=workflow_name, tenant=TENANT) as pd:
+    with Workflow(name=workflow_name, tenant=TENANT) as workflow:
         for t in range(0, NUM_TASKS):
             task_name = f"task:{t}-{workflow_name}"
             command = f"echo This is task {task_name}"
@@ -49,7 +49,7 @@ for wf in range(0, NUM_WORKFLOWS):
 
             if IS_CHAIN and t > 0:
                 pre_task_name = f"task:{t-1}-{workflow_name}"
-                pd.get_one_task_by_name(pre_task_name) >> task
+                workflow.get_one_task_by_name(pre_task_name) >> task
 
         # We just submit workflow and task definition without set schedule time or run it manually
-        pd.submit()
+        workflow.submit()

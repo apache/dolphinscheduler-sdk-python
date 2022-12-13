@@ -30,7 +30,7 @@ INTO TABLE talkingdata OPTIONS(mode='overwrite');
 with Workflow(
     name="task_openmldb_example",
     tenant="tenant_exists",
-) as pd:
+) as workflow:
     task_openmldb = OpenMLDB(
         name="task_openmldb",
         zookeeper="127.0.0.1:2181",
@@ -39,5 +39,5 @@ with Workflow(
         sql=sql,
     )
 
-    pd.run()
+    workflow.run()
 # [end workflow_declare]

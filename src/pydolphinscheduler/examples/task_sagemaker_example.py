@@ -36,11 +36,11 @@ sagemaker_request_data = {
 with Workflow(
     name="task_sagemaker_example",
     tenant="tenant_exists",
-) as pd:
+) as workflow:
     task_sagemaker = SageMaker(
         name="task_sagemaker",
         sagemaker_request_json=json.dumps(sagemaker_request_data, indent=2),
     )
 
-    pd.run()
+    workflow.run()
 # [end workflow_declare]
