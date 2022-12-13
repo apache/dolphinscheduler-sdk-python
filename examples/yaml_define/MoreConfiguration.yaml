@@ -34,7 +34,6 @@ tasks:
     delay_time: 20
     fail_retry_times: 30
     fail_retry_interval: 5
-    timeout_flag: "CLOSE"
     timeout: 60
     local_params:
       - { "prop": "n", "direct": "IN", "type": "VARCHAR", "value": "${n}" }

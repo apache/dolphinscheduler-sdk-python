@@ -17,11 +17,17 @@
 
 """Test utils.date module."""
 
-from datetime import datetime
+from datetime import datetime, timedelta
+from typing import Dict
 
 import pytest
 
-from pydolphinscheduler.utils.date import FMT_STD, conv_from_str, conv_to_schedule
+from pydolphinscheduler.utils.date import (
+    FMT_STD,
+    conv_from_str,
+    conv_to_schedule,
+    timedelta2timeout,
+)
 
 curr_date = datetime.now()
 
@@ -76,3 +82,22 @@ def test_conv_from_str_not_impl(src: str) -> None:
         NotImplementedError, match=".*? could not be convert to datetime for now."
     ):
         conv_from_str(src)
+
+
+@pytest.mark.parametrize(
+    "src, expect",
+    [
+        ({"seconds": 1}, 1),
+        ({"seconds": 60}, 1),
+        ({"seconds": 62}, 2),
+        ({"minutes": 1}, 1),
+        ({"minutes": 1.1}, 2),
+        ({"minutes": 2}, 2),
+        ({"hours": 1}, 60),
+        ({"hours": 1.3}, 78),
+    ],
+)
+def test_timedelta2timeout(src: Dict, expect: int) -> None:
+    """Test function timedelta2timeout."""
+    td = timedelta(**src)
+    assert timedelta2timeout(td) == expect, f"Test case {td} not expect to {expect}."

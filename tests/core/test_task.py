@@ -18,7 +18,8 @@
 """Test Task class function."""
 import logging
 import re
-from typing import Set
+from datetime import timedelta
+from typing import Set, Tuple
 from unittest.mock import PropertyMock, patch
 
 import pytest
@@ -98,6 +99,27 @@ def test__get_attr(addition: Set, ignore: Set, expect: Set):
     task._task_custom_attr = addition
     task._task_ignore_attr = ignore
     assert task._get_attr() == expect
+
+
+@pytest.mark.parametrize(
+    "value, expect",
+    [
+        (None, (0, "CLOSE")),
+        (timedelta(seconds=0.1), (1, "OPEN")),
+        (timedelta(seconds=61), (2, "OPEN")),
+        (timedelta(seconds=0), (0, "CLOSE")),
+        (timedelta(minutes=1.3), (2, "OPEN")),
+    ],
+)
+def test_task_timeout(value: timedelta, expect: Tuple[int, str]):
+    """Test task timout attribute."""
+    task = TestTask(
+        name="test-get-attr",
+        task_type="test",
+        timeout=value,
+    )
+    assert task.timeout == expect[0]
+    assert task.timeout_flag == expect[1]
 
 
 @pytest.mark.parametrize(
