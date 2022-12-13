@@ -45,6 +45,6 @@ def test_change_workflow_attr(pre: Dict, post: Dict):
     """Test whether workflow success when specific attribute change."""
     assert pre.keys() == post.keys(), "Not equal keys for pre and post attribute."
     for attrs in [pre, post]:
-        with Workflow(name=WORKFLOW_NAME, **attrs) as pd:
+        with Workflow(name=WORKFLOW_NAME, **attrs) as workflow:
             Shell(name=TASK_NAME, command="echo 1")
-            pd.submit()
+            workflow.submit()

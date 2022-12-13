@@ -32,7 +32,7 @@ mlflow_tracking_uri = "http://127.0.0.1:5000"
 with Workflow(
     name="task_mlflow_example",
     tenant="tenant_exists",
-) as pd:
+) as workflow:
 
     # run custom mlflow project to train model
     train_custom = MLFlowProjectsCustom(
@@ -88,6 +88,6 @@ with Workflow(
 
     train_basic_algorithm >> deploy_mlflow
 
-    pd.submit()
+    workflow.submit()
 
 # [end workflow_declare]

@@ -26,7 +26,7 @@ repository = "git@github.com:<YOUR-NAME-OR-ORG>/dvc-data-repository-example.git"
 with Workflow(
     name="task_dvc_example",
     tenant="tenant_exists",
-) as pd:
+) as workflow:
     init_task = DVCInit(name="init_dvc", repository=repository, store_url="~/dvc_data")
     upload_task = DVCUpload(
         name="upload_data",
@@ -47,6 +47,6 @@ with Workflow(
 
     init_task >> upload_task >> download_task
 
-    pd.run()
+    workflow.run()
 
 # [end workflow_declare]

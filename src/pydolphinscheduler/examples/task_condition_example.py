@@ -35,7 +35,7 @@ from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.tasks.condition import FAILURE, SUCCESS, And, Condition
 from pydolphinscheduler.tasks.shell import Shell
 
-with Workflow(name="task_condition_example", tenant="tenant_exists") as pd:
+with Workflow(name="task_condition_example", tenant="tenant_exists") as workflow:
     pre_task_1 = Shell(name="pre_task_1", command="echo pre_task_1")
     pre_task_2 = Shell(name="pre_task_2", command="echo pre_task_2")
     pre_task_3 = Shell(name="pre_task_3", command="echo pre_task_3")
@@ -55,5 +55,5 @@ with Workflow(name="task_condition_example", tenant="tenant_exists") as pd:
         success_task=success_branch,
         failed_task=fail_branch,
     )
-    pd.submit()
+    workflow.submit()
 # [end workflow_declare]

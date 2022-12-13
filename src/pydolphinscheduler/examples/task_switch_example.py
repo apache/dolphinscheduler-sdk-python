@@ -36,7 +36,7 @@ from pydolphinscheduler.tasks.switch import Branch, Default, Switch, SwitchCondi
 
 with Workflow(
     name="task_switch_example", tenant="tenant_exists", param={"var": "1"}
-) as pd:
+) as workflow:
     parent = Shell(name="parent", command="echo parent")
     switch_child_1 = Shell(name="switch_child_1", command="echo switch_child_1")
     switch_child_2 = Shell(name="switch_child_2", command="echo switch_child_2")
@@ -47,5 +47,5 @@ with Workflow(
 
     switch = Switch(name="switch", condition=switch_condition)
     parent >> switch
-    pd.submit()
+    workflow.submit()
 # [end workflow_declare]

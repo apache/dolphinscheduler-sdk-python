@@ -46,7 +46,7 @@ with Workflow(
     schedule="0 0 0 * * ? *",
     start_time="2021-01-01",
     tenant="tenant_exists",
-) as pd:
+) as workflow:
     # [end workflow_declare]
     # [start task_declare]
     task_parent = Shell(name="task_parent", command="echo hello pydolphinscheduler")
@@ -63,6 +63,6 @@ with Workflow(
     # [end task_relation_declare]
 
     # [start submit_or_run]
-    pd.run()
+    workflow.run()
     # [end submit_or_run]
 # [end tutorial]

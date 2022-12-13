@@ -266,7 +266,7 @@ def test_switch_get_define(mock_task_code_version):
 )
 def test_switch_set_dep_workflow(mock_task_code_version):
     """Test task switch set dependence in workflow level."""
-    with Workflow(name="test-switch-set-dep-workflow") as pd:
+    with Workflow(name="test-switch-set-dep-workflow") as workflow:
         parent = Task(name="parent", task_type=TEST_TYPE)
         switch_child_1 = Task(name="switch_child_1", task_type=TEST_TYPE)
         switch_child_2 = Task(name="switch_child_2", task_type=TEST_TYPE)
@@ -278,8 +278,8 @@ def test_switch_set_dep_workflow(mock_task_code_version):
         switch = Switch(name=TEST_NAME, condition=switch_condition)
         parent >> switch
         # General tasks test
-        assert len(pd.tasks) == 4
-        assert sorted(pd.task_list, key=lambda t: t.name) == sorted(
+        assert len(workflow.tasks) == 4
+        assert sorted(workflow.task_list, key=lambda t: t.name) == sorted(
             [parent, switch, switch_child_1, switch_child_2], key=lambda t: t.name
         )
         # Task dep test

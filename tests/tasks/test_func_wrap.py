@@ -41,13 +41,13 @@ def test_single_task_outside(mock_code):
     def foo():
         print(TASK_NAME)
 
-    with Workflow(WORKFLOW_NAME) as pd:
+    with Workflow(WORKFLOW_NAME) as workflow:
         foo()
 
-    assert pd is not None and pd.name == WORKFLOW_NAME
-    assert len(pd.tasks) == 1
+    assert workflow is not None and workflow.name == WORKFLOW_NAME
+    assert len(workflow.tasks) == 1
 
-    pd_task = pd.tasks[12345]
+    pd_task = workflow.tasks[12345]
     assert pd_task.name == "foo"
     assert pd_task.raw_script == "def foo():\n    print(TASK_NAME)\nfoo()"
 
@@ -57,7 +57,7 @@ def test_single_task_outside(mock_code):
 )
 def test_single_task_inside(mock_code):
     """Test single decorator task which inside workflow."""
-    with Workflow(WORKFLOW_NAME) as pd:
+    with Workflow(WORKFLOW_NAME) as workflow:
 
         @task
         def foo():
@@ -65,10 +65,10 @@ def test_single_task_inside(mock_code):
 
         foo()
 
-    assert pd is not None and pd.name == WORKFLOW_NAME
-    assert len(pd.tasks) == 1
+    assert workflow is not None and workflow.name == WORKFLOW_NAME
+    assert len(workflow.tasks) == 1
 
-    pd_task = pd.tasks[12345]
+    pd_task = workflow.tasks[12345]
     assert pd_task.name == "foo"
     assert pd_task.raw_script == "def foo():\n    print(TASK_NAME)\nfoo()"
 
@@ -84,7 +84,7 @@ def test_addition_decorator_error(mock_code):
     def foo():
         print(TASK_NAME)
 
-    with Workflow(WORKFLOW_NAME) as pd:  # noqa: F841
+    with Workflow(WORKFLOW_NAME) as workflow:  # noqa: F841
         with pytest.raises(
             PyDSParamException, match="Do no support other decorators for.*"
         ):
@@ -106,18 +106,18 @@ def test_multiple_tasks_outside(mock_code):
     def bar():
         print(TASK_NAME)
 
-    with Workflow(WORKFLOW_NAME) as pd:
+    with Workflow(WORKFLOW_NAME) as workflow:
         foo = foo()
         bar = bar()
 
         foo >> bar
 
-    assert pd is not None and pd.name == WORKFLOW_NAME
-    assert len(pd.tasks) == 2
+    assert workflow is not None and workflow.name == WORKFLOW_NAME
+    assert len(workflow.tasks) == 2
 
-    task_foo = pd.get_one_task_by_name("foo")
-    task_bar = pd.get_one_task_by_name("bar")
-    assert set(pd.task_list) == {task_foo, task_bar}
+    task_foo = workflow.get_one_task_by_name("foo")
+    task_bar = workflow.get_one_task_by_name("bar")
+    assert set(workflow.task_list) == {task_foo, task_bar}
     assert (
         task_foo is not None
         and task_foo._upstream_task_codes == set()
@@ -136,7 +136,7 @@ def test_multiple_tasks_outside(mock_code):
 )
 def test_multiple_tasks_inside(mock_code):
     """Test multiple decorator tasks which inside workflow."""
-    with Workflow(WORKFLOW_NAME) as pd:
+    with Workflow(WORKFLOW_NAME) as workflow:
 
         @task
         def foo():
@@ -151,12 +151,12 @@ def test_multiple_tasks_inside(mock_code):
 
         foo >> bar
 
-    assert pd is not None and pd.name == WORKFLOW_NAME
-    assert len(pd.tasks) == 2
+    assert workflow is not None and workflow.name == WORKFLOW_NAME
+    assert len(workflow.tasks) == 2
 
-    task_foo = pd.get_one_task_by_name("foo")
-    task_bar = pd.get_one_task_by_name("bar")
-    assert set(pd.task_list) == {task_foo, task_bar}
+    task_foo = workflow.get_one_task_by_name("foo")
+    task_bar = workflow.get_one_task_by_name("bar")
+    assert set(workflow.task_list) == {task_foo, task_bar}
     assert (
         task_foo is not None
         and task_foo._upstream_task_codes == set()

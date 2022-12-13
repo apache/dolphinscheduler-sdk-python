@@ -401,7 +401,7 @@ def test_condition_get_define(mock_condition_code_version, mock_task_code_versio
 )
 def test_condition_set_dep_workflow(mock_task_code_version):
     """Test task condition set dependence in workflow level."""
-    with Workflow(name="test-condition-set-dep-workflow") as pd:
+    with Workflow(name="test-condition-set-dep-workflow") as workflow:
         pre_task_1 = Task(name="pre_task_1", task_type=TEST_TYPE)
         pre_task_2 = Task(name="pre_task_2", task_type=TEST_TYPE)
         pre_task_3 = Task(name="pre_task_3", task_type=TEST_TYPE)
@@ -423,8 +423,8 @@ def test_condition_set_dep_workflow(mock_task_code_version):
         )
 
         # General tasks test
-        assert len(pd.tasks) == 6
-        assert sorted(pd.task_list, key=lambda t: t.name) == sorted(
+        assert len(workflow.tasks) == 6
+        assert sorted(workflow.task_list, key=lambda t: t.name) == sorted(
             [
                 pre_task_1,
                 pre_task_2,
