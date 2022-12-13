@@ -47,22 +47,24 @@ with Workflow(
     start_time="2021-01-01",
     tenant="tenant_exists",
 ) as pd:
+    
+wf = Workflow()
     # [end workflow_declare]
     # [start task_declare]
-    task_parent = Shell(name="task_parent", command="echo hello pydolphinscheduler")
-    task_child_one = Shell(name="task_child_one", command="echo 'child one'")
-    task_child_two = Shell(name="task_child_two", command="echo 'child two'")
-    task_union = Shell(name="task_union", command="echo union")
-    # [end task_declare]
+task_parent = Shell(name="task_parent", command="echo hello pydolphinscheduler", workflow=wf)
+task_child_one = Shell(name="task_child_one", command="echo 'child one'")
+task_child_two = Shell(name="task_child_two", command="echo 'child two'")
+task_union = Shell(name="task_union", command="echo union")
+# [end task_declare]
 
-    # [start task_relation_declare]
-    task_group = [task_child_one, task_child_two]
-    task_parent.set_downstream(task_group)
+# [start task_relation_declare]
+task_group = [task_child_one, task_child_two]
+task_parent.set_downstream(task_group)
 
-    task_union << task_group
-    # [end task_relation_declare]
+task_union << task_group
+# [end task_relation_declare]
 
-    # [start submit_or_run]
-    pd.run()
+# [start submit_or_run]
+pd.submit()
     # [end submit_or_run]
 # [end tutorial]

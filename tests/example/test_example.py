@@ -70,17 +70,17 @@ def setup_and_teardown_for_stuff():
 
 def submit_check_without_same_name(self):
     """Side effect for verifying workflow name and adding it to global variable."""
-    if self.name in workflow_name:
+    if self.name_chd in workflow_name:
         raise ValueError(
             "Example workflow should not have same name, but get duplicate name: %s",
-            self.name,
+            self.name_chd,
         )
     submit_add_workflow(self)
 
 
 def submit_add_workflow(self):
     """Side effect for adding workflow name to global variable."""
-    workflow_name.add(self.name)
+    workflow_name.add(self.name_chd)
 
 
 def test_example_basic():

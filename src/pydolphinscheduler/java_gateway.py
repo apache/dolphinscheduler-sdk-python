@@ -23,7 +23,7 @@ from logging import getLogger
 from typing import Any, Optional
 
 from py4j.java_collections import JavaMap
-from py4j.java_gateway import GatewayParameters, JavaGateway
+from py4j.java_gateway import GatewayParameters, JavaGateway, JavaObject
 from py4j.protocol import Py4JError
 
 from pydolphinscheduler import __version__, configuration
@@ -156,11 +156,11 @@ class GatewayEntryPoint:
         return self.gateway.entry_point.deleteProject(user, code)
 
     def create_tenant(
-        self, tenant_name: str, queue_name: str, description: Optional[str] = None
-    ):
+        self, tenant_code: str, queue_name: str, description: Optional[str] = None
+    ) -> JavaObject:
         """Create tenant through java gateway."""
         return self.gateway.entry_point.createTenant(
-            tenant_name, description, queue_name
+            tenant_code, description, queue_name
         )
 
     def query_tenant(self, tenant_code: str):
@@ -173,19 +173,23 @@ class GatewayEntryPoint:
 
     def update_tenant(
         self,
-        user: str,
-        tenant_id: int,
-        code: str,
-        queue_id: int,
-        description: Optional[str] = None,
-    ):
-        """Update tenant through java gateway."""
+        id_: int,
+        tenant_code: str,
+        queue_id: str,
+        description: str,
+        user: Optional[str] = configuration.USER_NAME,
+    ) -> JavaObject:
+        """Update tenant by tenant_code through java gateway."""
         return self.gateway.entry_point.updateTenant(
-            user, tenant_id, code, queue_id, description
+            user, id_, tenant_code, queue_id, description
         )
 
-    def delete_tenant(self, user: str, tenant_id: int):
-        """Delete tenant through java gateway."""
+    def delete_tenant(self, tenant_code: str, user: Optional[str] = configuration.USER_NAME) -> None:
+        """Delete tenant by tenant_code through java gateway.
+        
+        :tenant_code: tenant code for identification resource
+        :user: username to delete tenant
+        """
         return self.gateway.entry_point.deleteTenantById(user, tenant_id)
 
     def create_user(
@@ -194,13 +198,13 @@ class GatewayEntryPoint:
         password: str,
         email: str,
         phone: str,
-        tenant: str,
+        tenant_code: str,
         queue: str,
-        status: int,
+        state: int,
     ):
         """Create user through java gateway."""
         return self.gateway.entry_point.createUser(
-            name, password, email, phone, tenant, queue, status
+            name, password, email, phone, tenant_code, queue, state
         )
 
     def query_user(self, user_id: int):
@@ -255,7 +259,6 @@ class GatewayEntryPoint:
         execution_type: str,
         timeout: int,
         worker_group: str,
-        tenant_code: str,
         release_state: int,
         task_relation_json: str,
         task_definition_json: str,
@@ -274,7 +277,6 @@ class GatewayEntryPoint:
             warning_group_id,
             timeout,
             worker_group,
-            tenant_code,
             release_state,
             task_relation_json,
             task_definition_json,

@@ -15,93 +15,77 @@
 # specific language governing permissions and limitations
 # under the License.
 
-"""Test pydolphinscheduler user."""
+"""Test pydolphinscheduler model user."""
 
-import hashlib
+from typing import Dict
 
 import pytest
 
 from pydolphinscheduler.models import User
+from pydolphinscheduler.utils import encode
 
 
-def md5(str):
-    """MD5 a string."""
-    hl = hashlib.md5()
-    hl.update(str.encode(encoding="utf-8"))
-    return hl.hexdigest()
+tenant_code = "tenant-code"
+queue_name = "tenant-name"
+description = "description-of-this-tenant"
 
 
-def get_user(
-    name="test-name",
-    password="test-password",
-    email="test-email@abc.com",
-    phone="17366637777",
-    tenant="test-tenant",
-    queue="test-queue",
-    status=1,
-):
-    """Get a test user."""
-    user = User(
-        name=name,
-        password=password,
-        email=email,
-        phone=phone,
-        tenant=tenant,
-        queue=queue,
-        status=status,
-    )
-    user.create_if_not_exists()
-    return user
+user_name = "test-name"
+user_password = "test-password"
+email = "dolphinscheduler@apache.org"
+phone = "12345678912"
+tenant_code = "tenant-code"
+queue = "test-queue"
+state = True
 
 
-def test_create_user():
-    """Test weather client could connect java gate way or not."""
-    user = User(
-        name="test-name",
-        password="test-password",
-        email="test-email@abc.com",
-        phone="17366637777",
-        tenant="test-tenant",
-        queue="test-queue",
-        status=1,
-    )
-    user.create_if_not_exists()
-    assert user.user_id is not None
+def test_create():
+    """Test create user."""
+    user = User.create(user_name=user_name, user_password=user_password, email=email, phone=phone, tenant_code=tenant_code, queue=queue, state=state)
+    assert user is not None
+    assert user.id is not None and user.tenant_id is not None and user.user_name == user_name and user.user_password == encode.md5(user_password) and user.email == email and user.phone == phone and user.queue == queue and user.state == state
 
 
-def test_get_user():
-    """Test get user from java gateway."""
-    user = get_user()
-    user_ = User.get_user(user.user_id)
-    assert user_.password == md5(user.password)
-    assert user_.email == user.email
-    assert user_.phone == user.phone
-    assert user_.status == user.status
+def test_get():
+    """Test get a single user."""
+    user = User.get(user_name=user_name)
+    assert user is not None
+    assert user.id is not None and user.tenant_id is not None and user.user_name == user_name and user.user_password == encode.md5(user_password) and user.email == email and user.phone == phone and user.queue == queue and user.state == state
 
 
-def test_update_user():
-    """Test update user from java gateway."""
-    user = get_user()
-    user.update(
-        password="test-password-",
-        email="test-email-updated@abc.com",
-        phone="17366637766",
-        tenant="test-tenant-updated",
-        queue="test-queue-updated",
-        status=2,
-    )
-    user_ = User.get_user(user.user_id)
-    assert user_.password == md5("test-password-")
-    assert user_.email == "test-email-updated@abc.com"
-    assert user_.phone == "17366637766"
-    assert user_.status == 2
+def test_get_error():
+    """Test get user error."""
+    with pytest.raises(ValueError, match="User.*not found."):
+        User.get(user_name="not-exists-user")
 
 
-def test_delete_user():
-    """Test delete user from java gateway."""
-    user = get_user()
-    user.delete()
-    with pytest.raises(AttributeError) as excinfo:
-        _ = user.user_id
+@pytest.mark.parametrize(
+    "update_params, expected",
+    [
+        ({"password": "new-password"}, {"user_password": encode.md5("new-password")}),
+        ({"email": "test-dolphinscheduler@apache.org"}, {"email": "test-dolphinscheduler@apache.org"}),
+        ({"phone": reversed(phone)}, {"phone": reversed(phone)}),
+        ({"state": False}, {"state": False}),
+        ({"email": "test-dolphinscheduler@apache.org", "phone": reversed(phone)}, {"email": "test-dolphinscheduler@apache.org", "phone": reversed(phone)}),
+    ]
+)
+def test_update(update_params: Dict, expected: Dict):
+    """Test update a single user."""
+    # previous user attributes not equal to expected
+    original_user = User.get(user_name=user_name)
+    assert all([getattr(original_user, exp) != expected.get(exp) for exp in expected])
 
-    assert excinfo.type == AttributeError
+    # post user attributes equal to expected
+    update_user = User.update(user_name=user_name, **update_params)
+    assert update_user is not None and update_user.id is not None and update_user.id == original_user.id and update_user.user_name == original_user.user_name
+    assert all([getattr(update_user, exp) == expected.get(exp) for exp in expected])
+
+
+def test_delete():
+    """Test delete a single user."""
+    exists_user = User.get(user_name)
+    assert exists_user is not None
+
+    User.delete(user_name=user_name)
+    user = User.get(user_name)
+    assert user is None

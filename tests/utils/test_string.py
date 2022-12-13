@@ -33,6 +33,7 @@ from pydolphinscheduler.utils.string import attr2camel, class_name2camel, snake2
         ("_snake_case", "SnakeCase"),
         ("__snake_case", "SnakeCase"),
         ("Snake_case", "SnakeCase"),
+        ("snake_case_", "snakeCase"),
     ],
 )
 def test_snake2camel(snake: str, expect: str):

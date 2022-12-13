@@ -27,6 +27,7 @@ from pydolphinscheduler.configuration import (
     set_single_config,
 )
 from pydolphinscheduler.core.yaml_workflow import create_workflow
+from pydolphinscheduler.cli.tenants import tenants
 
 version_option_val = ["major", "minor", "micro"]
 
@@ -104,3 +105,6 @@ def config(getter, setter, init) -> None:
 def yaml(yaml_file) -> None:
     """Create workflow using YAML file."""
     create_workflow(yaml_file)
+    
+    
+cli.add_command(tenants)

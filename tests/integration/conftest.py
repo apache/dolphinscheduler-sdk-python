@@ -24,7 +24,7 @@ import pytest
 from tests.testing.docker_wrapper import DockerWrapper
 
 
-@pytest.fixture(scope="package", autouse=True)
+# @pytest.fixture(scope="package", autouse=True)
 def docker_setup_teardown():
     """Fixture for whole package tests, Set up and teardown docker env.
 
