@@ -141,6 +141,8 @@ class Task(Base):
         wait_start_timeout: Optional[Dict] = None,
         condition_result: Optional[Dict] = None,
         resource_plugin: Optional[ResourcePlugin] = None,
+        *args,
+        **kwargs,
     ):
 
         super().__init__(name, description)
@@ -155,7 +157,14 @@ class Task(Base):
         self.timeout_notify_strategy = timeout_notify_strategy
         self._timeout: timedelta = timeout
         self._workflow = None
-        self.workflow: Workflow = workflow or WorkflowContext.get()
+        if "process_definition" in kwargs:
+            warnings.warn(
+                "The `process_definition` parameter is deprecated, please use `workflow` instead.",
+                DeprecationWarning,
+            )
+            self.workflow = kwargs.pop("process_definition")
+        else:
+            self.workflow: Workflow = workflow or WorkflowContext.get()
         self._upstream_task_codes: Set[int] = set()
         self._downstream_task_codes: Set[int] = set()
         self._task_relation: Set[TaskRelation] = set()
