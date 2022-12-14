@@ -18,6 +18,7 @@
 """Test Task class function."""
 import logging
 import re
+import warnings
 from datetime import timedelta
 from typing import Set, Tuple
 from unittest.mock import PropertyMock, patch
@@ -341,6 +342,23 @@ def test_add_duplicate(caplog):
                 re.findall("already in workflow", caplog.text),
             ]
         )
+
+
+def test_use_deprecated_pd(caplog):
+    """Test raise warning when using process_defintion assign workflow."""
+    wf = Workflow("test_deprecated_pd")
+    with warnings.catch_warnings(record=True) as w:
+        task = TaskWithCode(
+            name="test_deprecated_pd",
+            task_type="test",
+            code=123,
+            version=2,
+            process_definition=wf,
+        )
+        assert len(w) == 1
+        assert issubclass(w[-1].category, DeprecationWarning)
+        assert "deprecated" in str(w[-1].message)
+        assert task.workflow == wf
 
 
 @pytest.mark.parametrize(

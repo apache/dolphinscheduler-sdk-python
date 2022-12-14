@@ -130,6 +130,8 @@ class Workflow(Base):
         param: Optional[Dict] = None,
         resource_plugin: Optional[ResourcePlugin] = None,
         resource_list: Optional[List[Resource]] = None,
+        *args,
+        **kwargs,
     ):
         super().__init__(name, description)
         self.schedule = schedule
