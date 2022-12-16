@@ -339,60 +339,42 @@ def test_condition_get_define(mock_condition_code_version, mock_task_code_versio
     )
 
     name = "test_condition_get_define"
-    expect = {
-        "code": 123,
-        "name": name,
-        "version": 1,
-        "description": None,
-        "delayTime": 0,
-        "taskType": "CONDITIONS",
-        "taskParams": {
-            "resourceList": [],
-            "localParams": [],
-            "dependence": {
-                "relation": "AND",
-                "dependTaskList": [
-                    {
-                        "relation": "AND",
-                        "dependItemList": [
-                            {"depTaskCode": common_task.code, "status": "SUCCESS"},
-                            {"depTaskCode": common_task.code, "status": "SUCCESS"},
-                            {"depTaskCode": common_task.code, "status": "FAILURE"},
-                            {"depTaskCode": common_task.code, "status": "FAILURE"},
-                        ],
-                    },
-                    {
-                        "relation": "OR",
-                        "dependItemList": [
-                            {"depTaskCode": common_task.code, "status": "SUCCESS"},
-                            {"depTaskCode": common_task.code, "status": "SUCCESS"},
-                            {"depTaskCode": common_task.code, "status": "FAILURE"},
-                            {"depTaskCode": common_task.code, "status": "FAILURE"},
-                        ],
-                    },
-                ],
-            },
-            "conditionResult": {
-                "successNode": [common_task.code],
-                "failedNode": [common_task.code],
-            },
-            "waitStartTimeout": {},
-        },
-        "flag": "YES",
-        "taskPriority": "MEDIUM",
-        "workerGroup": "default",
-        "environmentCode": None,
-        "failRetryTimes": 0,
-        "failRetryInterval": 1,
-        "timeoutFlag": "CLOSE",
-        "timeoutNotifyStrategy": None,
-        "timeout": 0,
-    }
-
     task = Condition(
         name, condition=cond_operator, success_task=common_task, failed_task=common_task
     )
-    assert task.get_define() == expect
+    expect_task_parmas = {
+        "resourceList": [],
+        "localParams": [],
+        "dependence": {
+            "relation": "AND",
+            "dependTaskList": [
+                {
+                    "relation": "AND",
+                    "dependItemList": [
+                        {"depTaskCode": common_task.code, "status": "SUCCESS"},
+                        {"depTaskCode": common_task.code, "status": "SUCCESS"},
+                        {"depTaskCode": common_task.code, "status": "FAILURE"},
+                        {"depTaskCode": common_task.code, "status": "FAILURE"},
+                    ],
+                },
+                {
+                    "relation": "OR",
+                    "dependItemList": [
+                        {"depTaskCode": common_task.code, "status": "SUCCESS"},
+                        {"depTaskCode": common_task.code, "status": "SUCCESS"},
+                        {"depTaskCode": common_task.code, "status": "FAILURE"},
+                        {"depTaskCode": common_task.code, "status": "FAILURE"},
+                    ],
+                },
+            ],
+        },
+        "conditionResult": {
+            "successNode": [common_task.code],
+            "failedNode": [common_task.code],
+        },
+        "waitStartTimeout": {},
+    }
+    assert task.task_params == expect_task_parmas
 
 
 @patch(

@@ -32,37 +32,20 @@ def test_kubernetes_get_define():
     minCpuCores = 2.0
     minMemorySpace = 10.0
 
-    expect = {
-        "code": code,
-        "name": name,
-        "version": 1,
-        "description": None,
-        "delayTime": 0,
-        "taskType": "K8S",
-        "taskParams": {
-            "resourceList": [],
-            "localParams": [],
-            "image": image,
-            "namespace": namespace,
-            "minCpuCores": minCpuCores,
-            "minMemorySpace": minMemorySpace,
-            "dependence": {},
-            "conditionResult": {"successNode": [""], "failedNode": [""]},
-            "waitStartTimeout": {},
-        },
-        "flag": "YES",
-        "taskPriority": "MEDIUM",
-        "workerGroup": "default",
-        "environmentCode": None,
-        "failRetryTimes": 0,
-        "failRetryInterval": 1,
-        "timeoutFlag": "CLOSE",
-        "timeoutNotifyStrategy": None,
-        "timeout": 0,
+    expect_task_params = {
+        "resourceList": [],
+        "localParams": [],
+        "image": image,
+        "namespace": namespace,
+        "minCpuCores": minCpuCores,
+        "minMemorySpace": minMemorySpace,
+        "dependence": {},
+        "conditionResult": {"successNode": [""], "failedNode": [""]},
+        "waitStartTimeout": {},
     }
     with patch(
         "pydolphinscheduler.core.task.Task.gen_code_and_version",
         return_value=(code, version),
     ):
         k8s = Kubernetes(name, image, namespace, minCpuCores, minMemorySpace)
-        assert k8s.get_define() == expect
+        assert k8s.task_params == expect_task_params

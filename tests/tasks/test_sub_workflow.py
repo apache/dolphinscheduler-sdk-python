@@ -80,30 +80,13 @@ def test_sub_workflow_get_define(mock_workflow_definition):
     code = 123
     version = 1
     name = "test_sub_workflow_get_define"
-    expect = {
-        "code": code,
-        "name": name,
-        "version": 1,
-        "description": None,
-        "delayTime": 0,
-        "taskType": "SUB_PROCESS",
-        "taskParams": {
-            "resourceList": [],
-            "localParams": [],
-            "processDefinitionCode": TEST_SUB_WORKFLOW_CODE,
-            "dependence": {},
-            "conditionResult": {"successNode": [""], "failedNode": [""]},
-            "waitStartTimeout": {},
-        },
-        "flag": "YES",
-        "taskPriority": "MEDIUM",
-        "workerGroup": "default",
-        "environmentCode": None,
-        "failRetryTimes": 0,
-        "failRetryInterval": 1,
-        "timeoutFlag": "CLOSE",
-        "timeoutNotifyStrategy": None,
-        "timeout": 0,
+    expect_task_params = {
+        "resourceList": [],
+        "localParams": [],
+        "processDefinitionCode": TEST_SUB_WORKFLOW_CODE,
+        "dependence": {},
+        "conditionResult": {"successNode": [""], "failedNode": [""]},
+        "waitStartTimeout": {},
     }
     with patch(
         "pydolphinscheduler.core.task.Task.gen_code_and_version",
@@ -111,7 +94,7 @@ def test_sub_workflow_get_define(mock_workflow_definition):
     ):
         with Workflow(TEST_WORKFLOW_NAME):
             sub_workflow = SubWorkflow(name, TEST_SUB_WORKFLOW_NAME)
-            assert sub_workflow.get_define() == expect
+            assert sub_workflow.task_params == expect_task_params
 
 
 @patch(
@@ -129,30 +112,13 @@ def test_deprecated_sub_workflow_get_define(mock_workflow_definition):
     code = 123
     version = 1
     name = "test_sub_workflow_get_define"
-    expect = {
-        "code": code,
-        "name": name,
-        "version": 1,
-        "description": None,
-        "delayTime": 0,
-        "taskType": "SUB_PROCESS",
-        "taskParams": {
-            "resourceList": [],
-            "localParams": [],
-            "processDefinitionCode": TEST_SUB_WORKFLOW_CODE,
-            "dependence": {},
-            "conditionResult": {"successNode": [""], "failedNode": [""]},
-            "waitStartTimeout": {},
-        },
-        "flag": "YES",
-        "taskPriority": "MEDIUM",
-        "workerGroup": "default",
-        "environmentCode": None,
-        "failRetryTimes": 0,
-        "failRetryInterval": 1,
-        "timeoutFlag": "CLOSE",
-        "timeoutNotifyStrategy": None,
-        "timeout": 0,
+    expect_task_params = {
+        "resourceList": [],
+        "localParams": [],
+        "processDefinitionCode": TEST_SUB_WORKFLOW_CODE,
+        "dependence": {},
+        "conditionResult": {"successNode": [""], "failedNode": [""]},
+        "waitStartTimeout": {},
     }
     with patch(
         "pydolphinscheduler.core.task.Task.gen_code_and_version",
@@ -167,4 +133,4 @@ def test_deprecated_sub_workflow_get_define(mock_workflow_definition):
 
             with Workflow(TEST_WORKFLOW_NAME):
                 sub_workflow = SubProcess(name, TEST_SUB_WORKFLOW_NAME)
-                assert sub_workflow.get_define() == expect
+                assert sub_workflow.task_params == expect_task_params

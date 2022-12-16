@@ -36,41 +36,24 @@ def test_mr_get_define(mock_resource):
     program_type = ProgramType.JAVA
     main_args = "/dolphinscheduler/resources/file.txt /output/ds"
 
-    expect = {
-        "code": code,
-        "name": name,
-        "version": 1,
-        "description": None,
-        "delayTime": 0,
-        "taskType": "MR",
-        "taskParams": {
-            "mainClass": main_class,
-            "mainJar": {
-                "id": 1,
-            },
-            "programType": program_type,
-            "appName": None,
-            "mainArgs": main_args,
-            "others": None,
-            "localParams": [],
-            "resourceList": [],
-            "dependence": {},
-            "conditionResult": {"successNode": [""], "failedNode": [""]},
-            "waitStartTimeout": {},
+    expect_task_params = {
+        "mainClass": main_class,
+        "mainJar": {
+            "id": 1,
         },
-        "flag": "YES",
-        "taskPriority": "MEDIUM",
-        "workerGroup": "default",
-        "environmentCode": None,
-        "failRetryTimes": 0,
-        "failRetryInterval": 1,
-        "timeoutFlag": "CLOSE",
-        "timeoutNotifyStrategy": None,
-        "timeout": 0,
+        "programType": program_type,
+        "appName": None,
+        "mainArgs": main_args,
+        "others": None,
+        "localParams": [],
+        "resourceList": [],
+        "dependence": {},
+        "conditionResult": {"successNode": [""], "failedNode": [""]},
+        "waitStartTimeout": {},
     }
     with patch(
         "pydolphinscheduler.core.task.Task.gen_code_and_version",
         return_value=(code, version),
     ):
         task = MR(name, main_class, main_package, program_type, main_args=main_args)
-        assert task.get_define() == expect
+        assert task.task_params == expect_task_params

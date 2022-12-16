@@ -106,40 +106,23 @@ def test_http_get_define():
     version = 1
     name = "test_http_get_define"
     url = "https://www.apache.org"
-    expect = {
-        "code": code,
-        "name": name,
-        "version": 1,
-        "description": None,
-        "delayTime": 0,
-        "taskType": "HTTP",
-        "taskParams": {
-            "localParams": [],
-            "httpParams": [],
-            "url": url,
-            "httpMethod": "GET",
-            "httpCheckCondition": "STATUS_CODE_DEFAULT",
-            "condition": None,
-            "connectTimeout": 60000,
-            "socketTimeout": 60000,
-            "dependence": {},
-            "resourceList": [],
-            "conditionResult": {"successNode": [""], "failedNode": [""]},
-            "waitStartTimeout": {},
-        },
-        "flag": "YES",
-        "taskPriority": "MEDIUM",
-        "workerGroup": "default",
-        "environmentCode": None,
-        "failRetryTimes": 0,
-        "failRetryInterval": 1,
-        "timeoutFlag": "CLOSE",
-        "timeoutNotifyStrategy": None,
-        "timeout": 0,
+    expect_task_params = {
+        "localParams": [],
+        "httpParams": [],
+        "url": url,
+        "httpMethod": "GET",
+        "httpCheckCondition": "STATUS_CODE_DEFAULT",
+        "condition": None,
+        "connectTimeout": 60000,
+        "socketTimeout": 60000,
+        "dependence": {},
+        "resourceList": [],
+        "conditionResult": {"successNode": [""], "failedNode": [""]},
+        "waitStartTimeout": {},
     }
     with patch(
         "pydolphinscheduler.core.task.Task.gen_code_and_version",
         return_value=(code, version),
     ):
         http = Http(name, url)
-        assert http.get_define() == expect
+        assert http.task_params == expect_task_params

@@ -226,38 +226,21 @@ def test_switch_get_define(mock_task_code_version):
     )
 
     name = "test_switch_get_define"
-    expect = {
-        "code": 123,
-        "name": name,
-        "version": 1,
-        "description": None,
-        "delayTime": 0,
-        "taskType": "SWITCH",
-        "taskParams": {
-            "resourceList": [],
-            "localParams": [],
-            "waitStartTimeout": {},
-            "switchResult": {
-                "dependTaskList": [
-                    {"condition": "${var1} > 1", "nextNode": task.code},
-                    {"condition": "${var1} <= 1", "nextNode": task.code},
-                ],
-                "nextNode": task.code,
-            },
+    expect_task_params = {
+        "resourceList": [],
+        "localParams": [],
+        "waitStartTimeout": {},
+        "switchResult": {
+            "dependTaskList": [
+                {"condition": "${var1} > 1", "nextNode": task.code},
+                {"condition": "${var1} <= 1", "nextNode": task.code},
+            ],
+            "nextNode": task.code,
         },
-        "flag": "YES",
-        "taskPriority": "MEDIUM",
-        "workerGroup": "default",
-        "environmentCode": None,
-        "failRetryTimes": 0,
-        "failRetryInterval": 1,
-        "timeoutFlag": "CLOSE",
-        "timeoutNotifyStrategy": None,
-        "timeout": 0,
     }
 
     task = Switch(name, condition=switch_condition)
-    assert task.get_define() == expect
+    assert task.task_params == expect_task_params
 
 
 @patch(
