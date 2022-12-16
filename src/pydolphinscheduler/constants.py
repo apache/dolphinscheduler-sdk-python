@@ -122,3 +122,10 @@ class Symbol(str):
     POINT = "."
     COMMA = ","
     UNDERLINE = "_"
+
+
+class Version(str):
+    """Constants for version match."""
+
+    DS = "dolphinscheduler"
+    FILE_NAME = "version_ext"
