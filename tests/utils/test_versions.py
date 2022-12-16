@@ -37,6 +37,8 @@ from pydolphinscheduler.utils.versions import version_match
         ("dolphinscheduler>=3.0.0, <3.1.0", "dolphinscheduler", "3.1.0", False),
         ("dolphinscheduler~=3.0.0, !=3.0.5", "dolphinscheduler", "3.0.9", True),
         ("dolphinscheduler~=3.0.0, !=3.0.5", "dolphinscheduler", "3.0.5", False),
+        # invalid version test
+        ("dolphinscheduler~=3.0.0, !=3.0.5", "dolphinscheduler", "dev-SNAPSHOT", False),
     ],
 )
 @mock.patch("pathlib.Path.open")

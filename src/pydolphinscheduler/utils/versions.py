@@ -20,6 +20,7 @@
 from pathlib import Path
 
 from packaging import requirements
+from packaging.version import InvalidVersion
 from pkg_resources import parse_requirements
 
 from pydolphinscheduler.constants import Version
@@ -36,5 +37,10 @@ def version_match(name: str, version: str) -> bool:
         content = match.read()
         for reqs in parse_requirements(content):
             if reqs.name == name:
-                return requirements.Requirement(str(reqs)).specifier.contains(version)
+                try:
+                    return requirements.Requirement(str(reqs)).specifier.contains(
+                        version
+                    )
+                except InvalidVersion:
+                    return False
         raise ValueError("%s is not in %s" % (name, Version.FILE_NAME))
