@@ -36,8 +36,6 @@ ignore_exec_examples = {
     "task_flink_example",
     "task_map_reduce_example",
     "task_spark_example",
-    # TODO activate it when dolphinscheduler default resource center is local file
-    "multi_resources_example",
 }
 
 # pydolphinscheduler environment home
