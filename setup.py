@@ -32,7 +32,7 @@ if sys.version_info[0] < 3:
 
 logger = logging.getLogger(__name__)
 
-version = "dev"
+version = "4.0.0"
 
 # Start package required
 prod = [
@@ -59,7 +59,7 @@ doc = [
     # Unreleased package have a feature we want(use correct version package for API ref), so we install from
     # GitHub directly, see also:
     # https://github.com/Holzhaus/sphinx-multiversion/issues/42#issuecomment-1210539786
-    "sphinx-multiversion @ git+https://github.com/Holzhaus/sphinx-multiversion#egg=sphinx-multiversion",
+    # "sphinx-multiversion @ git+https://github.com/Holzhaus/sphinx-multiversion#egg=sphinx-multiversion-0.2.5a1",
     "sphinx-github-changelog",
 ]
 
