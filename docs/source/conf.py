@@ -109,8 +109,8 @@ autodoc_default_options = {
 
 autosectionlabel_prefix_document = True
 
-# extensions for sphinx_github_changelog
-sphinx_github_changelog_token = "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"
+# extensions for sphinx_github_changelog, token from Jay Chung with only public_repo permission
+sphinx_github_changelog_token = "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"
 
 # -- Options for HTML output -------------------------------------------------
 
