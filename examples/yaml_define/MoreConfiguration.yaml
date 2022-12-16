@@ -35,5 +35,6 @@ tasks:
     fail_retry_times: 30
     fail_retry_interval: 5
     timeout: 60
+    is_cahce: true
     local_params:
       - { "prop": "n", "direct": "IN", "type": "VARCHAR", "value": "${n}" }

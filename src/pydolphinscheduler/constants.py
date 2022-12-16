@@ -35,6 +35,13 @@ class TaskFlag(str):
     NO = "NO"
 
 
+class IsCache(str):
+    """Constants for Cache."""
+
+    YES = "YES"
+    NO = "NO"
+
+
 class TaskTimeoutFlag(str):
     """Constants for task timeout flag."""
 
