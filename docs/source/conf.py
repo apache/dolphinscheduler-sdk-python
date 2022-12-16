@@ -75,6 +75,7 @@ extensions = [
     "sphinx_inline_tabs",
     "sphinx_copybutton",
     "sphinx_multiversion",
+    "sphinx_github_changelog",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -107,6 +108,9 @@ autodoc_default_options = {
 }
 
 autosectionlabel_prefix_document = True
+
+# extensions for sphinx_github_changelog
+sphinx_github_changelog_token = "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"
 
 # -- Options for HTML output -------------------------------------------------
 
