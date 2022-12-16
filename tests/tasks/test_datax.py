@@ -78,7 +78,7 @@ def test_datax_get_define(mock_datasource):
         return_value=(code, version),
     ):
         task = DataX(name, datasource_name, datatarget_name, command, target_table)
-        assert expect_task_params == task.get_define()["taskParams"]
+        assert task.task_params == expect_task_params 
 
 
 @pytest.mark.parametrize("json_template", ["json_template"])
