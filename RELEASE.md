@@ -27,6 +27,7 @@ but we also have a [PyPi](#release-to-pypi) repository for Python package distri
 * Change `version` in `setup.py`.
 * Remove `sphinx-multiversion` dependency in `setup.py`, we still can not fix this issue
   [Distribute tarball and wheel error with direct dependency](https://github.com/apache/dolphinscheduler/issues/12238)
+* Change `version_ext` about the dolphinscheduler version current support, the syntax is respect [pep-044](https://peps.python.org/pep-0440/#version-specifiers)
 * Run all test locally, `tox -e local-ci && tox -e local-integrate-test`, after you start dolphinscheduler to
   pass `local-integrate-test`
 
