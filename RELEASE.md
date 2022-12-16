@@ -19,47 +19,97 @@ under the License.
 
 # Release
 
-**PyDolphinScheduler** office release is in [ASF Distribution Directory](https://downloads.apache.org/dolphinscheduler/),
-and it should be released together with [apache-dolphinscheduler](https://github.com/apache/dolphinscheduler).
+**PyDolphinScheduler** office release is in [ASF Distribution Directory](#release-to-apache-distribution),
+but we also have a [PyPi](#release-to-pypi) repository for Python package distribution for convenience.
 
-<!--
-## To ASF Distribution Directory
+## Prepare
 
-You could release to [ASF Distribution Directory](https://downloads.apache.org/dolphinscheduler/) according to
-[release guide](../../docs/docs/en/contribute/release/release-prepare.md) in DolphinScheduler
-website.
--->
+* Change `version` in `setup.py`.
+* Remove `sphinx-multiversion` dependency in `setup.py`, we still can not fix this issue
+  [Distribute tarball and wheel error with direct dependency](https://github.com/apache/dolphinscheduler/issues/12238)
+* Run all test locally, `tox -e local-ci && tox -e local-integrate-test`, after you start dolphinscheduler to
+  pass `local-integrate-test`
 
-## Create Tag
-
-We should create a tag and push it to GitHub for each release, You could create a tag by:
-
-```shell
-export TAG=<YOUR-VERSION>  # setting your version here, like 1.0.1 or others
-export REMOTE=<YOUR-REMOTE-NAME>  # setting your remote name here, like origin or upstream
-git tag -a "${TAG}" -m "Release v${TAG}"
-git push "${REMOTE}" --tags
-```
-
-## Release to Apache Distribution
-
-
-
-## Release to PyPi
-
-[PyPI](https://pypi.org), Python Package Index, is a repository of software for the Python programming language.
-
-### Install or Upgrade package
+## Build and Sign Package
 
 We use [build](https://pypi.org/project/build/) to build package, and [twine](https://pypi.org/project/twine/) to
 upload package to PyPi. You could first install and upgrade them by:
 
-```bash
+```shell
+# Install or upgrade dependencies
 python3 -m pip install --upgrade pip build twine
+
+# Add Tag
+VERSION=<VERSION>  # The version of the package you want to release, e.g. 1.2.3
+REMOTE=<REMOTE>  # The git remote name, we usually use `origin` or `remote`
+git tag -a "${VERSION}" -m "Release v${VERSION}"
+git push "${REMOTE}" --tags
+
+# Build
+python setup.py pre_clean && python -m build
+
+# Sign
+cd dist
+gpg --batch --yes --armor --detach-sig apache-dolphinscheduler-"${VERSION}".tar.gz
+gpg --batch --yes --armor --detach-sig apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl
+shasum -a 512 apache-dolphinscheduler-"${VERSION}".tar.gz > apache-dolphinscheduler-"${VERSION}".tar.gz.sha512
+shasum -a 512 apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl > apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl.sha512
 ```
 
-It is highly recommended [releasing package to TestPyPi](#release-to-testpypi) first, to check whether the
-package is correct, and then [release to PyPi](#release-to-pypi).
+## Release to Apache Distribution
+
+### To Apache SVN
+
+```shell
+svn co https://dist.apache.org/repos/dist/dev/dolphinscheduler/ release/dolphinscheduler
+mkdir -p release/dolphinscheduler/python/"${VERSION}"
+cp apache*dolphinscheduler-"${VERSION}"* release/dolphinscheduler/python/"${VERSION}"
+
+cd release/dolphinscheduler && svn add python && svn commit python -m "Release Apache DolphinScheduler-SDK-Python version ${VERSION}"
+```
+
+### Vote Mail
+
+```text
+TITLE: [VOTE] Release Apache DolphinScheduler SDK Python <VERSION>
+
+BODY:
+
+Hello DolphinScheduler Community,
+
+This is a call for vote to release Apache DolphinScheduler SDK Python version <VERSION>
+
+Release notes: https://github.com/apache/dolphinscheduler-sdk-python/releases/tag/<VERSION>
+
+The release candidates: https://dist.apache.org/repos/dist/dev/dolphinscheduler/python/<VERSION>/
+
+Git tag for the release: https://github.com/apache/dolphinscheduler-sdk-python/tree/<VERSION>
+
+Release Commit ID: https://github.com/apache/dolphinscheduler-sdk-python/commit/02bc4f44cdd136622e403506f6474da0c7fa36fb
+
+Keys to verify the Release Candidate: https://dist.apache.org/repos/dist/dev/dolphinscheduler/KEYS
+
+The vote will be open for at least 72 hours or until necessary number of votes are reached.
+
+Please vote accordingly:
+
+[ ] +1 approve
+[ ] +0 no opinion
+[ ] -1 disapprove with the reason
+
+Checklist for reference:
+
+[ ] Download links are valid.
+[ ] Checksums and PGP signatures are valid.
+[ ] Source code artifacts have correct names matching the current release.
+[ ] LICENSE and NOTICE files are correct for each DolphinScheduler repo.
+[ ] All files have license headers if necessary.
+[ ] No compiled archives bundled in source archive.
+```
+
+## Release to PyPi
+
+[PyPI](https://pypi.org), Python Package Index, is a repository of software for the Python programming language.
 
 ### Release to TestPyPi
 
