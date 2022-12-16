@@ -15,6 +15,8 @@
 # specific language governing permissions and limitations
 # under the License.
 
+"""Util versions."""
+
 from pathlib import Path
 
 from packaging import requirements
