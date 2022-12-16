@@ -30,7 +30,22 @@ You could release to [ASF Distribution Directory](https://downloads.apache.org/d
 website.
 -->
 
-## To PyPi
+## Create Tag
+
+We should create a tag and push it to GitHub for each release, You could create a tag by:
+
+```shell
+export TAG=<YOUR-VERSION>  # setting your version here, like 1.0.1 or others
+export REMOTE=<YOUR-REMOTE-NAME>  # setting your remote name here, like origin or upstream
+git tag -a "${TAG}" -m "Release v${TAG}"
+git push "${REMOTE}" --tags
+```
+
+## Release to Apache Distribution
+
+
+
+## Release to PyPi
 
 [PyPI](https://pypi.org), Python Package Index, is a repository of software for the Python programming language.
 
