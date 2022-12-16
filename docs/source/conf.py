@@ -26,7 +26,7 @@
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-
+import base64
 import os
 import sys
 from pathlib import Path
@@ -75,6 +75,7 @@ extensions = [
     "sphinx_inline_tabs",
     "sphinx_copybutton",
     "sphinx_multiversion",
+    "sphinx_github_changelog",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -107,6 +108,11 @@ autodoc_default_options = {
 }
 
 autosectionlabel_prefix_document = True
+
+# extensions for sphinx_github_changelog, token from Jay Chung with only public_repo permission. have to
+# encode it due to github will delete token string if it is not encoded.
+token_encode = b"Z2hwX2tXa09kdTI0N3RVcmJlREVVeEJINUhWOVZBblVwQjNJNXNLeg=="
+sphinx_github_changelog_token = base64.b64decode(token_encode).decode()
 
 # -- Options for HTML output -------------------------------------------------
 
