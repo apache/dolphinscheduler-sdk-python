@@ -60,7 +60,7 @@ doc = [
     # GitHub directly, see also:
     # https://github.com/Holzhaus/sphinx-multiversion/issues/42#issuecomment-1210539786
     "sphinx-multiversion @ git+https://github.com/Holzhaus/sphinx-multiversion#egg=sphinx-multiversion",
-    "sphinx-github-changelog"
+    "sphinx-github-changelog",
 ]
 
 test = [
