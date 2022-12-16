@@ -18,7 +18,6 @@
 """Test Task OpenMLDB."""
 from unittest.mock import patch
 
-from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.tasks.openmldb import OpenMLDB
 
 
@@ -37,37 +36,20 @@ def test_openmldb_get_define():
     code = 123
     version = 1
     name = "test_openmldb_get_define"
-    expect = {
-        "code": code,
-        "name": name,
-        "version": 1,
-        "description": None,
-        "delayTime": 0,
-        "taskType": TaskType.OPENMLDB,
-        "taskParams": {
-            "resourceList": [],
-            "localParams": [],
-            "zk": zookeeper,
-            "zkPath": zookeeper_path,
-            "executeMode": execute_mode,
-            "sql": sql,
-            "dependence": {},
-            "conditionResult": {"successNode": [""], "failedNode": [""]},
-            "waitStartTimeout": {},
-        },
-        "flag": "YES",
-        "taskPriority": "MEDIUM",
-        "workerGroup": "default",
-        "environmentCode": None,
-        "failRetryTimes": 0,
-        "failRetryInterval": 1,
-        "timeoutFlag": "CLOSE",
-        "timeoutNotifyStrategy": None,
-        "timeout": 0,
+    expect_task_params = {
+        "resourceList": [],
+        "localParams": [],
+        "zk": zookeeper,
+        "zkPath": zookeeper_path,
+        "executeMode": execute_mode,
+        "sql": sql,
+        "dependence": {},
+        "conditionResult": {"successNode": [""], "failedNode": [""]},
+        "waitStartTimeout": {},
     }
     with patch(
         "pydolphinscheduler.core.task.Task.gen_code_and_version",
         return_value=(code, version),
     ):
         openmldb = OpenMLDB(name, zookeeper, zookeeper_path, execute_mode, sql)
-        assert openmldb.get_define() == expect
+        assert openmldb.task_params == expect_task_params

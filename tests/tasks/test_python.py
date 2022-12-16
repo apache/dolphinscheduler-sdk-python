@@ -132,38 +132,21 @@ def test_python_get_define(name, script_code, raw):
     """Test task python function get_define."""
     code = 123
     version = 1
-    expect = {
-        "code": code,
-        "name": name,
-        "version": 1,
-        "description": None,
-        "delayTime": 0,
-        "taskType": "PYTHON",
-        "taskParams": {
-            "definition": script_code,
-            "resourceList": [],
-            "localParams": [],
-            "rawScript": raw,
-            "dependence": {},
-            "conditionResult": {"successNode": [""], "failedNode": [""]},
-            "waitStartTimeout": {},
-        },
-        "flag": "YES",
-        "taskPriority": "MEDIUM",
-        "workerGroup": "default",
-        "environmentCode": None,
-        "failRetryTimes": 0,
-        "failRetryInterval": 1,
-        "timeoutFlag": "CLOSE",
-        "timeoutNotifyStrategy": None,
-        "timeout": 0,
+    expect_task_params = {
+        "definition": script_code,
+        "resourceList": [],
+        "localParams": [],
+        "rawScript": raw,
+        "dependence": {},
+        "conditionResult": {"successNode": [""], "failedNode": [""]},
+        "waitStartTimeout": {},
     }
     with patch(
         "pydolphinscheduler.core.task.Task.gen_code_and_version",
         return_value=(code, version),
     ):
         shell = Python(name, script_code)
-        assert shell.get_define() == expect
+        assert shell.task_params == expect_task_params
 
 
 @pytest.mark.parametrize(

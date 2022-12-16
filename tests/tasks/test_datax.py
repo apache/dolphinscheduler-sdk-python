@@ -53,65 +53,43 @@ def test_datax_get_define(mock_datasource):
     datasource_name = "test_datasource"
     datatarget_name = "test_datatarget"
     target_table = "test_target_table_name"
-    expect = {
-        "code": code,
-        "name": name,
-        "version": 1,
-        "description": None,
-        "delayTime": 0,
-        "taskType": "DATAX",
-        "taskParams": {
-            "customConfig": 0,
-            "dsType": "MYSQL",
-            "dataSource": 1,
-            "dtType": "MYSQL",
-            "dataTarget": 1,
-            "sql": command,
-            "targetTable": target_table,
-            "jobSpeedByte": 0,
-            "jobSpeedRecord": 1000,
-            "xms": 1,
-            "xmx": 1,
-            "preStatements": [],
-            "postStatements": [],
-            "localParams": [],
-            "resourceList": [],
-            "dependence": {},
-            "conditionResult": {"successNode": [""], "failedNode": [""]},
-            "waitStartTimeout": {},
-        },
-        "flag": "YES",
-        "taskPriority": "MEDIUM",
-        "workerGroup": "default",
-        "environmentCode": None,
-        "failRetryTimes": 0,
-        "failRetryInterval": 1,
-        "timeoutFlag": "CLOSE",
-        "timeoutNotifyStrategy": None,
-        "timeout": 0,
+    expect_task_params = {
+        "customConfig": 0,
+        "dsType": "MYSQL",
+        "dataSource": 1,
+        "dtType": "MYSQL",
+        "dataTarget": 1,
+        "sql": command,
+        "targetTable": target_table,
+        "jobSpeedByte": 0,
+        "jobSpeedRecord": 1000,
+        "xms": 1,
+        "xmx": 1,
+        "preStatements": [],
+        "postStatements": [],
+        "localParams": [],
+        "resourceList": [],
+        "dependence": {},
+        "conditionResult": {"successNode": [""], "failedNode": [""]},
+        "waitStartTimeout": {},
     }
     with patch(
         "pydolphinscheduler.core.task.Task.gen_code_and_version",
         return_value=(code, version),
     ):
         task = DataX(name, datasource_name, datatarget_name, command, target_table)
-        assert task.get_define() == expect
+        assert expect_task_params == task.get_define()["taskParams"]
 
 
 @pytest.mark.parametrize("json_template", ["json_template"])
 def test_custom_datax_get_define(json_template):
     """Test task custom datax function get_define."""
-    code = 123
-    version = 1
-    name = "test_custom_datax_get_define"
-    expect = {
-        "code": code,
-        "name": name,
-        "version": 1,
-        "description": None,
-        "delayTime": 0,
-        "taskType": "DATAX",
-        "taskParams": {
+    with patch(
+        "pydolphinscheduler.core.task.Task.gen_code_and_version",
+        return_value=(123, 1),
+    ):
+        task = CustomDataX("test_custom_datax_get_define", json_template)
+        expect_task_params = {
             "customConfig": 1,
             "json": json_template,
             "xms": 1,
@@ -121,23 +99,9 @@ def test_custom_datax_get_define(json_template):
             "dependence": {},
             "conditionResult": {"successNode": [""], "failedNode": [""]},
             "waitStartTimeout": {},
-        },
-        "flag": "YES",
-        "taskPriority": "MEDIUM",
-        "workerGroup": "default",
-        "environmentCode": None,
-        "failRetryTimes": 0,
-        "failRetryInterval": 1,
-        "timeoutFlag": "CLOSE",
-        "timeoutNotifyStrategy": None,
-        "timeout": 0,
-    }
-    with patch(
-        "pydolphinscheduler.core.task.Task.gen_code_and_version",
-        return_value=(code, version),
-    ):
-        task = CustomDataX(name, json_template)
-        assert task.get_define() == expect
+        }
+
+        assert task.task_params == expect_task_params
 
 
 @pytest.mark.parametrize(

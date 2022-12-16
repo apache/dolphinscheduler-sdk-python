@@ -69,34 +69,17 @@ def test_sagemaker_get_define():
     code = 123
     version = 1
     name = "test_sagemaker_get_define"
-    expect = {
-        "code": code,
-        "name": name,
-        "version": 1,
-        "description": None,
-        "delayTime": 0,
-        "taskType": "SAGEMAKER",
-        "taskParams": {
-            "resourceList": [],
-            "localParams": [],
-            "sagemakerRequestJson": sagemaker_request_json,
-            "dependence": {},
-            "conditionResult": {"successNode": [""], "failedNode": [""]},
-            "waitStartTimeout": {},
-        },
-        "flag": "YES",
-        "taskPriority": "MEDIUM",
-        "workerGroup": "default",
-        "environmentCode": None,
-        "failRetryTimes": 0,
-        "failRetryInterval": 1,
-        "timeoutFlag": "CLOSE",
-        "timeoutNotifyStrategy": None,
-        "timeout": 0,
+    expect_task_params = {
+        "resourceList": [],
+        "localParams": [],
+        "sagemakerRequestJson": sagemaker_request_json,
+        "dependence": {},
+        "conditionResult": {"successNode": [""], "failedNode": [""]},
+        "waitStartTimeout": {},
     }
     with patch(
         "pydolphinscheduler.core.task.Task.gen_code_and_version",
         return_value=(code, version),
     ):
         sagemaker = SageMaker(name, sagemaker_request_json)
-        assert sagemaker.get_define() == expect
+        assert sagemaker.task_params == expect_task_params

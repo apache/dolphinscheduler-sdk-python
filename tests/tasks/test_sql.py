@@ -143,43 +143,26 @@ def test_sql_get_define(mock_datasource):
     name = "test_sql_get_define"
     command = "select 1"
     datasource_name = "test_datasource"
-    expect = {
-        "code": code,
-        "name": name,
-        "version": 1,
-        "description": None,
-        "delayTime": 0,
-        "taskType": "SQL",
-        "taskParams": {
-            "type": "MYSQL",
-            "datasource": 1,
-            "sql": command,
-            "sqlType": "0",
-            "displayRows": 10,
-            "preStatements": [],
-            "postStatements": [],
-            "localParams": [],
-            "resourceList": [],
-            "dependence": {},
-            "conditionResult": {"successNode": [""], "failedNode": [""]},
-            "waitStartTimeout": {},
-        },
-        "flag": "YES",
-        "taskPriority": "MEDIUM",
-        "workerGroup": "default",
-        "environmentCode": None,
-        "failRetryTimes": 0,
-        "failRetryInterval": 1,
-        "timeoutFlag": "CLOSE",
-        "timeoutNotifyStrategy": None,
-        "timeout": 0,
+    expect_task_params = {
+        "type": "MYSQL",
+        "datasource": 1,
+        "sql": command,
+        "sqlType": "0",
+        "displayRows": 10,
+        "preStatements": [],
+        "postStatements": [],
+        "localParams": [],
+        "resourceList": [],
+        "dependence": {},
+        "conditionResult": {"successNode": [""], "failedNode": [""]},
+        "waitStartTimeout": {},
     }
     with patch(
         "pydolphinscheduler.core.task.Task.gen_code_and_version",
         return_value=(code, version),
     ):
         task = Sql(name, datasource_name, command)
-        assert task.get_define() == expect
+        assert task.task_params == expect_task_params
 
 
 @pytest.mark.parametrize(

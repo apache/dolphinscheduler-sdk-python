@@ -34,27 +34,11 @@ VERSION = 1
 MLFLOW_TRACKING_URI = "http://127.0.0.1:5000"
 
 EXPECT = {
-    "code": CODE,
-    "version": VERSION,
-    "description": None,
-    "delayTime": 0,
-    "taskType": "MLFLOW",
-    "taskParams": {
-        "resourceList": [],
-        "localParams": [],
-        "dependence": {},
-        "conditionResult": {"successNode": [""], "failedNode": [""]},
-        "waitStartTimeout": {},
-    },
-    "flag": "YES",
-    "taskPriority": "MEDIUM",
-    "workerGroup": "default",
-    "environmentCode": None,
-    "failRetryTimes": 0,
-    "failRetryInterval": 1,
-    "timeoutFlag": "CLOSE",
-    "timeoutNotifyStrategy": None,
-    "timeout": 0,
+    "resourceList": [],
+    "localParams": [],
+    "dependence": {},
+    "conditionResult": {"successNode": [""], "failedNode": [""]},
+    "waitStartTimeout": {},
 }
 
 
@@ -64,9 +48,7 @@ def test_mlflow_models_get_define():
     model_uri = "models:/xgboost_native/Production"
     port = 7001
 
-    expect = deepcopy(EXPECT)
-    expect["name"] = name
-    task_params = expect["taskParams"]
+    task_params = deepcopy(EXPECT)
     task_params["mlflowTrackingUri"] = MLFLOW_TRACKING_URI
     task_params["mlflowTaskType"] = MLflowTaskType.MLFLOW_MODELS
     task_params["deployType"] = MLflowDeployType.DOCKER
@@ -84,7 +66,8 @@ def test_mlflow_models_get_define():
             deploy_mode=MLflowDeployType.DOCKER,
             port=port,
         )
-        assert task.get_define() == expect
+        print(task_params)
+        assert task.task_params == task_params
 
 
 def test_mlflow_project_custom_get_define():
@@ -95,10 +78,7 @@ def test_mlflow_project_custom_get_define():
     parameters = "-P learning_rate=0.2 -P colsample_bytree=0.8 -P subsample=0.9"
     experiment_name = "xgboost"
 
-    expect = deepcopy(EXPECT)
-    expect["name"] = name
-    task_params = expect["taskParams"]
-
+    task_params = deepcopy(EXPECT)
     task_params["mlflowTrackingUri"] = MLFLOW_TRACKING_URI
     task_params["mlflowTaskType"] = MLflowTaskType.MLFLOW_PROJECTS
     task_params["mlflowJobType"] = MLflowJobType.CUSTOM_PROJECT
@@ -119,7 +99,7 @@ def test_mlflow_project_custom_get_define():
             experiment_name=experiment_name,
             version="dev",
         )
-        assert task.get_define() == expect
+        assert task.task_params == task_params
 
 
 def test_mlflow_project_automl_get_define():
@@ -132,10 +112,7 @@ def test_mlflow_project_automl_get_define():
     automl_tool = "flaml"
     data_path = "/data/examples/iris"
 
-    expect = deepcopy(EXPECT)
-    expect["name"] = name
-    task_params = expect["taskParams"]
-
+    task_params = deepcopy(EXPECT)
     task_params["mlflowTrackingUri"] = MLFLOW_TRACKING_URI
     task_params["mlflowTaskType"] = MLflowTaskType.MLFLOW_PROJECTS
     task_params["mlflowJobType"] = MLflowJobType.AUTOML
@@ -159,7 +136,7 @@ def test_mlflow_project_automl_get_define():
             automl_tool=automl_tool,
             data_path=data_path,
         )
-    assert task.get_define() == expect
+        assert task.task_params == task_params
 
 
 def test_mlflow_project_basic_algorithm_get_define():
@@ -173,10 +150,7 @@ def test_mlflow_project_basic_algorithm_get_define():
     data_path = "/data/examples/iris"
     search_params = "max_depth=[5, 10];n_estimators=[100, 200]"
 
-    expect = deepcopy(EXPECT)
-    expect["name"] = name
-    task_params = expect["taskParams"]
-
+    task_params = deepcopy(EXPECT)
     task_params["mlflowTrackingUri"] = MLFLOW_TRACKING_URI
     task_params["mlflowTaskType"] = MLflowTaskType.MLFLOW_PROJECTS
     task_params["mlflowJobType"] = MLflowJobType.BASIC_ALGORITHM
@@ -202,4 +176,4 @@ def test_mlflow_project_basic_algorithm_get_define():
             data_path=data_path,
             search_params=search_params,
         )
-    assert task.get_define() == expect
+        assert task.task_params == task_params

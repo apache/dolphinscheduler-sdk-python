@@ -18,7 +18,6 @@
 """Test Task Dvc."""
 from unittest.mock import patch
 
-from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.tasks.dvc import DVCDownload, DVCInit, DvcTaskType, DVCUpload
 
 repository = "git@github.com:<YOUR-NAME-OR-ORG>/dvc-data-repository-example.git"
@@ -31,39 +30,22 @@ def test_dvc_init_get_define():
 
     code = 123
     version = 1
-    expect = {
-        "code": code,
-        "name": name,
-        "version": 1,
-        "description": None,
-        "delayTime": 0,
-        "taskType": TaskType.DVC,
-        "taskParams": {
-            "resourceList": [],
-            "localParams": [],
-            "dvcTaskType": DvcTaskType.INIT,
-            "dvcRepository": repository,
-            "dvcStoreUrl": dvc_store_url,
-            "dependence": {},
-            "conditionResult": {"successNode": [""], "failedNode": [""]},
-            "waitStartTimeout": {},
-        },
-        "flag": "YES",
-        "taskPriority": "MEDIUM",
-        "workerGroup": "default",
-        "environmentCode": None,
-        "failRetryTimes": 0,
-        "failRetryInterval": 1,
-        "timeoutFlag": "CLOSE",
-        "timeoutNotifyStrategy": None,
-        "timeout": 0,
+    expect_task_params = {
+        "resourceList": [],
+        "localParams": [],
+        "dvcTaskType": DvcTaskType.INIT,
+        "dvcRepository": repository,
+        "dvcStoreUrl": dvc_store_url,
+        "dependence": {},
+        "conditionResult": {"successNode": [""], "failedNode": [""]},
+        "waitStartTimeout": {},
     }
     with patch(
         "pydolphinscheduler.core.task.Task.gen_code_and_version",
         return_value=(code, version),
     ):
         dvc_init = DVCInit(name, repository, dvc_store_url)
-        assert dvc_init.get_define() == expect
+        assert dvc_init.task_params == expect_task_params
 
 
 def test_dvc_upload_get_define():
@@ -76,35 +58,18 @@ def test_dvc_upload_get_define():
 
     code = 123
     version = 1
-    expect = {
-        "code": code,
-        "name": name,
-        "version": 1,
-        "description": None,
-        "delayTime": 0,
-        "taskType": TaskType.DVC,
-        "taskParams": {
-            "resourceList": [],
-            "localParams": [],
-            "dvcTaskType": DvcTaskType.UPLOAD,
-            "dvcRepository": repository,
-            "dvcDataLocation": data_path_in_dvc_repository,
-            "dvcLoadSaveDataPath": data_path_in_worker,
-            "dvcVersion": version,
-            "dvcMessage": message,
-            "dependence": {},
-            "conditionResult": {"successNode": [""], "failedNode": [""]},
-            "waitStartTimeout": {},
-        },
-        "flag": "YES",
-        "taskPriority": "MEDIUM",
-        "workerGroup": "default",
-        "environmentCode": None,
-        "failRetryTimes": 0,
-        "failRetryInterval": 1,
-        "timeoutFlag": "CLOSE",
-        "timeoutNotifyStrategy": None,
-        "timeout": 0,
+    expect_task_params = {
+        "resourceList": [],
+        "localParams": [],
+        "dvcTaskType": DvcTaskType.UPLOAD,
+        "dvcRepository": repository,
+        "dvcDataLocation": data_path_in_dvc_repository,
+        "dvcLoadSaveDataPath": data_path_in_worker,
+        "dvcVersion": version,
+        "dvcMessage": message,
+        "dependence": {},
+        "conditionResult": {"successNode": [""], "failedNode": [""]},
+        "waitStartTimeout": {},
     }
     with patch(
         "pydolphinscheduler.core.task.Task.gen_code_and_version",
@@ -118,7 +83,7 @@ def test_dvc_upload_get_define():
             version=version,
             message=message,
         )
-        assert dvc_upload.get_define() == expect
+        assert dvc_upload.task_params == expect_task_params
 
 
 def test_dvc_download_get_define():
@@ -130,34 +95,17 @@ def test_dvc_download_get_define():
 
     code = 123
     version = 1
-    expect = {
-        "code": code,
-        "name": name,
-        "version": 1,
-        "description": None,
-        "delayTime": 0,
-        "taskType": TaskType.DVC,
-        "taskParams": {
-            "resourceList": [],
-            "localParams": [],
-            "dvcTaskType": DvcTaskType.DOWNLOAD,
-            "dvcRepository": repository,
-            "dvcDataLocation": data_path_in_dvc_repository,
-            "dvcLoadSaveDataPath": data_path_in_worker,
-            "dvcVersion": version,
-            "dependence": {},
-            "conditionResult": {"successNode": [""], "failedNode": [""]},
-            "waitStartTimeout": {},
-        },
-        "flag": "YES",
-        "taskPriority": "MEDIUM",
-        "workerGroup": "default",
-        "environmentCode": None,
-        "failRetryTimes": 0,
-        "failRetryInterval": 1,
-        "timeoutFlag": "CLOSE",
-        "timeoutNotifyStrategy": None,
-        "timeout": 0,
+    expect_task_params = {
+        "resourceList": [],
+        "localParams": [],
+        "dvcTaskType": DvcTaskType.DOWNLOAD,
+        "dvcRepository": repository,
+        "dvcDataLocation": data_path_in_dvc_repository,
+        "dvcLoadSaveDataPath": data_path_in_worker,
+        "dvcVersion": version,
+        "dependence": {},
+        "conditionResult": {"successNode": [""], "failedNode": [""]},
+        "waitStartTimeout": {},
     }
     with patch(
         "pydolphinscheduler.core.task.Task.gen_code_and_version",
@@ -170,4 +118,4 @@ def test_dvc_download_get_define():
             data_path_in_worker=data_path_in_worker,
             version=version,
         )
-        assert dvc_download.get_define() == expect
+        assert dvc_download.task_params == expect_task_params

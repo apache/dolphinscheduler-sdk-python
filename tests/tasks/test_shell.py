@@ -73,39 +73,20 @@ def test_shell_get_define():
     version = 1
     name = "test_shell_get_define"
     command = "echo test shell"
-    expect = {
-        "code": code,
-        "name": name,
-        "version": 1,
-        "description": None,
-        "environmentCode": None,
-        "delayTime": 0,
-        "taskType": "SHELL",
-        "taskParams": {
-            "resourceList": [],
-            "localParams": [],
-            "rawScript": command,
-            "dependence": {},
-            "conditionResult": {"successNode": [""], "failedNode": [""]},
-            "waitStartTimeout": {},
-        },
-        "flag": "YES",
-        "taskPriority": "MEDIUM",
-        "workerGroup": "default",
-        "environmentCode": None,
-        "failRetryTimes": 0,
-        "failRetryInterval": 1,
-        "timeoutFlag": "CLOSE",
-        "timeoutNotifyStrategy": None,
-        "timeout": 0,
+    expect_task_params = {
+        "resourceList": [],
+        "localParams": [],
+        "rawScript": command,
+        "dependence": {},
+        "conditionResult": {"successNode": [""], "failedNode": [""]},
+        "waitStartTimeout": {},
     }
     with patch(
         "pydolphinscheduler.core.task.Task.gen_code_and_version",
         return_value=(code, version),
     ):
         shell = Shell(name, command)
-        print(shell.get_define())
-        assert shell.get_define() == expect
+        assert shell.task_params == expect_task_params
 
 
 @pytest.mark.parametrize(

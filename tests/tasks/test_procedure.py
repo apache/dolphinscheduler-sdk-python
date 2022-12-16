@@ -76,32 +76,15 @@ def test_property_task_params(mock_datasource, mock_code_version, attr, expect):
 def test_sql_get_define(mock_datasource, mock_code_version):
     """Test task procedure function get_define."""
     name = "test_procedure_get_define"
-    expect = {
-        "code": 123,
-        "name": name,
-        "version": 1,
-        "description": None,
-        "delayTime": 0,
-        "taskType": "PROCEDURE",
-        "taskParams": {
-            "type": "MYSQL",
-            "datasource": 1,
-            "method": TEST_PROCEDURE_SQL,
-            "localParams": [],
-            "resourceList": [],
-            "dependence": {},
-            "conditionResult": {"successNode": [""], "failedNode": [""]},
-            "waitStartTimeout": {},
-        },
-        "flag": "YES",
-        "taskPriority": "MEDIUM",
-        "workerGroup": "default",
-        "environmentCode": None,
-        "failRetryTimes": 0,
-        "failRetryInterval": 1,
-        "timeoutFlag": "CLOSE",
-        "timeoutNotifyStrategy": None,
-        "timeout": 0,
+    expect_task_params = {
+        "type": "MYSQL",
+        "datasource": 1,
+        "method": TEST_PROCEDURE_SQL,
+        "localParams": [],
+        "resourceList": [],
+        "dependence": {},
+        "conditionResult": {"successNode": [""], "failedNode": [""]},
+        "waitStartTimeout": {},
     }
     task = Procedure(name, TEST_PROCEDURE_DATASOURCE_NAME, TEST_PROCEDURE_SQL)
-    assert task.get_define() == expect
+    assert task.task_params == expect_task_params

@@ -769,58 +769,41 @@ def test_dependent_get_define(mock_code_version, mock_dep_code):
     )
 
     name = "test_dependent_get_define"
-    expect = {
-        "code": 123,
-        "name": name,
-        "version": 1,
-        "description": None,
-        "delayTime": 0,
-        "taskType": "DEPENDENT",
-        "taskParams": {
-            "resourceList": [],
-            "localParams": [],
-            "dependence": {
-                "relation": "AND",
-                "dependTaskList": [
-                    {
-                        "relation": "OR",
-                        "dependItemList": [
-                            {
-                                "projectCode": TEST_PROJECT_CODE,
-                                "definitionCode": TEST_DEFINITION_CODE,
-                                "depTaskCode": "0",
-                                "cycle": "day",
-                                "dateValue": "today",
-                            }
-                        ],
-                    },
-                    {
-                        "relation": "AND",
-                        "dependItemList": [
-                            {
-                                "projectCode": TEST_PROJECT_CODE,
-                                "definitionCode": TEST_DEFINITION_CODE,
-                                "depTaskCode": TEST_TASK_CODE,
-                                "cycle": "day",
-                                "dateValue": "today",
-                            }
-                        ],
-                    },
-                ],
-            },
-            "conditionResult": {"successNode": [""], "failedNode": [""]},
-            "waitStartTimeout": {},
+    expect_task_params = {
+        "resourceList": [],
+        "localParams": [],
+        "dependence": {
+            "relation": "AND",
+            "dependTaskList": [
+                {
+                    "relation": "OR",
+                    "dependItemList": [
+                        {
+                            "projectCode": TEST_PROJECT_CODE,
+                            "definitionCode": TEST_DEFINITION_CODE,
+                            "depTaskCode": "0",
+                            "cycle": "day",
+                            "dateValue": "today",
+                        }
+                    ],
+                },
+                {
+                    "relation": "AND",
+                    "dependItemList": [
+                        {
+                            "projectCode": TEST_PROJECT_CODE,
+                            "definitionCode": TEST_DEFINITION_CODE,
+                            "depTaskCode": TEST_TASK_CODE,
+                            "cycle": "day",
+                            "dateValue": "today",
+                        }
+                    ],
+                },
+            ],
         },
-        "flag": "YES",
-        "taskPriority": "MEDIUM",
-        "workerGroup": "default",
-        "environmentCode": None,
-        "failRetryTimes": 0,
-        "failRetryInterval": 1,
-        "timeoutFlag": "CLOSE",
-        "timeoutNotifyStrategy": None,
-        "timeout": 0,
+        "conditionResult": {"successNode": [""], "failedNode": [""]},
+        "waitStartTimeout": {},
     }
 
     task = Dependent(name, dependence=dep_operator)
-    assert task.get_define() == expect
+    assert task.task_params == expect_task_params

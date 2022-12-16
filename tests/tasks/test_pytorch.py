@@ -90,7 +90,7 @@ def test_pytorch_get_define():
             python_env_tool=python_env_tool,
             requirements=requirements,
         )
-        assert task.get_define() == expect
+        assert task.task_params == task_params
 
 
 @pytest.mark.parametrize(
