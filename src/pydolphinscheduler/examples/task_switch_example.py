@@ -34,9 +34,7 @@ from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.tasks.shell import Shell
 from pydolphinscheduler.tasks.switch import Branch, Default, Switch, SwitchCondition
 
-with Workflow(
-    name="task_switch_example", param={"var": "1"}
-) as workflow:
+with Workflow(name="task_switch_example", param={"var": "1"}) as workflow:
     parent = Shell(name="parent", command="echo parent")
     switch_child_1 = Shell(name="switch_child_1", command="echo switch_child_1")
     switch_child_2 = Shell(name="switch_child_2", command="echo switch_child_2")
