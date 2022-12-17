@@ -29,7 +29,6 @@ INTO TABLE talkingdata OPTIONS(mode='overwrite');
 
 with Workflow(
     name="task_openmldb_example",
-    tenant="tenant_exists",
 ) as workflow:
     task_openmldb = OpenMLDB(
         name="task_openmldb",

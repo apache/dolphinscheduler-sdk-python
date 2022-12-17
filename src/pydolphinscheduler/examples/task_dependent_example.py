@@ -42,7 +42,6 @@ from pydolphinscheduler.tasks.shell import Shell
 
 with Workflow(
     name="task_dependent_external",
-    tenant="tenant_exists",
 ) as workflow:
     task_1 = Shell(name="task_1", command="echo task 1")
     task_2 = Shell(name="task_2", command="echo task 2")
@@ -51,7 +50,6 @@ with Workflow(
 
 with Workflow(
     name="task_dependent_example",
-    tenant="tenant_exists",
 ) as workflow:
     task = Dependent(
         name="task_dependent",

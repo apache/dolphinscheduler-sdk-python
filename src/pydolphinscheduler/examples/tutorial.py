@@ -45,7 +45,6 @@ with Workflow(
     name="tutorial",
     schedule="0 0 0 * * ? *",
     start_time="2021-01-01",
-    tenant="tenant_exists",
 ) as workflow:
     # [end workflow_declare]
     # [start task_declare]

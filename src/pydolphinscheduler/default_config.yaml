@@ -39,16 +39,15 @@ java_gateway:
 default:
   # Default value for dolphinscheduler's user object
   user:
-    name: userPythonGateway
+    name: userPythonGateway1
     password: userPythonGateway
     email: userPythonGateway@dolphinscheduler.com
-    tenant: tenant_pydolphin
+    tenant: zhongjiajie
     phone: 11111111111
     state: 1
   # Default value for dolphinscheduler's workflow object
   workflow:
     project: project-pydolphin
-    tenant: tenant_pydolphin
     user: userPythonGateway
     queue: queuePythonGateway
     worker_group: default

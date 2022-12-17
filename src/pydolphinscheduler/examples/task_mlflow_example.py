@@ -31,7 +31,6 @@ mlflow_tracking_uri = "http://127.0.0.1:5000"
 
 with Workflow(
     name="task_mlflow_example",
-    tenant="tenant_exists",
 ) as workflow:
 
     # run custom mlflow project to train model

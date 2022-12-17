@@ -43,7 +43,7 @@ class User(BaseSide):
         password: Optional[str] = configuration.USER_PASSWORD,
         email: Optional[str] = configuration.USER_EMAIL,
         phone: Optional[str] = configuration.USER_PHONE,
-        tenant: Optional[str] = configuration.WORKFLOW_TENANT,
+        tenant: Optional[str] = configuration.USER_TENANT,
         queue: Optional[str] = configuration.WORKFLOW_QUEUE,
         status: Optional[int] = configuration.USER_STATE,
     ):
