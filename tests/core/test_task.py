@@ -251,6 +251,7 @@ def test_task_get_define():
             "waitStartTimeout": {},
         },
         "flag": "YES",
+        "isCache": "NO",
         "taskPriority": "MEDIUM",
         "workerGroup": "default",
         "environmentCode": None,

@@ -122,6 +122,7 @@ def test_property_task_params(mock_resource, mock_code_version, attr, expect):
                     "waitStartTimeout": {},
                 },
                 "flag": "YES",
+                "isCache": "NO",
                 "taskPriority": "MEDIUM",
                 "workerGroup": "default",
                 "environmentCode": None,
