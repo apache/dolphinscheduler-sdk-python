@@ -33,6 +33,7 @@ from pydolphinscheduler.constants import (
     TaskPriority,
     TaskTimeoutFlag,
 )
+from pydolphinscheduler.core.parameter import Direction, ParameterHelper
 from pydolphinscheduler.core.resource import Resource
 from pydolphinscheduler.core.resource_plugin import ResourcePlugin
 from pydolphinscheduler.core.workflow import Workflow, WorkflowContext
@@ -144,6 +145,8 @@ class Task(Base):
         condition_result: Optional[Dict] = None,
         resource_plugin: Optional[ResourcePlugin] = None,
         is_cache: Optional[bool] = False,
+        input_params: Optional[Dict] = None,
+        output_params: Optional[Dict] = None,
         *args,
         **kwargs,
     ):
@@ -161,6 +164,8 @@ class Task(Base):
         self.timeout_notify_strategy = timeout_notify_strategy
         self._timeout: timedelta = timeout
         self._workflow = None
+        self._input_params = input_params
+        self._output_params = output_params
         if "process_definition" in kwargs:
             warnings.warn(
                 "The `process_definition` parameter is deprecated, please use `workflow` instead.",
@@ -185,7 +190,7 @@ class Task(Base):
             )
 
         # Attribute for task param
-        self.local_params = local_params or []
+        self._local_params = local_params or []
         self._resource_list = resource_list or []
         self.dependence = dependence or {}
         self.wait_start_timeout = wait_start_timeout or {}
@@ -415,3 +420,16 @@ class Task(Base):
         if self._environment_name is None:
             return None
         return gateway.query_environment_info(self._environment_name)
+
+    @property
+    def local_params(self):
+        if self._local_params:
+            return self._local_params
+        local_params = []
+        local_params.extend(
+            ParameterHelper.convert_params(self._input_params, Direction.IN)
+        )
+        local_params.extend(
+            ParameterHelper.convert_params(self._output_params, Direction.OUT)
+        )
+        return local_params
