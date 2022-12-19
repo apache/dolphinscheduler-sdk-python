@@ -25,6 +25,7 @@ from unittest.mock import PropertyMock, patch
 
 import pytest
 
+from pydolphinscheduler.core.parameter import ParameterType
 from pydolphinscheduler.core.task import Task, TaskRelation
 from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.exceptions import PyResPluginException
@@ -509,3 +510,66 @@ def test_python_resource_list(
         resource_list=resources,
     )
     assert task.resource_list == expect
+
+
+@patch(
+    "pydolphinscheduler.core.task.Task.gen_code_and_version",
+    return_value=(123, 1),
+)
+def test_local_parameter(m_code_version):
+
+    base_local_params = [
+        {"prop": "base", "direct": "IN", "type": "VARCHAR", "value": "2022"},
+    ]
+
+    task = Task(name="test", task_type="task_type", local_params=base_local_params)
+
+    assert task.local_params == base_local_params
+
+    task = Task(
+        name="test",
+        task_type="task_type",
+        input_params={"a": 123, "b": True},
+        output_params={"c": "ccc", "d": ParameterType.LONG(123)},
+    )
+
+    expect = [
+        {"prop": "a", "direct": "IN", "type": "INTEGER", "value": 123},
+        {"prop": "b", "direct": "IN", "type": "BOOLEAN", "value": True},
+        {"prop": "c", "direct": "OUT", "type": "VARCHAR", "value": "ccc"},
+        {"prop": "d", "direct": "OUT", "type": "LONG", "value": "123"},
+    ]
+
+    assert task.local_params == expect
+
+    task = Task(
+        name="test",
+        task_type="task_type",
+        local_params=base_local_params,
+        input_params={"a": 123, "b": True},
+        output_params={"c": "ccc", "d": ParameterType.LONG(123)},
+    )
+
+    expect = [
+        {"prop": "base", "direct": "IN", "type": "VARCHAR", "value": "2022"},
+        {"prop": "a", "direct": "IN", "type": "INTEGER", "value": 123},
+        {"prop": "b", "direct": "IN", "type": "BOOLEAN", "value": True},
+        {"prop": "c", "direct": "OUT", "type": "VARCHAR", "value": "ccc"},
+        {"prop": "d", "direct": "OUT", "type": "LONG", "value": "123"},
+    ]
+
+    assert task.local_params == expect
+
+    task.add_in("e", "${e}")
+    task.add_out("f")
+
+    new_params = [
+        {"prop": "e", "direct": "IN", "type": "VARCHAR", "value": "${e}"},
+        {"prop": "f", "direct": "OUT", "type": "VARCHAR", "value": ""},
+    ]
+    expect.extend(new_params)
+
+    def sorted_func(x):
+        return (x["prop"], x["direct"])
+
+    assert sorted(task.local_params, key=sorted_func) == sorted(expect, key=sorted_func)

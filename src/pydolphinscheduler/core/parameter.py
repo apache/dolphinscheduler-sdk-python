@@ -26,35 +26,46 @@ class Direction:
 
 
 class BaseDataType:
-    TYPE = None
-
     def __init__(self, value=None):
         self.data_type = self.__class__.__name__
         self.value = self.convert_value(value) if value is not None else ""
 
     def convert_value(self, value=None):
-        return value or ""
+        if value is None or value == "":
+            return ""
+        else:
+            return self._convert(value)
+
+    def _convert(self, value=None):
+        return str(value)
 
 
-def create_data_type(class_name, convert_value_func=None):
-    convert_value = convert_value_func or BaseDataType.convert_value
-    return type(class_name, (BaseDataType,), {"convert_value": convert_value})
+def create_data_type(class_name, convert_func=None):
+    convert = convert_func or BaseDataType._convert
+    return type(class_name, (BaseDataType,), {"_convert": convert})
 
 
 class ParameterType:
     VARCHAR = create_data_type("VARCHAR", str)
     LONG = create_data_type("LONG")
-    INTEGER = create_data_type("INTERGER", int)
+    INTEGER = create_data_type("INTEGER", int)
     FLOAT = create_data_type("FLOAT", float)
     DOUBLE = create_data_type("DOUBLE")
     DATE = create_data_type("DATE")
     TIME = create_data_type("TIME")
     TIMESTAMP = create_data_type("TIMESTAMP")
-    BOOLEAN = create_data_type("BOOLEAN")
+    BOOLEAN = create_data_type("BOOLEAN", bool)
     LIST = create_data_type("LIST")
     FILE = create_data_type("FILE")
 
-    _TYPE_MAPPING = {"int": INTEGER, "float": FLOAT, "str": VARCHAR, "bool": BOOLEAN}
+    _TYPE_MAPPING = {
+        "int": INTEGER,
+        "float": FLOAT,
+        "ScalarFloat": FLOAT,
+        "str": VARCHAR,
+        "bool": BOOLEAN,
+        "NoneType": VARCHAR,
+    }
 
 
 class Parameter:
@@ -76,12 +87,12 @@ class Parameter:
 
 class ParameterHelper:
     @staticmethod
-    def convert_params(input_params, direction):
+    def convert_params(params, direction):
         parameters = []
-        input_params = input_params or {}
-        if not isinstance(input_params, dict):
+        params = params or {}
+        if not isinstance(params, dict):
             raise PyDSParamException("input_params must be a dict")
-        for key, value in input_params.items():
+        for key, value in params.items():
             if not isinstance(value, BaseDataType):
                 data_type_cls = ParameterHelper.infer_parameter_type(value)
                 value = data_type_cls(value)
@@ -96,7 +107,7 @@ class ParameterHelper:
 
         if value_type not in ParameterType._TYPE_MAPPING:
             raise PyDSParamException(
-                "Can not infer parameter type, please use ParameterType"
+                f"Can not infer parameter type {value}, please use ParameterType"
             )
 
         data_type_cls = ParameterType._TYPE_MAPPING[value_type]

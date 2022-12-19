@@ -164,8 +164,8 @@ class Task(Base):
         self.timeout_notify_strategy = timeout_notify_strategy
         self._timeout: timedelta = timeout
         self._workflow = None
-        self._input_params = input_params
-        self._output_params = output_params
+        self._input_params = input_params or {}
+        self._output_params = output_params or {}
         if "process_definition" in kwargs:
             warnings.warn(
                 "The `process_definition` parameter is deprecated, please use `workflow` instead.",
@@ -423,9 +423,8 @@ class Task(Base):
 
     @property
     def local_params(self):
-        if self._local_params:
-            return self._local_params
-        local_params = []
+        """Convert local params."""
+        local_params = copy.deepcopy(self._local_params)
         local_params.extend(
             ParameterHelper.convert_params(self._input_params, Direction.IN)
         )
@@ -433,3 +432,11 @@ class Task(Base):
             ParameterHelper.convert_params(self._output_params, Direction.OUT)
         )
         return local_params
+
+    def add_in(self, name, value=None):
+        """Add input parameters."""
+        self._input_params[name] = value
+
+    def add_out(self, name, value=None):
+        """Add output parameters."""
+        self._output_params[name] = value

@@ -15,51 +15,60 @@
 # specific language governing permissions and limitations
 # under the License.
 
+# [start workflow_declare]
 r"""
-A tutorial example take you to experience pydolphinscheduler.
+A tutorial example set local parameter in pydolphinscheduler.
 
-After tutorial.py file submit to Apache DolphinScheduler server a DAG would be create,
-and workflow DAG graph as below:
+Method 1:
+    task = Shell(..., input_params={"input":"a"}, output_params={"output": "b"})
 
-                  --> task_child_one
-                /                    \
-task_parent -->                        -->  task_union
-                \                    /
-                  --> task_child_two
-
-it will instantiate and run all the task it have.
+Method 2:
+    task = Shell(...)
+    task.add_in("input", "a")
+    task.add_out("output", "b")
 """
 
-from pprint import pprint
-
 from pydolphinscheduler.core.parameter import ParameterType
-
-# [start tutorial]
-# [start package_import]
-# Import Workflow object to define your workflow attributes
 from pydolphinscheduler.core.workflow import Workflow
-
-# Import task Shell object cause we would create some shell tasks later
 from pydolphinscheduler.tasks.shell import Shell
 
-# [end package_import]
+with Workflow(name="local_parameter_example", release_state="offline") as workflow:
 
-# [start workflow_declare]
-with Workflow(
-    name="tutorial",
-) as workflow:
-    task = Shell(
-        name="task_parent",
+    # Add in task __init__ func
+    task_1 = Shell(
+        name="task_1",
         command="echo hello pydolphinscheduler",
         input_params={
             "value_VARCHAR": "abc",
-            "value_LONG": ParameterType.LONG("1000000"),
             "value_INTEGER": 123,
             "value_FLOAT": 0.1,
+            "value_BOOLEAN": True,
+        },
+        output_params={
+            "value_EMPTY": None,
+        },
+    )
+
+    # Add in task instance
+    task_2 = Shell(name="task_2", command="echo hello pydolphinscheduler")
+
+    task_2.add_in("value_VARCHAR", "abc")
+    task_2.add_in("value_INTEGER", 123)
+    task_2.add_in("value_FLOAT", 0.1)
+    task_2.add_in("value_BOOLEAN", True)
+    task_2.add_out("value_EMPTY")
+
+    # Task 1 is the same as task 2
+
+    # Other parameter types corresponding to DolphinScheduler
+    task_3 = Shell(
+        name="task_3",
+        command="echo hello pydolphinscheduler",
+        input_params={
+            "value_LONG": ParameterType.LONG("1000000"),
             "value_DATE": ParameterType.DATE("2022-01-02"),
             "value_TIME": ParameterType.TIME("2022-01-01"),
             "value_TIMESTAMP": ParameterType.TIMESTAMP(123123124125),
-            "value_BOOLEAN": True,
             "value_LIST": ParameterType.LIST("123123"),
         },
         output_params={
@@ -67,17 +76,6 @@ with Workflow(
             "output_LIST": ParameterType.LIST(),
         },
     )
-    pprint(task.local_params)
 
     workflow.submit()
-    # VARCHAR = create_data_type("VARCHAR", str)
-    # LONG = create_data_type("LONG")
-    # INTEGER = create_data_type("INTERGER", int)
-    # FLOAT = create_data_type("FLOAT", float)
-    # DOUBLE = create_data_type("DOUBLE")
-    # DATE = create_data_type("DATE")
-    # TIME = create_data_type("TIME")
-    # TIMESTAMP = create_data_type("TIMESTAMP")
-    # BOOLEAN = create_data_type("BOOLEAN")
-    # LIST = create_data_type("LIST")
-    # FILE = create_data_type("FILE")
+# [end workflow_declare]

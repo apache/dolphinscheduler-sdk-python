@@ -35,6 +35,11 @@ tasks:
     fail_retry_times: 30
     fail_retry_interval: 5
     timeout: 60
-    is_cahce: true
-    local_params:
-      - { "prop": "n", "direct": "IN", "type": "VARCHAR", "value": "${n}" }
+    is_cache: true
+    input_params:
+      value_VARCHAR: "abc"
+      value_INTEGER: 123
+      value_FLOAT: 0.1
+      value_BOOLEAN: True
+    output_params:
+      value_output: ""
