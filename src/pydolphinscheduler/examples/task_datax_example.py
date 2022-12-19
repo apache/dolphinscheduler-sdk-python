@@ -74,7 +74,6 @@ JSON_TEMPLATE = {
 
 with Workflow(
     name="task_datax_example",
-    tenant="tenant_exists",
 ) as workflow:
     # This task synchronizes the data in `t_ds_project`
     # of `first_mysql` database to `target_project` of `second_mysql` database.

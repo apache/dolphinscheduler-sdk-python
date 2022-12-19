@@ -48,7 +48,6 @@ default:
   # Default value for dolphinscheduler's workflow object
   workflow:
     project: project-pydolphin
-    tenant: tenant_pydolphin
     user: userPythonGateway
     queue: queuePythonGateway
     worker_group: default

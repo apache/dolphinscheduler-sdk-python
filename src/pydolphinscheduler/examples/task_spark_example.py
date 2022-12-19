@@ -21,7 +21,7 @@
 from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.tasks.spark import DeployMode, ProgramType, Spark
 
-with Workflow(name="task_spark_example", tenant="tenant_exists") as workflow:
+with Workflow(name="task_spark_example") as workflow:
     task = Spark(
         name="task_spark",
         main_class="org.apache.spark.examples.SparkPi",

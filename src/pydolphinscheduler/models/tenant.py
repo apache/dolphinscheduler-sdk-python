@@ -29,7 +29,7 @@ class Tenant(BaseSide):
 
     def __init__(
         self,
-        name: str = configuration.WORKFLOW_TENANT,
+        name: str = configuration.USER_TENANT,
         queue: str = configuration.WORKFLOW_QUEUE,
         description: Optional[str] = None,
         tenant_id: Optional[int] = None,
