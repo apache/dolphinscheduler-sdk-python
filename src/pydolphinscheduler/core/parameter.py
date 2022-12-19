@@ -21,16 +21,24 @@ from pydolphinscheduler.exceptions import PyDSParamException
 
 
 class Direction:
+    """Constants for direction."""
+
     IN = "IN"
     OUT = "OUT"
 
 
 class BaseDataType:
+    """Base data type.
+
+    Use to convert value to ParameterType
+    """
+
     def __init__(self, value=None):
         self.data_type = self.__class__.__name__
         self.value = self.convert_value(value) if value is not None else ""
 
     def convert_value(self, value=None):
+        """Convert value."""
         if value is None or value == "":
             return ""
         else:
@@ -41,11 +49,14 @@ class BaseDataType:
 
 
 def create_data_type(class_name, convert_func=None):
+    """Create ParameterType and set the convert_func."""
     convert = convert_func or BaseDataType._convert
     return type(class_name, (BaseDataType,), {"_convert": convert})
 
 
 class ParameterType:
+    """ParameterType corresponds to dolphinscheduler."""
+
     VARCHAR = create_data_type("VARCHAR", str)
     LONG = create_data_type("LONG")
     INTEGER = create_data_type("INTEGER", int)
@@ -69,6 +80,8 @@ class ParameterType:
 
 
 class Parameter:
+    """Parameter."""
+
     def __init__(self, name, direction, data_type, value=None):
         self.name = name
         self.direction = direction
@@ -77,6 +90,7 @@ class Parameter:
 
     @property
     def data(self):
+        """Convert to local_params in task define."""
         return {
             "prop": self.name,
             "direct": self.direction,
@@ -86,8 +100,11 @@ class Parameter:
 
 
 class ParameterHelper:
+    """Use for task to handle parameters."""
+
     @staticmethod
     def convert_params(params, direction):
+        """Convert params to format local_params."""
         parameters = []
         params = params or {}
         if not isinstance(params, dict):
@@ -103,6 +120,7 @@ class ParameterHelper:
 
     @staticmethod
     def infer_parameter_type(value):
+        """Infer to ParameterType from the input value."""
         value_type = type(value).__name__
 
         if value_type not in ParameterType._TYPE_MAPPING:

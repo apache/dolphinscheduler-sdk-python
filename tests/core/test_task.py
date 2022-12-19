@@ -517,7 +517,7 @@ def test_python_resource_list(
     return_value=(123, 1),
 )
 def test_local_parameter(m_code_version):
-
+    """Test task local_params."""
     base_local_params = [
         {"prop": "base", "direct": "IN", "type": "VARCHAR", "value": "2022"},
     ]

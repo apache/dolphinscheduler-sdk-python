@@ -16,6 +16,8 @@
 # under the License.
 
 """Test parameter."""
+
+
 import pytest
 
 from pydolphinscheduler.core.parameter import (
@@ -39,6 +41,7 @@ from pydolphinscheduler.exceptions import PyDSParamException
     ],
 )
 def test_infer_type_of_parameters(value, expect):
+    """Test the infer function."""
     cls = ParameterHelper.infer_parameter_type(value)
     assert cls == expect
 
@@ -52,6 +55,7 @@ def test_infer_type_of_parameters(value, expect):
     ],
 )
 def test_infer_type_of_parameters_error(value):
+    """Test the infer function error."""
     with pytest.raises(
         PyDSParamException,
         match="Can not infer parameter type",
@@ -88,11 +92,13 @@ def test_infer_type_of_parameters_error(value):
     ],
 )
 def test_parameter_define(value: BaseDataType, expect_type: str, expect_value):
+    """Test the parameter define."""
     assert value.data_type == expect_type
     assert value.value == expect_value
 
 
 def test_convert_params():
+    """Test the ParameterHelper convert_params function."""
     params = {
         "value_INTEGER": 123,
         "value_LONG": ParameterType.LONG("1000000"),
