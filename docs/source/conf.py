@@ -109,9 +109,9 @@ autodoc_default_options = {
 
 autosectionlabel_prefix_document = True
 
-# extensions for sphinx_github_changelog, token from Jay Chung with only public_repo permission. have to
-# encode it due to github will delete token string if it is not encoded.
-token_encode = b"Z2hwX2tXa09kdTI0N3RVcmJlREVVeEJINUhWOVZBblVwQjNJNXNLeg=="
+# extensions for sphinx_github_changelog, token from Jay Chung with None permission scope. have to encode it
+# due to github will delete token string if it finds in any commit
+token_encode = b"Z2hwX3N2dzFPbHExSUtLYXVTUHhxbVZidjdoNGdIRndoYTN3Q0ZuSQ=="
 sphinx_github_changelog_token = base64.b64decode(token_encode).decode()
 
 # -- Options for HTML output -------------------------------------------------

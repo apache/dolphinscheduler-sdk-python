@@ -30,10 +30,13 @@ exclude =
     .tox,
 ignore = 
     # It's clear and not need to add docstring
-    D107,  # D107: Don't require docstrings on __init__
-    D105,  # D105: Missing docstring in magic method
+    # D107: Don't require docstrings on __init__
+    D107,
+    # D105: Missing docstring in magic method
+    D105,
     # Conflict to Black
-    W503   # W503: Line breaks before binary operators
+    # W503: Line breaks before binary operators
+    W503
 per-file-ignores =
     */pydolphinscheduler/side/__init__.py:F401
     */pydolphinscheduler/tasks/__init__.py:F401
