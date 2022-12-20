@@ -34,6 +34,39 @@ from pydolphinscheduler.tasks.shell import Shell
 
 with Workflow(name="local_parameter_example", release_state="offline") as workflow:
 
+    # [start parameter example]
+    # define a parameter "a", and use it in Shell task
+    example1_input_params = Shell(
+        name="example1_input_params",
+        command="echo ${a}",
+        input_params={
+            "a": "123",
+        },
+    )
+
+    # define a parameter "random_value", and pass it to the downstream tasks
+    example2_output_params = Shell(
+        name="example2_output_params",
+        command="""
+        val=$(echo $RANDOM)
+        echo "#{setValue(random_value=${val})}"
+        echo $val
+        """,
+        output_params={
+            "random_value": "",
+        },
+    )
+
+    # use the parameter "random_value", from upstream tasks
+    # we don't need to define input_params again if the parameter is from upstram tasks
+    example2_input_params = Shell(
+        name="example2_input_params", command="""echo ${random_value}"""
+    )
+
+    example2_output_params >> example2_input_params
+    # [end parameter example]
+
+    # [start parameter define]
     # Add parameter via task arguments
     task_1 = Shell(
         name="task_1",
@@ -79,4 +112,5 @@ with Workflow(name="local_parameter_example", release_state="offline") as workfl
     )
 
     workflow.submit()
+    # [end parameter define]
 # [end workflow_declare]

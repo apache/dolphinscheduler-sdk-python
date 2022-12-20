@@ -24,6 +24,7 @@ from pathlib import Path
 from typing import Any, Dict
 
 from pydolphinscheduler import configuration, tasks
+from pydolphinscheduler.constants import Symbol
 from pydolphinscheduler.core.parameter import ParameterType
 from pydolphinscheduler.core.task import Task
 from pydolphinscheduler.core.workflow import Workflow
@@ -80,7 +81,7 @@ class ParseTool:
     def parse_string_param_if_parameter(string_param: str, **kwargs):
         """Use TYPE(value) to set local params."""
         key_path = kwargs.get("key_path")
-        if key_path.split("-")[0] not in {"input_params", "output_params"}:
+        if key_path.split(Symbol.POINT)[0] not in {"input_params", "output_params"}:
             return string_param
 
         if not isinstance(string_param, str):
@@ -221,7 +222,7 @@ class YamlWorkflow(YamlParser):
                 if not key_path:
                     new_key_path = key
                 else:
-                    new_key_path = key_path + "-" + key
+                    new_key_path = key_path + Symbol.POINT + key
                 params[key] = self.parse_params(value, new_key_path)
 
         return params

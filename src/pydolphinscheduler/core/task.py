@@ -33,7 +33,7 @@ from pydolphinscheduler.constants import (
     TaskPriority,
     TaskTimeoutFlag,
 )
-from pydolphinscheduler.core.parameter import Direction, ParameterHelper
+from pydolphinscheduler.core.parameter import BaseDataType, Direction, ParameterHelper
 from pydolphinscheduler.core.resource import Resource
 from pydolphinscheduler.core.resource_plugin import ResourcePlugin
 from pydolphinscheduler.core.workflow import Workflow, WorkflowContext
@@ -86,24 +86,24 @@ class Task(Base):
     """Task object, parent class for all exactly task type.
 
     :param name: The name of the task. Node names within the same workflow must be unique.
-    :param task_type: task type
-    :param description: str, Describing the function of this node.
-    :param flag: str, default TaskFlag.YES,
-    :param task_priority: str, default TaskPriority.MEDIUM
-    :param worker_group: str, default configuration.WORKFLOW_WORKER_GROUP
-    :param environment_name: str, default None
-    :param delay_time: int, deault 0
-    :param fail_retry_times: int, default 0
-    :param fail_retry_interval: int, default 1
+    :param task_type:
+    :param description: default None
+    :param flag: default TaskFlag.YES,
+    :param task_priority: default TaskPriority.MEDIUM
+    :param worker_group: default configuration.WORKFLOW_WORKER_GROUP
+    :param environment_name: default None
+    :param delay_time: deault 0
+    :param fail_retry_times: default 0
+    :param fail_retry_interval: default 1
     :param timeout_notify_strategy: default, None
-    :param timeout: timedelta, default None
-    :param resource_list: list, default None
-    :param wait_start_timeout: dict, default None
-    :param condition_result: dict,  default None,
-    :param resource_plugin: ResourcePlugin, default None
-    :param is_cache: bool, default False
-    :param input_params: dict, default None, input parameters, {param_name: param_value}
-    :param output_params: dict, default None, input parameters, {param_name: param_value}
+    :param timeout: default None
+    :param resource_list: default None
+    :param wait_start_timeout: default None
+    :param condition_result: default None,
+    :param resource_plugin: default None
+    :param is_cache: default False
+    :param input_params: default None, input parameters, {param_name: param_value}
+    :param output_params: default None, input parameters, {param_name: param_value}
     """
 
     _DEFINE_ATTR = {
@@ -159,7 +159,6 @@ class Task(Base):
         timeout_notify_strategy: Optional = None,
         timeout: Optional[timedelta] = None,
         workflow: Optional[Workflow] = None,
-        local_params: Optional[List] = None,
         resource_list: Optional[List] = None,
         dependence: Optional[Dict] = None,
         wait_start_timeout: Optional[Dict] = None,
@@ -203,9 +202,7 @@ class Task(Base):
                 """,
                 DeprecationWarning,
             )
-            self._local_params = kwargs.get(local_params)
-        else:
-            self._local_params: []
+            self._local_params = kwargs.get("local_params")
 
         self._upstream_task_codes: Set[int] = set()
         self._downstream_task_codes: Set[int] = set()
@@ -223,7 +220,6 @@ class Task(Base):
             )
 
         # Attribute for task param
-        self._local_params = local_params or []
         self._resource_list = resource_list or []
         self.dependence = dependence or {}
         self.wait_start_timeout = wait_start_timeout or {}
@@ -457,7 +453,9 @@ class Task(Base):
     @property
     def local_params(self):
         """Convert local params."""
-        local_params = copy.deepcopy(self._local_params)
+        local_params = (
+            copy.deepcopy(self._local_params) if hasattr(self, "_local_params") else []
+        )
         local_params.extend(
             ParameterHelper.convert_params(self._input_params, Direction.IN)
         )
@@ -466,18 +464,42 @@ class Task(Base):
         )
         return local_params
 
-    def add_in(self, name, value=None):
+    def add_in(
+        self,
+        name: str,
+        value: Optional[Union[int, str, float, bool, BaseDataType]] = None,
+    ):
         """Add input parameters.
 
-        :param name: str, name of the input parameter.
-        :param value: [int | str | float | bool | ParameterType ], value of the input parameter.
+        :param name: name of the input parameter.
+        :param value: value of the input parameter.
+
+        It could be simply command::
+
+            task.add_in("a")
+            task.add_in("b", 123)
+            task.add_in("c", bool)
+            task.add_in("d", ParameterType.LONG(123))
+
         """
         self._input_params[name] = value
 
-    def add_out(self, name, value=None):
+    def add_out(
+        self,
+        name: str,
+        value: Optional[Union[int, str, float, bool, BaseDataType]] = None,
+    ):
         """Add output parameters.
 
         :param name: str, name of the output parameter.
         :param value: [int | str | float | bool | ParameterType ], value of the output parameter.
+
+        It could be simply command::
+
+            task.add_out("a")
+            task.add_out("b", 123)
+            task.add_out("c", bool)
+            task.add_out("d", ParameterType.LONG(123))
+
         """
         self._output_params[name] = value

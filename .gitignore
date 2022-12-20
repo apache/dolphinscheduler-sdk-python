@@ -15,3 +15,6 @@ build/
 .coverage
 coverage.xml
 htmlcov/
+
+# the pydolphinscheduler config
+config.yaml
