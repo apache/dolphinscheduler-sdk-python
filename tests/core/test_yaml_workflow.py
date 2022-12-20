@@ -24,6 +24,7 @@ from unittest.mock import patch
 import pytest
 
 from pydolphinscheduler import configuration, tasks
+from pydolphinscheduler.core.parameter import ParameterType
 from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.core.yaml_workflow import (
     ParseTool,
@@ -66,6 +67,21 @@ def test_parse_tool_config(string_param, expect_key):
     """Test parsing configuration."""
     expect = configuration.get_single_config(expect_key)
     assert expect == ParseTool.parse_string_param_if_config(string_param)
+
+
+@pytest.mark.parametrize(
+    "string_param, key_path, expect",
+    [
+        ("VARCHAR()", "input_params", ParameterType.VARCHAR()),
+        ("FILE(data.txt)", "output_params", ParameterType.FILE("data.txt")),
+        (123, "output_params", 123),
+        (True, "output_params", True),
+    ],
+)
+def test_parse_tool_parameter(string_param, key_path, expect):
+    """Test parsing parameter."""
+    value = ParseTool.parse_string_param_if_parameter(string_param, key_path=key_path)
+    assert value == expect
 
 
 def test_parse_possible_yaml_file():

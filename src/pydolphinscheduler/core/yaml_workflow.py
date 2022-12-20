@@ -24,6 +24,8 @@ from pathlib import Path
 from typing import Any, Dict
 
 from pydolphinscheduler import configuration, tasks
+from pydolphinscheduler.constants import Symbol
+from pydolphinscheduler.core.parameter import ParameterType
 from pydolphinscheduler.core.task import Task
 from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.exceptions import PyDSTaskNoFoundException
@@ -76,6 +78,24 @@ class ParseTool:
         return string_param
 
     @staticmethod
+    def parse_string_param_if_parameter(string_param: str, **kwargs):
+        """Use TYPE(value) to set local params."""
+        key_path = kwargs.get("key_path")
+        if key_path.split(Symbol.POINT)[0] not in {"input_params", "output_params"}:
+            return string_param
+
+        if not isinstance(string_param, str):
+            return string_param
+
+        result = re.findall(r"^(.*?)\((.*?)\)", string_param)
+        if len(result) == 1 and len(result[0]) == 2:
+            type_ = result[0][0].rstrip()
+            value = result[0][1].rstrip()
+            return ParameterType.type_sets[type_](value)
+        else:
+            return string_param
+
+    @staticmethod
     def get_possible_path(file_path, base_folder):
         """Get file possible path.
 
@@ -123,6 +143,7 @@ class YamlWorkflow(YamlParser):
         ParseTool.parse_string_param_if_file,
         ParseTool.parse_string_param_if_env,
         ParseTool.parse_string_param_if_config,
+        ParseTool.parse_string_param_if_parameter,
     ]
 
     def __init__(self, yaml_file: str):
@@ -178,7 +199,7 @@ class YamlWorkflow(YamlParser):
 
         return workflow_name
 
-    def parse_params(self, params: Any):
+    def parse_params(self, params: Any, key_path=""):
         """Recursively resolves the parameter values.
 
         The function operates params only when it encounters a string; other types continue recursively.
@@ -186,17 +207,23 @@ class YamlWorkflow(YamlParser):
         if isinstance(params, str):
             for parse_rule in self._parse_rules:
                 params_ = params
-                params = parse_rule(params, base_folder=self._base_folder)
+                params = parse_rule(
+                    params, base_folder=self._base_folder, key_path=key_path
+                )
                 if params_ != params:
                     logger.info(f"parse {params_} -> {params}")
 
         elif isinstance(params, list):
             for index in range(len(params)):
-                params[index] = self.parse_params(params[index])
+                params[index] = self.parse_params(params[index], key_path)
 
         elif isinstance(params, dict):
             for key, value in params.items():
-                params[key] = self.parse_params(value)
+                if not key_path:
+                    new_key_path = key
+                else:
+                    new_key_path = key_path + Symbol.POINT + key
+                params[key] = self.parse_params(value, new_key_path)
 
         return params
 
