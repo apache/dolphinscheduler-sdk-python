@@ -261,6 +261,16 @@ After that, we could see new file named ``bare-create.py`` is be created in reso
    Both parameter ``resource_list`` in workflow and task is list of string which mean you could upload and reference
    multiple files. For more complex usage, you could read :doc:`howto/multi-resources`.
 
+Define Local Parameters
+-----------------------
+
+There are two ways to define local parameters
+
+.. literalinclude:: ../../src/pydolphinscheduler/examples/local_parameter_example.py
+   :start-after: [start workflow_declare]
+   :end-before: [end workflow_declare]
+
+
 Authentication Token
 --------------------
 
@@ -268,3 +278,4 @@ pydolphinscheduler use token as authentication when communication with dolphinsc
 token to make it out-of-box. For security reason, we highly recommend you to change your own auth token when you
 deploy in production environment or test dolphinscheduler in public network. The auth token keyword in ``auth_token``
 and it can be set in multiple ways which you can read :doc:`config` section for more detail.
+

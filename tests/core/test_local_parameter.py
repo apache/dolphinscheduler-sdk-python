@@ -48,11 +48,7 @@ def test_infer_type_of_parameters(value, expect):
 
 @pytest.mark.parametrize(
     "value",
-    [
-        (list()),
-        (dict()),
-        (set()),
-    ],
+    [list(), dict(), set()],
 )
 def test_infer_type_of_parameters_error(value):
     """Test the infer function error."""
@@ -89,6 +85,7 @@ def test_infer_type_of_parameters_error(value):
         (ParameterType.BOOLEAN(), "BOOLEAN", ""),
         (ParameterType.LIST("abc"), "LIST", "abc"),
         (ParameterType.LIST(), "LIST", ""),
+        (ParameterType.FILE("task1.output"), "FILE", "task1.output"),
     ],
 )
 def test_parameter_define(value: BaseDataType, expect_type: str, expect_value):

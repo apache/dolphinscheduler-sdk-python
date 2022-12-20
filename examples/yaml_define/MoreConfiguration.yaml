@@ -30,6 +30,7 @@ tasks:
     command: |
       echo "$ENV{HOME}"
       echo "${n}"
+      echo "123" >> text.txt
     task_priority: "HIGH"
     delay_time: 20
     fail_retry_times: 30
@@ -43,3 +44,5 @@ tasks:
       value_BOOLEAN: True
     output_params:
       value_output: ""
+      value_output2: VARCHAR()
+      value_data_path: FILE(text.txt)

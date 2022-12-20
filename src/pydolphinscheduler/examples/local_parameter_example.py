@@ -34,7 +34,7 @@ from pydolphinscheduler.tasks.shell import Shell
 
 with Workflow(name="local_parameter_example", release_state="offline") as workflow:
 
-    # Add in task __init__ func
+    # Add parameter via task arguments
     task_1 = Shell(
         name="task_1",
         command="echo hello pydolphinscheduler",
@@ -49,7 +49,7 @@ with Workflow(name="local_parameter_example", release_state="offline") as workfl
         },
     )
 
-    # Add in task instance
+    # Add parameter via task instance's method
     task_2 = Shell(name="task_2", command="echo hello pydolphinscheduler")
 
     task_2.add_in("value_VARCHAR", "abc")
@@ -60,10 +60,10 @@ with Workflow(name="local_parameter_example", release_state="offline") as workfl
 
     # Task 1 is the same as task 2
 
-    # Other parameter types corresponding to DolphinScheduler
+    # Others parameter types which cannot be converted automatically, must declare type explicitly
     task_3 = Shell(
         name="task_3",
-        command="echo hello pydolphinscheduler",
+        command="echo '123' >> test.txt",
         input_params={
             "value_LONG": ParameterType.LONG("1000000"),
             "value_DATE": ParameterType.DATE("2022-01-02"),
@@ -74,6 +74,7 @@ with Workflow(name="local_parameter_example", release_state="offline") as workfl
         output_params={
             "output_INTEGER": ParameterType.INTEGER(100),
             "output_LIST": ParameterType.LIST(),
+            "output_FILE": ParameterType.FILE("test.txt"),
         },
     )
 

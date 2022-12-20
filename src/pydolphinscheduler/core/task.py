@@ -83,7 +83,28 @@ class TaskRelation(Base):
 
 
 class Task(Base):
-    """Task object, parent class for all exactly task type."""
+    """Task object, parent class for all exactly task type.
+
+    :param name: The name of the task. Node names within the same workflow must be unique.
+    :param task_type: task type
+    :param description: str, Describing the function of this node.
+    :param flag: str, default TaskFlag.YES,
+    :param task_priority: str, default TaskPriority.MEDIUM
+    :param worker_group: str, default configuration.WORKFLOW_WORKER_GROUP
+    :param environment_name: str, default None
+    :param delay_time: int, deault 0
+    :param fail_retry_times: int, default 0
+    :param fail_retry_interval: int, default 1
+    :param timeout_notify_strategy: default, None
+    :param timeout: timedelta, default None
+    :param resource_list: list, default None
+    :param wait_start_timeout: dict, default None
+    :param condition_result: dict,  default None,
+    :param resource_plugin: ResourcePlugin, default None
+    :param is_cache: bool, default False
+    :param input_params: dict, default None, input parameters, {param_name: param_value}
+    :param output_params: dict, default None, input parameters, {param_name: param_value}
+    """
 
     _DEFINE_ATTR = {
         "name",
@@ -174,6 +195,18 @@ class Task(Base):
             self.workflow = kwargs.pop("process_definition")
         else:
             self.workflow: Workflow = workflow or WorkflowContext.get()
+
+        if "local_params" in kwargs:
+            warnings.warn(
+                """The `local_params` parameter is deprecated,
+                please use `input_params` and `output_params` instead.
+                """,
+                DeprecationWarning,
+            )
+            self._local_params = kwargs.get(local_params)
+        else:
+            self._local_params: []
+
         self._upstream_task_codes: Set[int] = set()
         self._downstream_task_codes: Set[int] = set()
         self._task_relation: Set[TaskRelation] = set()
@@ -434,9 +467,17 @@ class Task(Base):
         return local_params
 
     def add_in(self, name, value=None):
-        """Add input parameters."""
+        """Add input parameters.
+
+        :param name: str, name of the input parameter.
+        :param value: [int | str | float | bool | ParameterType ], value of the input parameter.
+        """
         self._input_params[name] = value
 
     def add_out(self, name, value=None):
-        """Add output parameters."""
+        """Add output parameters.
+
+        :param name: str, name of the output parameter.
+        :param value: [int | str | float | bool | ParameterType ], value of the output parameter.
+        """
         self._output_params[name] = value

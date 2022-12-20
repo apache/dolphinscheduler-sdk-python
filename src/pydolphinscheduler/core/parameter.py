@@ -47,6 +47,13 @@ class BaseDataType:
     def _convert(self, value=None):
         return str(value)
 
+    def __eq__(self, data):
+        return (
+            type(self) == type(data)
+            and self.data_type == data.data_type
+            and self.value == data.value
+        )
+
 
 def create_data_type(class_name, convert_func=None):
     """Create ParameterType and set the convert_func."""
@@ -68,6 +75,10 @@ class ParameterType:
     BOOLEAN = create_data_type("BOOLEAN", bool)
     LIST = create_data_type("LIST")
     FILE = create_data_type("FILE")
+
+    type_sets = {
+        key: value for key, value in locals().items() if not key.startswith("_")
+    }
 
     _TYPE_MAPPING = {
         "int": INTEGER,
@@ -104,7 +115,11 @@ class ParameterHelper:
 
     @staticmethod
     def convert_params(params, direction):
-        """Convert params to format local_params."""
+        """Convert params to format local_params.
+
+        :param params: dict[str, Any], the input_params or output_params of Task.
+        :param direction: [Direction.IN | Direction.OUT], direction of parameter.
+        """
         parameters = []
         params = params or {}
         if not isinstance(params, dict):
