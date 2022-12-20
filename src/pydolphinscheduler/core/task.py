@@ -491,8 +491,8 @@ class Task(Base):
     ):
         """Add output parameters.
 
-        :param name: str, name of the output parameter.
-        :param value: [int | str | float | bool | ParameterType ], value of the output parameter.
+        :param name: name of the output parameter.
+        :param value: value of the output parameter.
 
         It could be simply command::
 
