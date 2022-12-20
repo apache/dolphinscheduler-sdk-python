@@ -300,4 +300,3 @@ pydolphinscheduler use token as authentication when communication with dolphinsc
 token to make it out-of-box. For security reason, we highly recommend you to change your own auth token when you
 deploy in production environment or test dolphinscheduler in public network. The auth token keyword in ``auth_token``
 and it can be set in multiple ways which you can read :doc:`config` section for more detail.
-
