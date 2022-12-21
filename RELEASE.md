@@ -54,7 +54,7 @@ cd dist
 gpg --batch --yes --armor --detach-sig apache-dolphinscheduler-"${VERSION}".tar.gz
 gpg --batch --yes --armor --detach-sig apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl
 shasum -a 512 apache-dolphinscheduler-"${VERSION}".tar.gz > apache-dolphinscheduler-"${VERSION}".tar.gz.sha512
-shasum -a 512 apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl > apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl.sha512
+shasum -b -a 512 apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl > apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl.sha512
 ```
 
 ## Release to Apache Distribution
