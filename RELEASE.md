@@ -57,6 +57,11 @@ shasum -a 512 apache-dolphinscheduler-"${VERSION}".tar.gz > apache-dolphinschedu
 shasum -b -a 512 apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl > apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl.sha512
 ```
 
+## Create Draft Release
+
+Go to [GitHub release page](https://github.com/apache/dolphinscheduler-sdk-python/releases) and create a release
+based to the specific tag, and set it as pre-release.
+
 ## Release to Apache Distribution
 
 ### To Apache SVN
@@ -70,6 +75,8 @@ cd release/dolphinscheduler && svn add python && svn commit python -m "Release A
 ```
 
 ### Vote Mail
+
+Create a new vote in dev@dolphinscheduler.apache.org
 
 ```text
 TITLE: [VOTE] Release Apache DolphinScheduler SDK Python <VERSION>
@@ -107,6 +114,92 @@ Checklist for reference:
 [ ] All files have license headers if necessary.
 [ ] No compiled archives bundled in source archive.
 ```
+
+### Check Release Candidate
+
+- Artifacts in staging repository are published with `.asc`, and `sha512` files.
+- `LICENSE` and `NOTICE` are in source codes and distribution package.
+- Check `sha512` and `gpg` signature with following command:
+
+```shell
+VERSION=<VERSION>  # The version of the package you want to release, e.g. 1.2.3
+# Download source code
+curl https://dist.apache.org/repos/dist/dev/dolphinscheduler/python/"${VERSION}"/apache-dolphinscheduler-"${VERSION}".tar.gz > apache-dolphinscheduler-"${VERSION}".tar.gz
+curl https://dist.apache.org/repos/dist/dev/dolphinscheduler/python/"${VERSION}"/apache-dolphinscheduler-"${VERSION}".tar.gz.asc > apache-dolphinscheduler-"${VERSION}".tar.gz.asc
+curl https://dist.apache.org/repos/dist/dev/dolphinscheduler/python/"${VERSION}"/apache-dolphinscheduler-"${VERSION}".tar.gz.sha512 > apache-dolphinscheduler-"${VERSION}".tar.gz.sha512
+# Download binary code
+curl https://dist.apache.org/repos/dist/dev/dolphinscheduler/python/"${VERSION}"/apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl > apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl
+curl https://dist.apache.org/repos/dist/dev/dolphinscheduler/python/"${VERSION}"/apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl.asc > apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl.asc
+curl https://dist.apache.org/repos/dist/dev/dolphinscheduler/python/"${VERSION}"/apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl.sha512 > apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl.sha512
+
+# Verify sha512
+sha512sum --check apache-dolphinscheduler-"${VERSION}".tar.gz.sha512
+sha512sum --check apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl.sha512
+# Verify gpg signature
+curl https://dist.apache.org/repos/dist/release/dolphinscheduler/KEYS > KEYS
+gpg --import KEYS
+gpg --verify apache-dolphinscheduler-"${VERSION}".tar.gz.asc
+gpg --verify apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl.asc
+```
+
+Vote result should follow these:
+
+- PMC vote is +1 binding, all others is +1 no binding.
+- Within 72 hours, you get at least 3 (+1 binding), and have more +1 than -1. Vote pass.
+- **Send the closing vote mail to announce the result**. When count the binding and no binding votes, please list the names of voters. An example like this:
+
+    ```text
+    [RESULT][VOTE] Release Apache SkyWalking Python version $VERSION
+    
+    72+ hours passed, we’ve got ($NUMBER) +1 bindings (and ... +1 non-bindings):
+    
+    (list names)
+    +1 bindings:
+    xxx
+    ...
+    
+    +1 non-bindings:
+    xxx
+    ...
+     
+    Thank you for voting, I’ll continue the release process.
+    ```
+
+### Publish
+
+- Move source codes tar balls and distributions to https://dist.apache.org/repos/dist/release/dolphinscheduler/, **you can do this only if you are a PMC member**.
+
+    ```shell
+    svn mv https://dist.apache.org/repos/dist/dev/dolphinscheduler/python/"${VERSION}" https://dist.apache.org/repos/dist/release/dolphinscheduler/python/"${VERSION}"
+    ```
+
+- Update [GitHub release page](https://github.com/apache/dolphinscheduler-sdk-python/releases) and set it as formal release.
+- Send ANNOUNCE email to `dev@dolphinscheduler.apache.org` and `announce@apache.org`.
+
+    ```text
+    Subject: [ANNOUNCE] Apache DolphinScheduler SDK Python $VERSION Released
+
+    Content:
+
+    Hi Community,
+
+    We are glad to announce the release of Apache DolphinScheduler SDK Python $VERSION.
+
+    Apache DolphinScheduler SDK Python is an API for Apache DolphinScheduler which allow you definition your workflow by Python code, aka workflow-as-codes.
+  
+    DolphinScheduler is a distributed and easy-to-extend visual workflow scheduler system,
+    dedicated to solving the complex task dependencies in data processing, making the scheduler system out of the box for data processing.
+
+    Download Links: https://dolphinscheduler.apache.org/#/en-us/download
+
+    Release Notes: https://github.com/apache/dolphinscheduler-sdk-python/releases/tag/$VERSION
+
+    DolphinScheduler Resources:
+    - Issue: https://github.com/apache/dolphinscheduler-sdk-python/issues/
+    - Mailing list: dev@dolphinscheduler.apache.org
+    - Website: https://dolphinscheduler.apache.org
+    - Documents: https://dolphinscheduler.apache.org/python/$VERSION
+    ```
 
 ## Release to PyPi
 
