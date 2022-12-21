@@ -22,7 +22,6 @@ import os
 # Record some task without example in directory `example`. Some of them maybe can not write example,
 # but most of them just without adding by mistake, and we should add it later.
 task_without_example = {
-    "sql",
     "http",
     "sub_workflow",
     "python",
@@ -38,6 +37,7 @@ ignore_exec_examples = {
     "task_spark_example",
     # TODO activate it when dolphinscheduler default resource center is local file
     "multi_resources_example",
+    "task_sql_example",
 }
 
 # pydolphinscheduler environment home

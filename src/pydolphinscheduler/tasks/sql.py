@@ -19,7 +19,7 @@
 
 import logging
 import re
-from typing import Dict, Optional
+from typing import Dict, List, Optional, Sequence, Union
 
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.database import Database
@@ -49,6 +49,18 @@ class Sql(Task):
     - SQLServer
     You provider datasource_name contain connection information, it decisions which
     database type and database instance would run this sql.
+
+    :param name: SQL task name
+    :param datasource_name: datasource name in dolphinscheduler, the name must exists and must be ``online``
+        datasource instead of ``test``.
+    :param sql: SQL statement, the sql script you want to run. Support resource plugin in this parameter.
+    :param sql_type: SQL type, whether sql statement is select query or not. If not provided, it will be auto
+        detected according to sql statement using :func:`pydolphinscheduler.tasks.sql.Sql.sql_type`, and you
+        can also set it manually. by ``SqlType.SELECT`` for query statement or ``SqlType.NOT_SELECT`` for not
+        query statement.
+    :param pre_statements: SQL statements to be executed before the main SQL statement.
+    :param post_statements: SQL statements to be executed after the main SQL statement.
+    :param display_rows: The number of record rows number to be displayed in the SQL task log, default is 10.
     """
 
     _task_custom_attr = {
@@ -68,8 +80,8 @@ class Sql(Task):
         datasource_name: str,
         sql: str,
         sql_type: Optional[str] = None,
-        pre_statements: Optional[str] = None,
-        post_statements: Optional[str] = None,
+        pre_statements: Optional[Union[str, Sequence[str]]] = None,
+        post_statements: Optional[Union[str, Sequence[str]]] = None,
         display_rows: Optional[int] = 10,
         *args,
         **kwargs
@@ -78,9 +90,22 @@ class Sql(Task):
         super().__init__(name, TaskType.SQL, *args, **kwargs)
         self.param_sql_type = sql_type
         self.datasource_name = datasource_name
-        self.pre_statements = pre_statements or []
-        self.post_statements = post_statements or []
+        self.pre_statements = self.get_stm_list(pre_statements)
+        self.post_statements = self.get_stm_list(post_statements)
         self.display_rows = display_rows
+
+    @staticmethod
+    def get_stm_list(stm: Union[str, Sequence[str]]) -> List[str]:
+        """Convert statement to str of list.
+
+        :param stm: statements string
+        :return: statements list
+        """
+        if not stm:
+            return []
+        elif isinstance(stm, str):
+            return [stm]
+        return list(stm)
 
     @property
     def sql_type(self) -> str:
