@@ -49,7 +49,10 @@ def test_single_task_outside(mock_code):
 
     pd_task = workflow.tasks[12345]
     assert pd_task.name == "foo"
-    assert pd_task.raw_script == "def foo():\n    print(TASK_NAME)\nfoo()"
+    assert (
+        pd_task.raw_script
+        == 'TASK_NAME = "test_task"\n\n\ndef foo():\n    print(TASK_NAME)\nfoo()'
+    )
 
 
 @patch(
@@ -70,7 +73,10 @@ def test_single_task_inside(mock_code):
 
     pd_task = workflow.tasks[12345]
     assert pd_task.name == "foo"
-    assert pd_task.raw_script == "def foo():\n    print(TASK_NAME)\nfoo()"
+    assert (
+        pd_task.raw_script
+        == 'TASK_NAME = "test_task"\n\n\ndef foo():\n    print(TASK_NAME)\nfoo()'
+    )
 
 
 @patch(

@@ -19,43 +19,47 @@
 
 import functools
 import inspect
-import itertools
 import types
+from pathlib import Path
+
+from stmdency.extractor import Extractor
 
 from pydolphinscheduler.exceptions import PyDSParamException
 from pydolphinscheduler.tasks.python import Python
 
 
-def _get_func_str(func: types.FunctionType) -> str:
-    """Get Python function string without indent from decorator.
+def _exists_other_decorator(func: types.FunctionType) -> None:
+    """Check if the function has other decorators except @task.
 
     :param func: The function which wraps by decorator ``@task``.
     """
     lines = inspect.getsourcelines(func)[0]
 
-    src_strip = ""
-    lead_space_num = None
     for line in lines:
-        if lead_space_num is None:
-            lead_space_num = sum(1 for _ in itertools.takewhile(str.isspace, line))
-        if line.strip() == "@task":
-            continue
-        elif line.strip().startswith("@"):
+        strip_line = line.strip()
+        if strip_line.startswith("@") and not strip_line == "@task":
             raise PyDSParamException(
                 "Do no support other decorators for function ``task`` decorator."
             )
-        src_strip += line[lead_space_num:]
-    return src_strip
 
 
 def task(func: types.FunctionType):
-    """Decorate which covert Python function into pydolphinscheduler task."""
+    """Decorate which covert Python functions into pydolphinscheduler task.
+
+    :param func: The function which wraps by decorator ``@task``.
+    """
 
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        func_str = _get_func_str(func)
+        _exists_other_decorator(func)
+        loc = func.__code__.co_filename
+        extractor = Extractor(Path(loc).open("r").read())
+        stm = extractor.get_code(func.__name__)
         return Python(
-            name=kwargs.get("name", func.__name__), definition=func_str, *args, **kwargs
+            name=kwargs.get("name", func.__name__),
+            definition=f"{stm}{func.__name__}()",
+            *args,
+            **kwargs,
         )
 
     return wrapper
