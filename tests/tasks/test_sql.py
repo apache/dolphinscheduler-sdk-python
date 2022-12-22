@@ -41,6 +41,30 @@ def setup_crt_first():
 
 
 @pytest.mark.parametrize(
+    "stm, expected",
+    [
+        ("select * from t_ds_version", ["select * from t_ds_version"]),
+        (None, []),
+        (
+            ["select * from table1", "select * from table2"],
+            ["select * from table1", "select * from table2"],
+        ),
+        (
+            ("select * from table1", "select * from table2"),
+            ["select * from table1", "select * from table2"],
+        ),
+        (
+            {"select * from table1", "select * from table2"},
+            ["select * from table1", "select * from table2"],
+        ),
+    ],
+)
+def test_get_stm_list(stm, expected) -> None:
+    """Test static function get_stm_list."""
+    assert sorted(Sql.get_stm_list(stm)) == sorted(expected)
+
+
+@pytest.mark.parametrize(
     "sql, param_sql_type, sql_type",
     [
         ("select 1", None, SqlType.SELECT),
