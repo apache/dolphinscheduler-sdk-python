@@ -80,10 +80,6 @@ class Python(Task):
             pattern = re.compile("^def (\\w+)\\(")
             find = pattern.findall(definition)
             if not find:
-                log.warning(
-                    "Python definition is simple script instead of function, with value %s",
-                    definition,
-                )
                 return definition
             # Keep function str and function callable always have one blank line
             func_str = (

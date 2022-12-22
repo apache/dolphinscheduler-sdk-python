@@ -42,6 +42,7 @@ prod = [
     "click>=8.0.0",
     "py4j~=0.10",
     "ruamel.yaml",
+    "stmdency>=0.0.2",
 ]
 
 build = [

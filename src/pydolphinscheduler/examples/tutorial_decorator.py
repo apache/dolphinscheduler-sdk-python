@@ -30,6 +30,8 @@ task_parent -->                        -->  task_union
 it will instantiate and run all the task it have.
 """
 
+import time
+
 # [start tutorial]
 # [start package_import]
 # Import Workflow object to define your workflow attributes
@@ -40,30 +42,44 @@ from pydolphinscheduler.tasks.func_wrap import task
 
 # [end package_import]
 
+scope_global = "global-var"
+
 
 # [start task_declare]
 @task
-def task_parent():
+def print_something():
     """First task in this workflow."""
-    print("echo hello pydolphinscheduler")
+    print("hello python function wrap task")
 
 
 @task
-def task_child_one():
-    """Child task will be run parallel after task ``task_parent`` finished."""
-    print("echo 'child one'")
+def depend_import():
+    """Depend on import module."""
+    time.sleep(2)
 
 
 @task
-def task_child_two():
-    """Child task will be run parallel after task ``task_parent`` finished."""
-    print("echo 'child two'")
+def depend_global_var():
+    """Depend on global var."""
+    print(f"Use global variable {scope_global}")
 
 
 @task
-def task_union():
-    """Last task in this workflow."""
-    print("echo union")
+def depend_local_var():
+    """Depend on local variable."""
+    scope_global = "local"
+    print(f"Use local variable overwrite global {scope_global}")
+
+
+def foo():
+    """Call in other task."""
+    print("this is a global function")
+
+
+@task
+def depend_func():
+    """Depend on global function."""
+    foo()
 
 
 # [end task_declare]
@@ -78,13 +94,13 @@ with Workflow(
     # [end workflow_declare]
 
     # [start task_relation_declare]
-    task_group = [task_child_one(), task_child_two()]
-    task_parent().set_downstream(task_group)
+    task_group = [depend_import(), depend_global_var()]
+    print_something().set_downstream(task_group)
 
-    task_union() << task_group
+    task_group >> depend_local_var() >> depend_func()
     # [end task_relation_declare]
 
     # [start submit_or_run]
-    workflow.run()
+    workflow.submit()
     # [end submit_or_run]
 # [end tutorial]
