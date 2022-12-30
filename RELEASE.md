@@ -24,7 +24,6 @@ but we also have a [PyPi](#release-to-pypi) repository for Python package distri
 
 ## Prepare
 
-* Change `version` in `setup.py`.
 * Remove `sphinx-multiversion` dependency in `setup.py`, we still can not fix this issue
   [Distribute tarball and wheel error with direct dependency](https://github.com/apache/dolphinscheduler/issues/12238)
 * Change `version_ext` about the dolphinscheduler version current support, the syntax is respect [pep-044](https://peps.python.org/pep-0440/#version-specifiers)
@@ -40,6 +39,13 @@ upload package to PyPi. You could first install and upgrade them by:
 # Install or upgrade dependencies
 python3 -m pip install --upgrade pip build twine
 
+# Change version
+# For macOS
+sed -i '' "s/__version__ = \".*\"/__version__ = \"${VERSION}\"/" src/pydolphinscheduler/__init__.py
+# For Linux
+sed -i "s/__version__ = \".*\"/__version__ = \"${VERSION}\"/" src/pydolphinscheduler/__init__.py
+git commit -am "Release v${VERSION}"
+
 # Add Tag
 VERSION=<VERSION>  # The version of the package you want to release, e.g. 1.2.3
 REMOTE=<REMOTE>  # The git remote name, we usually use `origin` or `remote`
@@ -47,7 +53,7 @@ git tag -a "${VERSION}" -m "Release v${VERSION}"
 git push "${REMOTE}" --tags
 
 # Build
-python setup.py pre_clean && python -m build
+python setup.py clean && python -m build
 
 # Sign
 cd dist
@@ -210,7 +216,7 @@ Vote result should follow these:
 TestPyPi is a test environment of PyPi, you could release to it to test whether the package is work or not.
 
 1. Create an account in [TestPyPi](https://test.pypi.org/account/register/).
-2. Clean unrelated files in `dist` directory, and build package `python3 setup.py pre_clean`.
+2. Clean unrelated files in `dist` directory, and build package `python3 setup.py clean`.
 3. Build package `python3 -m build`, and you will see two new files in `dist` directory, with extension
    `.tar.gz` and `.whl`.
 4. Upload to TestPyPi `python3 -m twine upload --repository testpypi dist/*`.
@@ -224,7 +230,7 @@ PyPi is the official repository of Python packages, it is highly recommended [re
 first to test whether the package is correct.
 
 1. Create an account in [PyPI](https://pypi.org/account/register/).
-2. Clean unrelated files in `dist` directory, and build package `python3 setup.py pre_clean`.
+2. Clean unrelated files in `dist` directory, and build package `python3 setup.py clean`.
 3. Build package `python3 -m build`, and you will see two new files in `dist` directory, with extension
    `.tar.gz` and `.whl`.
 4. Upload to TestPyPi `python3 -m twine upload dist/*`.
