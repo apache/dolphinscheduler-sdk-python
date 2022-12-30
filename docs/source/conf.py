@@ -39,6 +39,9 @@ pkg_src_dir = (
     .resolve()
 )
 sys.path.insert(0, str(pkg_src_dir))
+
+from pydolphinscheduler import __version__  # noqa
+
 # Debug to uncomment this to see the source path
 # print("=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=")
 # print(pkg_src_dir)
@@ -48,12 +51,12 @@ sys.path.insert(0, str(pkg_src_dir))
 
 # -- Project information -----------------------------------------------------
 
-project = "pydolphinscheduler"
+project = "apache-dolphinscheduler"
 copyright = "2022, apache"
-author = "apache dolphinscheduler contributors"
+author = "Apache Software Foundation"
 
 # The full version, including alpha/beta/rc tags
-release = "0.0.1"
+release = __version__
 
 
 # -- General configuration ---------------------------------------------------
