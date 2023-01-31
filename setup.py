@@ -19,7 +19,9 @@
 import logging
 import os
 import sys
+from distutils.command.sdist import sdist
 from distutils.dir_util import remove_tree
+from distutils.errors import DistutilsExecError
 from typing import List
 
 from setuptools import Command, setup
@@ -63,8 +65,31 @@ class CleanCommand(Command):
         logger.info("Finish clean process.")
 
 
+class ApacheRelease(sdist):
+    """Command to make Apache release by running `python setup.py sdist`.
+
+    This command will make a tarball and also sign the tarball with gpg and sha512.
+    """
+
+    def run(self):
+        """Run and build tarball and sign."""
+        super().run()
+        version = self.distribution.metadata.get_version()
+        target_name = f"dolphinscheduler-python-src-{version}.tar.gz"
+        try:
+            os.system(
+                f"cd dist && "
+                f"mv apache-dolphinscheduler-{version}.tar.gz {target_name} && "
+                f"gpg --batch --yes --armor --detach-sig {target_name} && "
+                f"shasum -a 512 {target_name} > {target_name}.sha512"
+            )
+        except DistutilsExecError as e:
+            self.warn("Make dist and sign failed: %s" % e)
+
+
 setup(
     cmdclass={
         "clean": CleanCommand,
+        "sdist": ApacheRelease,
     },
 )

@@ -52,15 +52,8 @@ REMOTE=<REMOTE>  # The git remote name, we usually use `origin` or `remote`
 git tag -a "${VERSION}" -m "Release v${VERSION}"
 git push "${REMOTE}" --tags
 
-# Build
-python setup.py clean && python -m build
-
-# Sign
-cd dist
-gpg --batch --yes --armor --detach-sig apache-dolphinscheduler-"${VERSION}".tar.gz
-gpg --batch --yes --armor --detach-sig apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl
-shasum -a 512 apache-dolphinscheduler-"${VERSION}".tar.gz > apache-dolphinscheduler-"${VERSION}".tar.gz.sha512
-shasum -b -a 512 apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl > apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl.sha512
+# Build and sign according to the Apache requirements
+python setup.py clean && python setup.py sdist
 ```
 
 ## Create Draft Release
@@ -75,7 +68,7 @@ based to the specific tag, and set it as pre-release.
 ```shell
 svn co https://dist.apache.org/repos/dist/dev/dolphinscheduler/ release/dolphinscheduler
 mkdir -p release/dolphinscheduler/python/"${VERSION}"
-cp apache*dolphinscheduler-"${VERSION}"* release/dolphinscheduler/python/"${VERSION}"
+cp dolphinscheduler-python-src-"${VERSION}"* release/dolphinscheduler/python/"${VERSION}"
 
 cd release/dolphinscheduler && svn add python && svn commit python -m "Release Apache DolphinScheduler-SDK-Python version ${VERSION}"
 ```
@@ -99,7 +92,7 @@ The release candidates: https://dist.apache.org/repos/dist/dev/dolphinscheduler/
 
 Git tag for the release: https://github.com/apache/dolphinscheduler-sdk-python/tree/<VERSION>
 
-Release Commit ID: https://github.com/apache/dolphinscheduler-sdk-python/commit/02bc4f44cdd136622e403506f6474da0c7fa36fb
+Release Commit ID: https://github.com/apache/dolphinscheduler-sdk-python/commit/<commit-SHA>
 
 Keys to verify the Release Candidate: https://dist.apache.org/repos/dist/dev/dolphinscheduler/KEYS
 
@@ -130,22 +123,16 @@ Checklist for reference:
 ```shell
 VERSION=<VERSION>  # The version of the package you want to release, e.g. 1.2.3
 # Download source code
-curl https://dist.apache.org/repos/dist/dev/dolphinscheduler/python/"${VERSION}"/apache-dolphinscheduler-"${VERSION}".tar.gz > apache-dolphinscheduler-"${VERSION}".tar.gz
-curl https://dist.apache.org/repos/dist/dev/dolphinscheduler/python/"${VERSION}"/apache-dolphinscheduler-"${VERSION}".tar.gz.asc > apache-dolphinscheduler-"${VERSION}".tar.gz.asc
-curl https://dist.apache.org/repos/dist/dev/dolphinscheduler/python/"${VERSION}"/apache-dolphinscheduler-"${VERSION}".tar.gz.sha512 > apache-dolphinscheduler-"${VERSION}".tar.gz.sha512
-# Download binary code
-curl https://dist.apache.org/repos/dist/dev/dolphinscheduler/python/"${VERSION}"/apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl > apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl
-curl https://dist.apache.org/repos/dist/dev/dolphinscheduler/python/"${VERSION}"/apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl.asc > apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl.asc
-curl https://dist.apache.org/repos/dist/dev/dolphinscheduler/python/"${VERSION}"/apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl.sha512 > apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl.sha512
+curl https://dist.apache.org/repos/dist/dev/dolphinscheduler/python/"${VERSION}"/dolphinscheduler-python-src-"${VERSION}".tar.gz > dolphinscheduler-python-src-"${VERSION}".tar.gz
+curl https://dist.apache.org/repos/dist/dev/dolphinscheduler/python/"${VERSION}"/dolphinscheduler-python-src-"${VERSION}".tar.gz.asc > dolphinscheduler-python-src-"${VERSION}".tar.gz.asc
+curl https://dist.apache.org/repos/dist/dev/dolphinscheduler/python/"${VERSION}"/dolphinscheduler-python-src-"${VERSION}".tar.gz.sha512 > dolphinscheduler-python-src-"${VERSION}".tar.gz.sha512
 
 # Verify sha512
-sha512sum --check apache-dolphinscheduler-"${VERSION}".tar.gz.sha512
-sha512sum --check apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl.sha512
+sha512sum --check dolphinscheduler-python-src-"${VERSION}".tar.gz.sha512
 # Verify gpg signature
 curl https://dist.apache.org/repos/dist/release/dolphinscheduler/KEYS > KEYS
 gpg --import KEYS
-gpg --verify apache-dolphinscheduler-"${VERSION}".tar.gz.asc
-gpg --verify apache_dolphinscheduler-"${VERSION}"-py3-none-any.whl.asc
+gpg --verify dolphinscheduler-python-src-"${VERSION}".tar.gz.asc
 ```
 
 Vote result should follow these:
@@ -176,7 +163,10 @@ Vote result should follow these:
 - Move source codes tar balls and distributions to https://dist.apache.org/repos/dist/release/dolphinscheduler/, **you can do this only if you are a PMC member**.
 
     ```shell
+    # Move from dev to release
     svn mv https://dist.apache.org/repos/dist/dev/dolphinscheduler/python/"${VERSION}" https://dist.apache.org/repos/dist/release/dolphinscheduler/python/"${VERSION}"
+    # Delete the old version
+    svn delete -m "remove old release Python SDK" https://dist.apache.org/repos/dist/release/dolphinscheduler/python/<PREVIOUS-RELEASE-VERSION>
     ```
 
 - Update [GitHub release page](https://github.com/apache/dolphinscheduler-sdk-python/releases) and set it as formal release.
