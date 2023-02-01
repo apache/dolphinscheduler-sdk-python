@@ -119,7 +119,7 @@ class Time(str):
 class ResourceKey(str):
     """Constants for key of resource."""
 
-    NAME = "resourceName"
+    ID = "id"
 
 
 class Symbol(str):
