@@ -72,8 +72,10 @@ class GatewayEntryPoint:
             # 1. Java gateway version is too old: doesn't have method 'getGatewayVersion()'
             # 2. Error connecting to Java gateway
             gateway_version = self.get_gateway_version()
-        if not __version__.endswith("dev") and not version_match(
-            Version.DS, gateway_version
+        if (
+            not __version__.endswith("dev")
+            and gateway_version
+            and not version_match(Version.DS, gateway_version)
         ):
             warnings.warn(
                 f"Using unmatched version of pydolphinscheduler (version {__version__}) "

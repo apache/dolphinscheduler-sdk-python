@@ -19,10 +19,10 @@
 
 import json
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional, Set, Union
 
 from pydolphinscheduler import configuration
-from pydolphinscheduler.constants import TaskType
+from pydolphinscheduler.constants import Symbol, TaskType
 from pydolphinscheduler.core.resource import Resource
 from pydolphinscheduler.core.resource_plugin import ResourcePlugin
 from pydolphinscheduler.exceptions import PyDSParamException, PyDSTaskNoFoundException
@@ -108,13 +108,15 @@ class Workflow(Base):
         "resource_list",
     }
 
+    _EXPECT_SCHEDULE_CHAR_NUM = 7
+
     def __init__(
         self,
         name: str,
         description: Optional[str] = None,
         schedule: Optional[str] = None,
-        start_time: Optional[str] = None,
-        end_time: Optional[str] = None,
+        start_time: Optional[Union[str, datetime]] = None,
+        end_time: Optional[Union[str, datetime]] = None,
         timezone: Optional[str] = configuration.WORKFLOW_TIME_ZONE,
         user: Optional[str] = configuration.WORKFLOW_USER,
         project: Optional[str] = configuration.WORKFLOW_PROJECT,
@@ -131,7 +133,13 @@ class Workflow(Base):
         **kwargs,
     ):
         super().__init__(name, description)
-        self.schedule = schedule
+        self.schedule = schedule.strip()
+        if self.schedule.count(Symbol.BLANK) != self._EXPECT_SCHEDULE_CHAR_NUM - 1:
+            raise PyDSParamException(
+                "Invlaid parameter schedule, expect crontab char is %d but get %s",
+                self._EXPECT_SCHEDULE_CHAR_NUM,
+                schedule,
+            )
         self._start_time = start_time
         self._end_time = end_time
         self.timezone = timezone

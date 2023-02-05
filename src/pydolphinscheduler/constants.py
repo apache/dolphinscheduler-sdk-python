@@ -129,6 +129,7 @@ class Symbol(str):
     POINT = "."
     COMMA = ","
     UNDERLINE = "_"
+    BLANK = " "
 
 
 class Version(str):
