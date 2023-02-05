@@ -55,7 +55,7 @@ class Python(Task):
         want to execute.
     """
 
-    _task_custom_attr = {"raw_script", "definition"}
+    _task_custom_attr = {"raw_script"}
 
     ext: set = {".py"}
     ext_attr: Union[str, types.FunctionType] = "_definition"
