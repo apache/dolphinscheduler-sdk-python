@@ -133,8 +133,11 @@ class Workflow(Base):
         **kwargs,
     ):
         super().__init__(name, description)
-        self.schedule = schedule.strip()
-        if self.schedule.count(Symbol.BLANK) != self._EXPECT_SCHEDULE_CHAR_NUM - 1:
+        self.schedule = schedule.strip() if schedule else schedule
+        if (
+            self.schedule
+            and self.schedule.count(Symbol.BLANK) != self._EXPECT_SCHEDULE_CHAR_NUM - 1
+        ):
             raise PyDSParamException(
                 "Invlaid parameter schedule, expect crontab char is %d but get %s",
                 self._EXPECT_SCHEDULE_CHAR_NUM,
