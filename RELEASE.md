@@ -29,6 +29,7 @@ but we also have a [PyPi](#release-to-pypi) repository for Python package distri
 * Change `version_ext` about the dolphinscheduler version current support, the syntax is respect [pep-044](https://peps.python.org/pep-0440/#version-specifiers)
 * Run all test locally, `tox -e local-ci && tox -e local-integrate-test`, after you start dolphinscheduler to
   pass `local-integrate-test`
+* Show revert some dolphinscheduler not release commit `git revert 85a1dfaa`
 
 ## Build and Sign Package
 
