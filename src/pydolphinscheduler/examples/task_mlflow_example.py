@@ -32,7 +32,6 @@ mlflow_tracking_uri = "http://127.0.0.1:5000"
 with Workflow(
     name="task_mlflow_example",
 ) as workflow:
-
     # run custom mlflow project to train model
     train_custom = MLFlowProjectsCustom(
         name="train_xgboost_native",

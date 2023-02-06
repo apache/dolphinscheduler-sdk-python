@@ -168,7 +168,6 @@ class YamlWorkflow(YamlParser):
         workflow_name = workflow_params["name"]
         logger.info(f"Create workflow: {workflow_name}")
         with Workflow(**workflow_params) as workflow:
-
             # save dependencies between tasks
             dependencies = {}
 

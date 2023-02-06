@@ -51,7 +51,6 @@ def setup_crt_first(request):
         (
             {"definition": "print(1)"},
             {
-                "definition": "print(1)",
                 "rawScript": "print(1)",
                 "localParams": [],
                 "resourceList": [],
@@ -63,7 +62,6 @@ def setup_crt_first(request):
         (
             {"definition": "def foo():\n    print('I am foo')"},
             {
-                "definition": "def foo():\n    print('I am foo')",
                 "rawScript": "def foo():\n    print('I am foo')\nfoo()",
                 "localParams": [],
                 "resourceList": [],
@@ -75,7 +73,6 @@ def setup_crt_first(request):
         (
             {"definition": foo},
             {
-                "definition": foo,
                 "rawScript": 'def foo():  # noqa: D103\n    print("hello world.")\nfoo()',
                 "localParams": [],
                 "resourceList": [],
@@ -133,7 +130,6 @@ def test_python_get_define(name, script_code, raw):
     code = 123
     version = 1
     expect_task_params = {
-        "definition": script_code,
         "resourceList": [],
         "localParams": [],
         "rawScript": raw,
