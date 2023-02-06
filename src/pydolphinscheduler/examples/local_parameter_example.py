@@ -33,7 +33,6 @@ from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.tasks.shell import Shell
 
 with Workflow(name="local_parameter_example", release_state="offline") as workflow:
-
     # [start parameter example]
     # define a parameter "a", and use it in Shell task
     example1_input_params = Shell(

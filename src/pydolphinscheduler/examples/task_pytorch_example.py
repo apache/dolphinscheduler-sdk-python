@@ -24,7 +24,6 @@ from pydolphinscheduler.tasks.pytorch import Pytorch
 with Workflow(
     name="task_pytorch_example",
 ) as workflow:
-
     # run project with existing environment
     task_existing_env = Pytorch(
         name="task_existing_env",

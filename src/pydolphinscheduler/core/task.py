@@ -170,7 +170,6 @@ class Task(Base):
         *args,
         **kwargs,
     ):
-
         super().__init__(name, description)
         self.task_type = task_type
         self.flag = flag
