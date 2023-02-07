@@ -90,6 +90,6 @@ class ApacheRelease(sdist):
 setup(
     cmdclass={
         "clean": CleanCommand,
-        "sdist": ApacheRelease,
+        "asdist": ApacheRelease,
     },
 )

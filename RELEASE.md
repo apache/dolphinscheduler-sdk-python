@@ -53,7 +53,7 @@ git tag -a "${VERSION}" -m "Release v${VERSION}"
 git push "${REMOTE}" --tags
 
 # Build and sign according to the Apache requirements
-python setup.py clean && python setup.py sdist
+python setup.py clean && python setup.py asdist
 ```
 
 ## Create Draft Release
