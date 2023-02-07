@@ -63,6 +63,7 @@ jobs:
           python-version: 3.7
       - name: Install Dependences
         run: |
+          sudo apt-get purge --auto-remove -y python-debian python3-distro-info
           python -m pip install --upgrade ${{ env.DEPENDENCES }}
       - name: Run All Lint Check
         run: |
