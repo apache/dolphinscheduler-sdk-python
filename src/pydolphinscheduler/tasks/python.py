@@ -17,11 +17,13 @@
 
 """Task Python."""
 
-import inspect
 import logging
 import re
 import types
+from pathlib import Path
 from typing import Union
+
+from stmdency.extractor import Extractor
 
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.task import Task
@@ -74,8 +76,10 @@ class Python(Task):
         """
         definition = getattr(self, "definition")
         if isinstance(definition, types.FunctionType):
-            py_function = inspect.getsource(definition)
-            func_str = f"{py_function}{definition.__name__}()"
+            loc = definition.__code__.co_filename
+            extractor = Extractor(Path(loc).open("r").read())
+            stm = extractor.get_code(definition.__name__)
+            func_str = f"{stm}{definition.__name__}()"
         else:
             pattern = re.compile("^def (\\w+)\\(")
             find = pattern.findall(definition)
