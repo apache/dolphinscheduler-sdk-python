@@ -124,6 +124,22 @@ def test_set_release_state(value, expect):
 
 
 @pytest.mark.parametrize(
+    "value,expect",
+    [
+        ({}, False),
+        ({"schedule": "0 0 0 * * ? *"}, True),
+        ({"schedule": "0 0 0 * * ? *", "online_schedule": False}, False),
+    ],
+)
+def test_set_online_schedule(value, expect):
+    """Test workflow set online_schedule attributes."""
+    with Workflow(TEST_WORKFLOW_NAME, **value) as workflow:
+        assert (
+            getattr(workflow, "online_schedule") == expect
+        ), f"Workflow attribute online_schedule do not in expect value with case {value}."
+
+
+@pytest.mark.parametrize(
     "value",
     [
         "oneline",
