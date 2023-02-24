@@ -17,7 +17,7 @@
 
 """Task procedure."""
 
-from typing import Dict
+from typing import Dict, Optional
 
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.task import Task
@@ -47,7 +47,7 @@ class Procedure(Task):
         name: str,
         datasource_name: str,
         method: str,
-        datasource_type: str | None = None,
+        datasource_type: Optional[str] = None,
         *args,
         **kwargs
     ):

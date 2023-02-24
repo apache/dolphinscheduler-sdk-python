@@ -19,7 +19,7 @@
 
 import logging
 import re
-from typing import Dict, List, Sequence, Union
+from typing import Dict, List, Optional, Sequence, Union
 
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.task import Task
@@ -79,11 +79,11 @@ class Sql(Task):
         name: str,
         datasource_name: str,
         sql: str,
-        datasource_type: str | None = None,
-        sql_type: str | None = None,
-        pre_statements: str | Sequence[str] | None = None,
-        post_statements: str | Sequence[str] | None = None,
-        display_rows: int | None = 10,
+        datasource_type: Optional[str] = None,
+        sql_type: Optional[str] = None,
+        pre_statements: Union[str, Sequence[str], None] = None,
+        post_statements: Union[str, Sequence[str], None] = None,
+        display_rows: Optional[int] = 10,
         *args,
         **kwargs
     ):

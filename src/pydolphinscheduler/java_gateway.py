@@ -110,7 +110,7 @@ class GatewayEntryPoint:
         """Get the java gateway version, expected to be equal with pydolphinscheduler."""
         return self.gateway.entry_point.getGatewayVersion()
 
-    def get_datasource(self, name: str, type: str | None = None):
+    def get_datasource(self, name: str, type: Optional[str] = None):
         """Get single datasource by java gateway.
 
         Will use datasource_name to query database, and then filter by datasource_type if provided.

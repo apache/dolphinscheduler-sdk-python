@@ -18,7 +18,7 @@
 """Module database."""
 import json
 import re
-from typing import NamedTuple
+from typing import NamedTuple, Optional
 
 from py4j.java_gateway import JavaObject
 
@@ -92,9 +92,9 @@ class Datasource(metaclass=ModelMeta):
         type_: str,
         name: str,
         connection_params: str,
-        user_id: int | None = None,
-        id_: int | None = None,
-        note: str | None = None,
+        user_id: Optional[int] = None,
+        id_: Optional[int] = None,
+        note: Optional[str] = None,
     ):
         self.id = id_
         self.name = name
@@ -106,7 +106,7 @@ class Datasource(metaclass=ModelMeta):
 
     @classmethod
     def get(
-        cls, datasource_name: str, datasource_type: str | None = None
+        cls, datasource_name: str, datasource_type: Optional[str] = None
     ) -> "Datasource":
         """Get single datasource.
 
@@ -122,7 +122,7 @@ class Datasource(metaclass=ModelMeta):
 
     @classmethod
     def get_task_usage_4j(
-        cls, datasource_name: str, datasource_type: str | None = None
+        cls, datasource_name: str, datasource_type: Optional[str] = None
     ) -> TaskUsage:
         """Get the necessary information of datasource for task usage in web UI."""
         datasource: "Datasource" = cls.get(datasource_name, datasource_type)
