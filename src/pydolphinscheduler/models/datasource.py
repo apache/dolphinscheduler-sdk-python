@@ -113,7 +113,7 @@ class Datasource(metaclass=ModelMeta):
         :param datasource_name: datasource name
         :param datasource_type: datasource type, if not provided, will get datasource by name only
         """
-        datasource = gateway.datasource(datasource_name, datasource_type)
+        datasource = gateway.get_datasource(datasource_name, datasource_type)
         if datasource is None:
             raise ValueError(
                 f"Datasource with name: {datasource_name} and type: {datasource_type} not found."
