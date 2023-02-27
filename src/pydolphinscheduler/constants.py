@@ -137,3 +137,10 @@ class Version(str):
 
     DS = "dolphinscheduler"
     FILE_NAME = "version_ext"
+
+
+class Keyword(str):
+    """Constants for keyword."""
+
+    DATASOURCE_ID = "id"
+    DATASOURCE_TYPE = "type"

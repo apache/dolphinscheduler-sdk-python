@@ -32,6 +32,7 @@ from pydolphinscheduler.core.yaml_workflow import (
     get_task_cls,
 )
 from pydolphinscheduler.exceptions import PyDSTaskNoFoundException
+from pydolphinscheduler.models.datasource import TaskUsage
 from tests.testing.path import path_yaml_example
 from tests.testing.task import Task
 
@@ -182,8 +183,8 @@ def test_get_error(task_type):
     return_value=({"id": 1, "name": "test"}),
 )
 @patch(
-    "pydolphinscheduler.core.database.Database.get_database_info",
-    return_value=({"id": 1, "type": "mock_type"}),
+    "pydolphinscheduler.models.datasource.Datasource.get_task_usage_4j",
+    return_value=TaskUsage(id=1, type="MYSQL"),
 )
 @patch(
     "pydolphinscheduler.tasks.dependent.DependentItem.get_code_from_gateway",
