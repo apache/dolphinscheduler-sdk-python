@@ -30,7 +30,7 @@ from pydolphinscheduler.models.meta import ModelMeta
 class TaskUsage(NamedTuple):
     """Class for task usage just like datasource in web ui."""
 
-    id: int
+    id: str
     type: str
 
 
@@ -69,7 +69,9 @@ class Datasource(metaclass=ModelMeta):
 
     """
 
-    _PATTERN = re.compile("jdbc:.*://(?P<host>[\\w\\W]+):(?P<port>\\d+)")
+    _PATTERN = re.compile(
+        "jdbc:.*://(?P<host>[\\w\\W]+):(?P<port>\\d+)/(?P<database>[\\w\\W]+)\\?"
+    )
 
     _DATABASE_TYPE_MAP = dict(
         mysql=0,
@@ -89,7 +91,7 @@ class Datasource(metaclass=ModelMeta):
 
     def __init__(
         self,
-        type_: str,
+        st_db_type: str,
         name: str,
         connection_params: str,
         user_id: Optional[int] = None,
@@ -100,7 +102,7 @@ class Datasource(metaclass=ModelMeta):
         self.name = name
         self.note = note
         # TODO try to handle type_ in metaclass
-        self.type_: JavaObject = type_
+        self.st_db_type: JavaObject = st_db_type
         self.user_id = user_id
         self.connection_params = connection_params
 
@@ -127,7 +129,7 @@ class Datasource(metaclass=ModelMeta):
         """Get the necessary information of datasource for task usage in web UI."""
         datasource: "Datasource" = cls.get(datasource_name, datasource_type)
         return TaskUsage(
-            id=datasource.id,
+            id=str(datasource.id),
             type=datasource.type.upper(),
         )
 
@@ -136,12 +138,14 @@ class Datasource(metaclass=ModelMeta):
         """Parse dolphinscheduler connection_params to Connection."""
         data = json.loads(self.connection_params)
 
-        address_match = self._PATTERN.match(data.get("jdbcUrl", None)).groupdict()
+        pattern_match = self._PATTERN.match(
+            data.get("jdbcUrl", data.get("url", None))
+        ).groupdict()
 
         return Connection(
-            host=address_match.get("host", None),
-            port=int(address_match.get("port", None)),
-            schema=data.get("database", None),
+            host=pattern_match.get("host", None),
+            port=int(pattern_match.get("port", None)),
+            schema=pattern_match.get("database", None),
             username=data.get("user", None),
             password=data.get("password", None),
         )
@@ -149,12 +153,12 @@ class Datasource(metaclass=ModelMeta):
     @property
     def type(self) -> str:
         """Property datasource type."""
-        return self.type_.getDescp()
+        return self.st_db_type.getDescp()
 
     @property
     def type_code(self) -> str:
         """Property datasource type."""
-        return self.type_.getCode()
+        return self.st_db_type.getCode()
 
     @property
     def host(self) -> str:
