@@ -45,6 +45,8 @@ with Workflow(
     name="tutorial",
     schedule="0 0 0 * * ? *",
     start_time="2021-01-01",
+    online_schedule=False,
+    release_state="offline",
 ) as workflow:
     # [end workflow_declare]
     # [start task_declare]
@@ -62,6 +64,6 @@ with Workflow(
     # [end task_relation_declare]
 
     # [start submit_or_run]
-    workflow.run()
+    workflow.submit()
     # [end submit_or_run]
 # [end tutorial]

@@ -30,14 +30,14 @@ with Workflow(
     # [start bare_sql_desc]
     bare_sql = Sql(
         name="bare_sql",
-        datasource_name="metadata",
+        datasource_name="whalescheduler",
         sql="select * from t_ds_version",
     )
     # [end bare_sql_desc]
     # [start sql_file_desc]
     sql_file = Sql(
         name="sql_file",
-        datasource_name="metadata",
+        datasource_name="whalescheduler",
         sql="ext/example.sql",
         sql_type=SqlType.SELECT,
         resource_plugin=Local(prefix=str(Path(__file__).parent)),
@@ -46,20 +46,17 @@ with Workflow(
     # [start sql_with_pre_post_desc]
     sql_with_pre_post = Sql(
         name="sql_with_pre_post",
-        datasource_name="metadata",
+        datasource_name="whalescheduler",
         sql="select * from t_ds_version",
         pre_statements=[
-            "update table_one set version = '1.3.6'",
-            "delete from table_two where version = '1.3.6'",
+            "update test.table_one set name = '1.3.6'",
+            "delete from test.table_two where name = '1.3.6'",
         ],
-        post_statements="update table_one set version = '3.0.0'",
+        post_statements="update test.table_one set name = '3.0.0'",
     )
     # [end sql_with_pre_post_desc]
 
-    bare_sql >> [
-        sql_file,
-        sql_with_pre_post,
-    ]
+    bare_sql >> sql_file >> sql_with_pre_post
 
     workflow.submit()
 
