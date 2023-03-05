@@ -130,7 +130,7 @@ class Datasource(metaclass=ModelMeta):
         datasource: "Datasource" = cls.get(datasource_name, datasource_type)
         return TaskUsage(
             id=str(datasource.id),
-            type=datasource.type.upper(),
+            type=datasource.type,
         )
 
     @property
