@@ -17,19 +17,15 @@
 
 """Module java gateway, contain gateway behavior."""
 
-import contextlib
-import warnings
 from logging import getLogger
 from typing import Any, Optional
 
 from py4j.java_collections import JavaMap
 from py4j.java_gateway import GatewayParameters, JavaGateway
-from py4j.protocol import Py4JError
 
-from pydolphinscheduler import __version__, configuration
-from pydolphinscheduler.constants import JavaGatewayDefault, Version
+from pydolphinscheduler import configuration
+from pydolphinscheduler.constants import JavaGatewayDefault
 from pydolphinscheduler.exceptions import PyDSJavaGatewayException
-from pydolphinscheduler.utils.versions import version_match
 
 logger = getLogger(__name__)
 
@@ -67,24 +63,6 @@ class GatewayEntryPoint:
         self.port = port or configuration.JAVA_GATEWAY_PORT
         self.auto_convert = auto_convert or configuration.JAVA_GATEWAY_AUTO_CONVERT
         self.auth_token = auth_token or configuration.JAVA_GATEWAY_AUTH_TOKEN
-        gateway_version = "unknown"
-        with contextlib.suppress(Py4JError):
-            # 1. Java gateway version is too old: doesn't have method 'getGatewayVersion()'
-            # 2. Error connecting to Java gateway
-            gateway_version = self.get_gateway_version()
-        if (
-            not __version__.endswith("dev")
-            and gateway_version
-            and not version_match(Version.DS, gateway_version)
-        ):
-            warnings.warn(
-                f"Using unmatched version of pydolphinscheduler (version {__version__}) "
-                f"and Java gateway (version {gateway_version}) may cause errors. "
-                "We strongly recommend you to find the matched version "
-                "(check: https://pypi.org/project/apache-dolphinscheduler)",
-                UserWarning,
-                stacklevel=2,
-            )
 
     @property
     def gateway(self) -> JavaGateway:
