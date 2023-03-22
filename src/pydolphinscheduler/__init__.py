@@ -17,4 +17,4 @@
 
 """Init root of pydolphinscheduler."""
 
-__version__ = "4.0.2a7"
+__version__ = "v4.0.2a8"
