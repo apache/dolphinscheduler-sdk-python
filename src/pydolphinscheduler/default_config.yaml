@@ -23,7 +23,7 @@ java_gateway:
 
   # The address of Python gateway server start. Set its value to `0.0.0.0` if your Python API run in different
   # between Python gateway server. It could be be specific to other address like `127.0.0.1` or `localhost`
-  address: ctyun5
+  address: 127.0.0.1
 
   # The port of Python gateway server start. Define which port you could connect to Python gateway server from
   # Python API models.
