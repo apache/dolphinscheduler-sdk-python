@@ -62,6 +62,7 @@ main = "main.py"
 
 with Workflow(
     name="multi_resources_example",
+    tenant="tenant_exists",
     # [start create_new_resources]
     resource_list=[
         Resource(

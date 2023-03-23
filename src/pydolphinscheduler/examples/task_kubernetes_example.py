@@ -23,6 +23,7 @@ from pydolphinscheduler.tasks.kubernetes import Kubernetes
 
 with Workflow(
     name="task_kubernetes_example",
+    tenant="tenant_exists",
 ) as workflow:
     task_k8s = Kubernetes(
         name="task_k8s",

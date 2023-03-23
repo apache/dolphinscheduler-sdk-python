@@ -22,7 +22,7 @@ from pydolphinscheduler.core.engine import ProgramType
 from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.tasks.map_reduce import MR
 
-with Workflow(name="task_map_reduce_example") as workflow:
+with Workflow(name="task_map_reduce_example", tenant="tenant_exists") as workflow:
     task = MR(
         name="task_mr",
         main_class="wordcount",

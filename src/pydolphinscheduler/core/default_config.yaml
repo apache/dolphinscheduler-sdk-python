@@ -17,16 +17,12 @@
 
 # Setting about Java gateway server
 java_gateway:
-  # Authentication token for connection from python api to python gateway server. Should be changed the default value
-  # when you deploy in public network.
-  auth_token: jwUDzpLsNKEFER4*a8gruBH_GsAurNxU7A@Xc
-
   # The address of Python gateway server start. Set its value to `0.0.0.0` if your Python API run in different
   # between Python gateway server. It could be be specific to other address like `127.0.0.1` or `localhost`
   address: 127.0.0.1
 
   # The port of Python gateway server start. Define which port you could connect to Python gateway server from
-  # Python API models.
+  # Python API side.
   port: 25333
 
   # Whether automatically convert Python objects to Java Objects. Default value is ``True``. There is some
@@ -60,6 +56,3 @@ default:
     # change to ``FAILURE`` if you want to warn users when workflow failed. All available enum value are
     # ``NONE``, ``SUCCESS``, ``FAILURE``, ``ALL`` 
     warning_type: NONE
-    # Default execution type about how to run multiple workflow instances, default value is ``parallel`` which
-    # mean run all workflow instances parallel and the other value is ``SERIAL_WAIT``, ``SERIAL_DISCARD``, ``SERIAL_PRIORITY``
-    execution_type: parallel

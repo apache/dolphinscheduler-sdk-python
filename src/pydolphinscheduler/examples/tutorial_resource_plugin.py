@@ -41,6 +41,7 @@ with Workflow(
     name="tutorial_resource_plugin",
     schedule="0 0 0 * * ? *",
     start_time="2021-01-01",
+    tenant="tenant_exists",
     resource_plugin=Local("/tmp"),
 ) as workflow:
     # [end workflow_declare]

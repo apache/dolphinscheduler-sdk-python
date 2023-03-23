@@ -31,6 +31,8 @@ from pydolphinscheduler.tasks.shell import Shell
 
 NUM_WORKFLOWS = 10
 NUM_TASKS = 5
+# Make sure your tenant exists in your operator system
+TENANT = "exists_tenant"
 # Whether task should dependent on pre one or not
 # False will create workflow with independent task, while True task will dependent on pre-task and dependence
 # link like `pre_task -> current_task -> next_task`, default True
@@ -39,7 +41,7 @@ IS_CHAIN = True
 for wf in range(0, NUM_WORKFLOWS):
     workflow_name = f"workflow:{wf}"
 
-    with Workflow(name=workflow_name) as workflow:
+    with Workflow(name=workflow_name, tenant=TENANT) as workflow:
         for t in range(0, NUM_TASKS):
             task_name = f"task:{t}-{workflow_name}"
             command = f"echo This is task {task_name}"

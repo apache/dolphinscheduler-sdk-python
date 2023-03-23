@@ -58,6 +58,7 @@ expects = [
         "default.user.state": (1, 0),
         "default.workflow": yaml.load("no need test"),
         "default.workflow.project": ("project-pydolphin", "project-pydolphinEdit"),
+        "default.workflow.tenant": ("tenant_pydolphin", "SmithEdit"),
         "default.workflow.user": ("userPythonGateway", "SmithEdit"),
         "default.workflow.queue": ("queuePythonGateway", "queueEdit"),
         "default.workflow.worker_group": ("default", "wgEdit"),
