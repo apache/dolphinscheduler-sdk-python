@@ -21,7 +21,6 @@ from unittest.mock import patch
 
 import pytest
 
-from pydolphinscheduler.models.datasource import TaskUsage
 from pydolphinscheduler.tasks.procedure import Procedure
 
 TEST_PROCEDURE_SQL = (
@@ -57,8 +56,8 @@ TEST_PROCEDURE_DATASOURCE_NAME = "test_datasource"
     return_value=(123, 1),
 )
 @patch(
-    "pydolphinscheduler.models.datasource.Datasource.get_task_usage_4j",
-    return_value=TaskUsage(id=1, type="MYSQL"),
+    "pydolphinscheduler.core.database.Database.get_database_info",
+    return_value=({"id": 1, "type": "MYSQL"}),
 )
 def test_property_task_params(mock_datasource, mock_code_version, attr, expect):
     """Test task sql task property."""
@@ -71,8 +70,8 @@ def test_property_task_params(mock_datasource, mock_code_version, attr, expect):
     return_value=(123, 1),
 )
 @patch(
-    "pydolphinscheduler.models.datasource.Datasource.get_task_usage_4j",
-    return_value=TaskUsage(id=1, type="MYSQL"),
+    "pydolphinscheduler.core.database.Database.get_database_info",
+    return_value=({"id": 1, "type": "MYSQL"}),
 )
 def test_sql_get_define(mock_datasource, mock_code_version):
     """Test task procedure function get_define."""

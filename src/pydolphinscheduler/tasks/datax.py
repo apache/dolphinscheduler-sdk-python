@@ -20,8 +20,8 @@
 from typing import Dict, List, Optional
 
 from pydolphinscheduler.constants import TaskType
+from pydolphinscheduler.core.database import Database
 from pydolphinscheduler.core.task import Task
-from pydolphinscheduler.models.datasource import Datasource
 
 
 class CustomDataX(Task):
@@ -57,21 +57,12 @@ class DataX(Task):
     """Task DataX object, declare behavior for DataX task to dolphinscheduler.
 
     It should run database datax job in multiply sql link engine, such as:
-
     - MySQL
     - Oracle
     - Postgresql
     - SQLServer
-
     You provider datasource_name and datatarget_name contain connection information, it decisions which
     database type and database instance would synchronous data.
-
-    :param name: task name.
-    :param datasource_name: source database name for task datax to extract data.
-    :param datatarget_name: target database name for task datax to load data.
-    :param sql: sql statement for task datax to extract data form source database.
-    :param target_table: target table name for task datax to load data into target database.
-    :param datasource_type: source database type, dolphinscheduler use
     """
 
     CUSTOM_CONFIG = 0
@@ -98,8 +89,6 @@ class DataX(Task):
         datatarget_name: str,
         sql: str,
         target_table: str,
-        datasource_type: Optional[str] = None,
-        datatarget_type: Optional[str] = None,
         job_speed_byte: Optional[int] = 0,
         job_speed_record: Optional[int] = 1000,
         pre_statements: Optional[List[str]] = None,
@@ -112,9 +101,7 @@ class DataX(Task):
         self._sql = sql
         super().__init__(name, TaskType.DATAX, *args, **kwargs)
         self.custom_config = self.CUSTOM_CONFIG
-        self.datasource_type = datasource_type
         self.datasource_name = datasource_name
-        self.datatarget_type = datatarget_type
         self.datatarget_name = datatarget_name
         self.target_table = target_table
         self.job_speed_byte = job_speed_byte
@@ -125,28 +112,6 @@ class DataX(Task):
         self.xmx = xmx
 
     @property
-    def source_params(self) -> Dict:
-        """Get source params for datax task."""
-        datasource_task_u = Datasource.get_task_usage_4j(
-            self.datasource_name, self.datasource_type
-        )
-        return {
-            "dsType": datasource_task_u.type,
-            "dataSource": datasource_task_u.id,
-        }
-
-    @property
-    def target_params(self) -> Dict:
-        """Get target params for datax task."""
-        datasource_task_u = Datasource.get_task_usage_4j(
-            self.datatarget_name, self.datatarget_type
-        )
-        return {
-            "dtType": datasource_task_u.type,
-            "dataTarget": datasource_task_u.id,
-        }
-
-    @property
     def task_params(self, camel_attr: bool = True, custom_attr: set = None) -> Dict:
         """Override Task.task_params for datax task.
 
@@ -154,6 +119,9 @@ class DataX(Task):
         directly set as python property, so we Override Task.task_params here.
         """
         params = super().task_params
-        params.update(self.source_params)
-        params.update(self.target_params)
+        datasource = Database(self.datasource_name, "dsType", "dataSource")
+        params.update(datasource)
+
+        datatarget = Database(self.datatarget_name, "dtType", "dataTarget")
+        params.update(datatarget)
         return params

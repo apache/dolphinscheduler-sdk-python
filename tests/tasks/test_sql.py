@@ -21,7 +21,6 @@ from unittest.mock import patch
 
 import pytest
 
-from pydolphinscheduler.models.datasource import TaskUsage
 from pydolphinscheduler.resources_plugin import Local
 from pydolphinscheduler.tasks.sql import Sql, SqlType
 from pydolphinscheduler.utils import file
@@ -106,8 +105,8 @@ def test_get_stm_list(stm, expected) -> None:
     return_value=(123, 1),
 )
 @patch(
-    "pydolphinscheduler.models.datasource.Datasource.get_task_usage_4j",
-    return_value=TaskUsage(id=1, type="mock_type"),
+    "pydolphinscheduler.core.database.Database.get_database_info",
+    return_value=({"id": 1, "type": "mock_type"}),
 )
 def test_get_sql_type(
     mock_datasource, mock_code_version, sql, param_sql_type, sql_type
@@ -148,8 +147,8 @@ def test_get_sql_type(
     return_value=(123, 1),
 )
 @patch(
-    "pydolphinscheduler.models.datasource.Datasource.get_task_usage_4j",
-    return_value=TaskUsage(id=1, type="MYSQL"),
+    "pydolphinscheduler.core.database.Database.get_database_info",
+    return_value=({"id": 1, "type": "MYSQL"}),
 )
 def test_property_task_params(mock_datasource, mock_code_version, attr, expect):
     """Test task sql task property."""
@@ -158,8 +157,8 @@ def test_property_task_params(mock_datasource, mock_code_version, attr, expect):
 
 
 @patch(
-    "pydolphinscheduler.models.datasource.Datasource.get_task_usage_4j",
-    return_value=TaskUsage(id=1, type="MYSQL"),
+    "pydolphinscheduler.core.database.Database.get_database_info",
+    return_value=({"id": 1, "type": "MYSQL"}),
 )
 def test_sql_get_define(mock_datasource):
     """Test task sql function get_define."""

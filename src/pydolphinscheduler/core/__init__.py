@@ -17,11 +17,13 @@
 
 """Init pydolphinscheduler.core package."""
 
+from pydolphinscheduler.core.database import Database
 from pydolphinscheduler.core.engine import Engine
 from pydolphinscheduler.core.task import Task
 from pydolphinscheduler.core.workflow import Workflow
 
 __all__ = [
+    "Database",
     "Engine",
     "Workflow",
     "Task",
