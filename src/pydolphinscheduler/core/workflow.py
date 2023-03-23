@@ -57,11 +57,6 @@ class Workflow(Base):
 
     TODO: maybe we should rename this class, currently use DS object name.
 
-    :param online_schedule: Whether the online workflow is schedule. It will be automatically configured
-        according to :param:``schedule`` configuration. If the :param:``schedule`` is assigned with valid
-        value, :param:``online_schedule`` will be set to ``True``. But you can also manually specify
-        :param:``online_schedule``. For example if you only want to set the workflow :param:``schedule`` but
-        do not want to online the workflow schedule, you can set :param:``online_schedule`` to ``False``.
     :param execution_type: Decision which behavior to run when workflow have multiple instances.
         when workflow schedule interval is too short, it may cause multiple instances run at the
         same time. We can use this parameter to control the behavior about how to run those workflows
@@ -120,7 +115,6 @@ class Workflow(Base):
         name: str,
         description: Optional[str] = None,
         schedule: Optional[str] = None,
-        online_schedule: Optional[bool] = None,
         start_time: Optional[Union[str, datetime]] = None,
         end_time: Optional[Union[str, datetime]] = None,
         timezone: Optional[str] = configuration.WORKFLOW_TIME_ZONE,
@@ -149,12 +143,6 @@ class Workflow(Base):
                 self._EXPECT_SCHEDULE_CHAR_NUM,
                 schedule,
             )
-
-        #  handle workflow schedule state according to init value
-        if self.schedule and online_schedule is None:
-            self.online_schedule = True
-        else:
-            self.online_schedule = online_schedule or False
         self._start_time = start_time
         self._end_time = end_time
         self.timezone = timezone
@@ -452,7 +440,6 @@ class Workflow(Base):
             json.dumps(self.task_relation_json),
             json.dumps(self.task_definition_json),
             json.dumps(self.schedule_json) if self.schedule_json else None,
-            self.online_schedule,
             None,
         )
         return self._workflow_code

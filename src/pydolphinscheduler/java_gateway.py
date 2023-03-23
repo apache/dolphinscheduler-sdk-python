@@ -264,7 +264,6 @@ class GatewayEntryPoint:
         task_relation_json: str,
         task_definition_json: str,
         schedule: Optional[str] = None,
-        online_schedule: Optional[bool] = None,
         other_params_json: Optional[str] = None,
     ):
         """Create or update workflow through java gateway."""
@@ -275,7 +274,6 @@ class GatewayEntryPoint:
             description,
             global_params,
             schedule,
-            online_schedule,
             warning_type,
             warning_group_id,
             timeout,
