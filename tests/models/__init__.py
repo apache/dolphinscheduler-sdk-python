@@ -15,20 +15,4 @@
 # specific language governing permissions and limitations
 # under the License.
 
-[run]
-command_line = -m pytest
-omit = 
-    # Ignore all test cases in tests/
-    tests/*
-    # Ignore examples directory
-    */pydolphinscheduler/examples/*
-    # TODO. Temporary ignore java_gateway file, because we could not find good way to test it.
-    */pydolphinscheduler/java_gateway.py
-
-[report]
-# Don’t report files that are 100% covered
-skip_covered = True
-show_missing = True
-precision = 2
-# Report will fail when coverage under 90.00%
-fail_under = 90
+"""Init modules package tests."""

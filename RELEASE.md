@@ -41,6 +41,10 @@ upload package to PyPi. You could first install and upgrade them by:
 # Install or upgrade dependencies
 python3 -m pip install --upgrade pip build twine
 
+# Configuration during the releasing
+VERSION=<VERSION>  # The version of the package you want to release, e.g. 1.2.3
+REMOTE=<REMOTE>  # The git remote name, we usually use `origin` or `remote`
+
 # Change version
 # For macOS
 sed -i '' "s/__version__ = \".*\"/__version__ = \"${VERSION}\"/" src/pydolphinscheduler/__init__.py
@@ -49,8 +53,6 @@ sed -i "s/__version__ = \".*\"/__version__ = \"${VERSION}\"/" src/pydolphinsched
 git commit -am "Release v${VERSION}"
 
 # Add Tag
-VERSION=<VERSION>  # The version of the package you want to release, e.g. 1.2.3
-REMOTE=<REMOTE>  # The git remote name, we usually use `origin` or `remote`
 git tag -a "${VERSION}" -m "Release v${VERSION}"
 git push "${REMOTE}" --tags
 
@@ -70,9 +72,9 @@ based to the specific tag, and set it as pre-release.
 ```shell
 svn co https://dist.apache.org/repos/dist/dev/dolphinscheduler/ release/dolphinscheduler
 mkdir -p release/dolphinscheduler/python/"${VERSION}"
-cp dolphinscheduler-python-src-"${VERSION}"* release/dolphinscheduler/python/"${VERSION}"
+cp dist/dolphinscheduler-python-src-"${VERSION}"* release/dolphinscheduler/python/"${VERSION}"
 
-cd release/dolphinscheduler && svn add python && svn commit python -m "Release Apache DolphinScheduler-SDK-Python version ${VERSION}"
+cd release/dolphinscheduler && svn add python/"${VERSION}" && svn commit python -m "Release Apache DolphinScheduler-SDK-Python version ${VERSION}"
 ```
 
 ### Vote Mail
@@ -86,7 +88,7 @@ BODY:
 
 Hello DolphinScheduler Community,
 
-This is a call for vote to release Apache DolphinScheduler SDK Python version <VERSION>
+This is a call for the vote to release Apache DolphinScheduler SDK Python version <VERSION>
 
 Release notes: https://github.com/apache/dolphinscheduler-sdk-python/releases/tag/<VERSION>
 
@@ -96,9 +98,9 @@ Git tag for the release: https://github.com/apache/dolphinscheduler-sdk-python/t
 
 Release Commit ID: https://github.com/apache/dolphinscheduler-sdk-python/commit/<commit-SHA>
 
-Keys to verify the Release Candidate: https://dist.apache.org/repos/dist/dev/dolphinscheduler/KEYS
+Keys to verify the Release Candidate: https://downloads.apache.org/dolphinscheduler/KEYS
 
-The vote will be open for at least 72 hours or until necessary number of votes are reached.
+The vote will be open for at least 72 hours or until the necessary number of votes is reached.
 
 Please vote accordingly:
 

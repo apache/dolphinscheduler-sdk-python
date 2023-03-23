@@ -15,5 +15,20 @@
 # specific language governing permissions and limitations
 # under the License.
 
-[settings]
-profile=black
+
+"""DolphinScheduler Connection object.
+
+Including the basic information of database connection.
+"""
+
+from typing import NamedTuple
+
+
+class Connection(NamedTuple):
+    """Basic information of database connection."""
+
+    host: str
+    port: int
+    schema: str
+    username: str
+    password: str

@@ -110,9 +110,15 @@ class GatewayEntryPoint:
         """Get the java gateway version, expected to be equal with pydolphinscheduler."""
         return self.gateway.entry_point.getGatewayVersion()
 
-    def get_datasource_info(self, name: str):
-        """Get datasource info through java gateway."""
-        return self.gateway.entry_point.getDatasourceInfo(name)
+    def get_datasource(self, name: str, type: Optional[str] = None):
+        """Get single datasource by java gateway.
+
+        Will use datasource_name to query database, and then filter by datasource_type if provided.
+
+        :param name: datasource name of the datasource to be queried
+        :param type: datasource type of the datasource, only used to filter the result.
+        """
+        return self.gateway.entry_point.getDatasource(name, type)
 
     def get_resources_file_info(self, program_type: str, main_package: str):
         """Get resources file info through java gateway."""
@@ -264,6 +270,7 @@ class GatewayEntryPoint:
         task_relation_json: str,
         task_definition_json: str,
         schedule: Optional[str] = None,
+        online_schedule: Optional[bool] = None,
         other_params_json: Optional[str] = None,
     ):
         """Create or update workflow through java gateway."""
@@ -274,6 +281,7 @@ class GatewayEntryPoint:
             description,
             global_params,
             schedule,
+            online_schedule,
             warning_type,
             warning_group_id,
             timeout,

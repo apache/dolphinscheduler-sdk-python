@@ -21,6 +21,7 @@ from unittest.mock import patch
 
 import pytest
 
+from pydolphinscheduler.models.datasource import Datasource, TaskUsage
 from pydolphinscheduler.resources_plugin import Local
 from pydolphinscheduler.tasks.datax import CustomDataX, DataX
 from pydolphinscheduler.utils import file
@@ -40,10 +41,7 @@ def setup_crt_first(request):
     delete_file(file_path)
 
 
-@patch(
-    "pydolphinscheduler.core.database.Database.get_database_info",
-    return_value=({"id": 1, "type": "MYSQL"}),
-)
+@patch.object(Datasource, "get_task_usage_4j", return_value=TaskUsage(1, "MYSQL"))
 def test_datax_get_define(mock_datasource):
     """Test task datax function get_define."""
     code = 123
