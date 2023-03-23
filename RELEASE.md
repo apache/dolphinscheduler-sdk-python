@@ -29,6 +29,8 @@ but we also have a [PyPi](#release-to-pypi) repository for Python package distri
 * Change `version_ext` about the dolphinscheduler version current support, the syntax is respect [pep-044](https://peps.python.org/pep-0440/#version-specifiers)
 * Run all test locally, `tox -e local-ci && tox -e local-integrate-test`, after you start dolphinscheduler to
   pass `local-integrate-test`
+* Revert commit Apache dolphinscheduler not release yet, see [this link](https://github.com/apache/dolphinscheduler-sdk-python/pulls?q=is%3Apr+is%3Aclosed+label%3Adep-main-repo)
+  add check whether apache/dolphinscheduler commit is released, for some commit not release should revert the change
 
 ## Build and Sign Package
 
@@ -205,12 +207,10 @@ Vote result should follow these:
 
 TestPyPi is a test environment of PyPi, you could release to it to test whether the package is work or not.
 
-1. Create an account in [TestPyPi](https://test.pypi.org/account/register/).
-2. Clean unrelated files in `dist` directory, and build package `python3 setup.py clean`.
-3. Build package `python3 -m build`, and you will see two new files in `dist` directory, with extension
-   `.tar.gz` and `.whl`.
-4. Upload to TestPyPi `python3 -m twine upload --repository testpypi dist/*`.
-5. Check the package in [TestPyPi](https://test.pypi.org/project/apache-dolphinscheduler/) and install it
+1. (Optional) Create an account in [TestPyPi](https://test.pypi.org/account/register/), only need for first release.
+2. Clean `dist` directory and build `python3 setup.py clean && python3 -m build`.
+3. Upload to TestPyPi `python3 -m twine upload --repository testpypi dist/*`.
+4. Check the package in [TestPyPi](https://test.pypi.org/project/apache-dolphinscheduler/) and install it
    by `python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps apache-dolphinscheduler` to
    test whether it is work or not.
 
@@ -219,10 +219,8 @@ TestPyPi is a test environment of PyPi, you could release to it to test whether 
 PyPi is the official repository of Python packages, it is highly recommended [releasing package to TestPyPi](#release-to-testpypi)
 first to test whether the package is correct.
 
-1. Create an account in [PyPI](https://pypi.org/account/register/).
-2. Clean unrelated files in `dist` directory, and build package `python3 setup.py clean`.
-3. Build package `python3 -m build`, and you will see two new files in `dist` directory, with extension
-   `.tar.gz` and `.whl`.
-4. Upload to TestPyPi `python3 -m twine upload dist/*`.
-5. Check the package in [PyPi](https://pypi.org/project/apache-dolphinscheduler/) and install it
+1. (Optional) Create an account in [PyPI](https://pypi.org/account/register/), only need for first release.
+2. Clean `dist` directory and build `python3 setup.py clean && python3 -m build`.
+3. Upload to TestPyPi `python3 -m twine upload dist/*`.
+4. Check the package in [PyPi](https://pypi.org/project/apache-dolphinscheduler/) and install it
    by `python3 -m pip install apache-dolphinscheduler` to install it.
