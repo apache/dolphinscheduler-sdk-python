@@ -36,7 +36,6 @@ tasks:
     fail_retry_times: 30
     fail_retry_interval: 5
     timeout: 60
-    is_cache: true
     input_params:
       value_VARCHAR: "abc"
       value_INTEGER: 123
