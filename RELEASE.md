@@ -82,13 +82,13 @@ cd release/dolphinscheduler && svn add python/"${VERSION}" && svn commit python 
 Create a new vote in dev@dolphinscheduler.apache.org
 
 ```text
-TITLE: [VOTE] Release Apache DolphinScheduler SDK Python <VERSION>
+TITLE: [VOTE] Release Apache DolphinScheduler Python SDK <VERSION>
 
 BODY:
 
 Hello DolphinScheduler Community,
 
-This is a call for the vote to release Apache DolphinScheduler SDK Python version <VERSION>
+This is a call for the vote to release Apache DolphinScheduler Python SDK version <VERSION>
 
 Release notes: https://github.com/apache/dolphinscheduler-sdk-python/releases/tag/<VERSION>
 
@@ -146,7 +146,7 @@ Vote result should follow these:
 - **Send the closing vote mail to announce the result**. When count the binding and no binding votes, please list the names of voters. An example like this:
 
     ```text
-    [RESULT][VOTE] Release Apache SkyWalking Python version $VERSION
+    [RESULT][VOTE] Release Apache DolphinScheduler Python version $VERSION
     
     72+ hours passed, we’ve got ($NUMBER) +1 bindings (and ... +1 non-bindings):
     
@@ -177,15 +177,15 @@ Vote result should follow these:
 - Send ANNOUNCE email to `dev@dolphinscheduler.apache.org` and `announce@apache.org`.
 
     ```text
-    Subject: [ANNOUNCE] Apache DolphinScheduler SDK Python $VERSION Released
+    Subject: [ANNOUNCE] Apache DolphinScheduler Python SDK $VERSION Released
 
     Content:
 
     Hi Community,
 
-    We are glad to announce the release of Apache DolphinScheduler SDK Python $VERSION.
+    We are glad to announce the release of Apache DolphinScheduler Python SDK $VERSION.
 
-    Apache DolphinScheduler SDK Python is an API for Apache DolphinScheduler which allow you definition your workflow by Python code, aka workflow-as-codes.
+    Apache DolphinScheduler Python SDK is an API for Apache DolphinScheduler which allow you definition your workflow by Python code, aka workflow-as-codes.
   
     DolphinScheduler is a distributed and easy-to-extend visual workflow scheduler system,
     dedicated to solving the complex task dependencies in data processing, making the scheduler system out of the box for data processing.
