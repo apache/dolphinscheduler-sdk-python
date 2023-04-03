@@ -68,5 +68,6 @@ class Resource(Base):
         return gateway.create_or_update_resource(
             self.user_name,
             self.name,
+            self.description,
             self.content,
         )
