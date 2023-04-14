@@ -151,15 +151,17 @@ jobs:
   commit-msg:
     needs: license
     runs-on: ubuntu-latest
+    outputs:
+      commit_message: ${{ steps.set-commit-message.outputs.commit_message }}
     steps:
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      - run: echo "GIT_COMMIT_MSG=$(git show -s --format=%s)" >> $GITHUB_ENV
+      - run: echo "commit_message=$(git show -s --format=%B | tr '\n' ' ')" >> $GITHUB_OUTPUT
   integrate-test:
     needs: commit-msg
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'schedule' || contains(env.GIT_COMMIT_MSG, '[run-it]') }}
+    if: ${{ github.event_name == 'schedule' || contains(needs.commit-msg.outputs.commit_message, '[run-it]') }}
     timeout-minutes: 30
     steps:
       - name: Checkout Dolphinscheduler Python SDK
