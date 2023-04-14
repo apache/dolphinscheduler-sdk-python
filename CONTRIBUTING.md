@@ -55,7 +55,7 @@ We use [GitHub Actions][github-actions] to run CI, and it will run automatically
 But some CI we do not need to run them every time, or we have special rule to change our CI behavior.
 
 * `[run-it]`: By default, we will skip all integration test in pull requests, if you want to run them, you should add this
-  syntax to your Git commit message. The common reason to run integration test is you change some code related to python gateway
+  syntax to your latest Git commit message. The common reason to run integration test is you change some code related to python gateway
   service in repository [apache/dolphinscheduler](https://github.com/apache/dolphinscheduler). 
 
 ## Test Your Code

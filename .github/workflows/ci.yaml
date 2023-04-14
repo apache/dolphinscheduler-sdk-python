@@ -148,10 +148,21 @@ jobs:
       - name: Run Tests Build Docs
         run: |
           python -m tox -vv -e local-ci
-  integrate-test:
+  commit-msg:
     needs: license
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'schedule' || contains(toJSON(github.event.commits.*.message), '[run-it]') }}
+    outputs:
+      commit_message: ${{ steps.set-commit-message.outputs.commit_message }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - id: set-commit-message
+        run: echo "commit_message=$(git show -s --format=%B | tr '\n' ' ')" >> $GITHUB_OUTPUT
+  integrate-test:
+    needs: commit-msg
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'schedule' || contains(needs.commit-msg.outputs.commit_message, '[run-it]') }}
     timeout-minutes: 30
     steps:
       - name: Checkout Dolphinscheduler Python SDK
