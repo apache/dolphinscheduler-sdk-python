@@ -157,7 +157,8 @@ jobs:
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      - run: echo "commit_message=$(git show -s --format=%B | tr '\n' ' ')" >> $GITHUB_OUTPUT
+      - id: set-commit-message
+        run: echo "commit_message=$(git show -s --format=%B | tr '\n' ' ')" >> $GITHUB_OUTPUT
   integrate-test:
     needs: commit-msg
     runs-on: ubuntu-latest
