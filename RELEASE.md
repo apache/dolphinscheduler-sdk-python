@@ -187,12 +187,10 @@ Vote result should follow these:
 
     We are glad to announce the release of Apache DolphinScheduler Python SDK $VERSION.
 
-    Apache DolphinScheduler Python SDK is an API for Apache DolphinScheduler which allow you definition your workflow by Python code, aka workflow-as-codes.
+    Apache DolphinScheduler Python SDK is an API for Apache DolphinScheduler which allows you to define your workflow by Python code, aka workflow-as-codes.
   
     DolphinScheduler is a distributed and easy-to-extend visual workflow scheduler system,
     dedicated to solving the complex task dependencies in data processing, making the scheduler system out of the box for data processing.
-
-    Download Links: https://dolphinscheduler.apache.org/#/en-us/download
 
     Release Notes: https://github.com/apache/dolphinscheduler-sdk-python/releases/tag/$VERSION
 
