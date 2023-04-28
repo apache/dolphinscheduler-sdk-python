@@ -24,7 +24,7 @@ but we also have a [PyPi](#release-to-pypi) repository for Python package distri
 
 ## Prepare
 
-* Change `version_ext` about the dolphinscheduler version current support, the syntax is respect [pep-044](https://peps.python.org/pep-0440/#version-specifiers)
+* Change `version_ext` about the dolphinscheduler version current support, the syntax is respect [pep-044](https://peps.python.org/pep-0440/#version-specifiers), and update support version in `docs/source/index.rst` file.
 * Cherry-pick some backward compatibility commit in [4.0.x](https://github.com/apache/dolphinscheduler-sdk-python/tree/4.0.x), the first
   commit is 3a8a4e31
 * Revert commit Apache dolphinscheduler not release yet, see [this link](https://github.com/apache/dolphinscheduler-sdk-python/pulls?q=is%3Apr+is%3Aclosed+label%3Adep-main-repo)
