@@ -19,6 +19,7 @@
 
 import logging
 import re
+import warnings
 from typing import Dict, List, Optional, Sequence, Union
 
 from pydolphinscheduler.constants import TaskType
@@ -58,6 +59,8 @@ class Sql(Task):
         detected according to sql statement using :func:`pydolphinscheduler.tasks.sql.Sql.sql_type`, and you
         can also set it manually. by ``SqlType.SELECT`` for query statement or ``SqlType.NOT_SELECT`` for not
         query statement.
+    :param sql_delimiter: SQL delimiter to split one sql statement into multiple statements, ONLY support in
+        ``sql_type=SqlType.NOT_SELECT``, default is None.
     :param pre_statements: SQL statements to be executed before the main SQL statement.
     :param post_statements: SQL statements to be executed after the main SQL statement.
     :param display_rows: The number of record rows number to be displayed in the SQL task log, default is 10.
@@ -66,6 +69,7 @@ class Sql(Task):
     _task_custom_attr = {
         "sql",
         "sql_type",
+        "segment_separator",
         "pre_statements",
         "post_statements",
         "display_rows",
@@ -81,6 +85,7 @@ class Sql(Task):
         sql: str,
         datasource_type: Optional[str] = None,
         sql_type: Optional[str] = None,
+        sql_delimiter: Optional[str] = None,
         pre_statements: Union[str, Sequence[str], None] = None,
         post_statements: Union[str, Sequence[str], None] = None,
         display_rows: Optional[int] = 10,
@@ -90,6 +95,14 @@ class Sql(Task):
         self._sql = sql
         super().__init__(name, TaskType.SQL, *args, **kwargs)
         self.param_sql_type = sql_type
+        if sql_type == SqlType.SELECT and sql_delimiter:
+            warnings.warn(
+                "Parameter `sql_delimiter` is only supported in `sql_type=SqlType.NO_SELECT`, but current "
+                "sql_type is `sql_type=SqlType.SELECT`, so `sql_delimiter` will be ignored.",
+                UserWarning,
+                stacklevel=2,
+            )
+        self.segment_separator = sql_delimiter or ""
         self.datasource_name = datasource_name
         self.datasource_type = datasource_type
         self.pre_statements = self.get_stm_list(pre_statements)

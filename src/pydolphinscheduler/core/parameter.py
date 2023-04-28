@@ -49,7 +49,7 @@ class BaseDataType:
 
     def __eq__(self, data):
         return (
-            type(self) == type(data)
+            type(self) is type(data)
             and self.data_type == data.data_type
             and self.value == data.value
         )

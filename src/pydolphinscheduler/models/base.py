@@ -43,7 +43,7 @@ class Base:
         return f'<{type(self).__name__}: name="{self.name}">'
 
     def __eq__(self, other):
-        return type(self) == type(other) and all(
+        return type(self) is type(other) and all(
             getattr(self, a, None) == getattr(other, a, None) for a in self._KEY_ATTR
         )
 
