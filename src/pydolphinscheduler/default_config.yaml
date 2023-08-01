@@ -39,16 +39,16 @@ java_gateway:
 default:
   # Default value for dolphinscheduler's user object
   user:
-    name: userPythonGateway
-    password: userPythonGateway
+    name: admin
+    password: dolphinscheduler123
     email: userPythonGateway@dolphinscheduler.com
-    tenant: tenant_pydolphin
+    tenant: default
     phone: 11111111111
     state: 1
   # Default value for dolphinscheduler's workflow object
   workflow:
     project: project-pydolphin
-    user: userPythonGateway
+    user: admin
     queue: queuePythonGateway
     worker_group: default
     # Release state of workflow, default value is ``online`` which mean setting workflow online when it submits

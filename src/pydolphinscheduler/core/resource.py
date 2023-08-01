@@ -58,6 +58,9 @@ class Resource(Base):
     def get_fullname_from_database(self):
         """Get resource fullname from java gateway."""
         return self.get_info_from_database().getFullName()
+    
+    def get_id_from_database(self):
+        return self.get_info_from_database().getId()
 
     def create_or_update_resource(self):
         """Create or update resource via java gateway."""
@@ -68,5 +71,6 @@ class Resource(Base):
         return gateway.create_or_update_resource(
             self.user_name,
             self.name,
+            self.description,
             self.content,
         )

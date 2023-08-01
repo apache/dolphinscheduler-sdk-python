@@ -184,7 +184,7 @@ USER_PASSWORD = os.environ.get(
     "PYDS_USER_PASSWORD", configs.get("default.user.password")
 )
 USER_EMAIL = os.environ.get("PYDS_USER_EMAIL", configs.get("default.user.email"))
-USER_TENANT = os.environ.get("PYDS_USER_TENANT", configs.get("default.user.tenant"))
+USER_TENANT = os.environ.get("PYDS_USER_STATE", configs.get("default.user.tenant"))
 USER_PHONE = str(os.environ.get("PYDS_USER_PHONE", configs.get("default.user.phone")))
 USER_STATE = get_int(
     os.environ.get("PYDS_USER_STATE", configs.get("default.user.state"))

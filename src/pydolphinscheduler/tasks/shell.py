@@ -49,10 +49,14 @@ class Shell(Task):
     _task_custom_attr = {
         "raw_script",
     }
-
     ext: set = {".sh", ".zsh"}
     ext_attr: str = "_raw_script"
 
     def __init__(self, name: str, command: str, *args, **kwargs):
         self._raw_script = command
         super().__init__(name, TaskType.SHELL, *args, **kwargs)
+        #for arg in args:
+            #print("im!arg!!",arg)
+        #for arg in kwargs:
+            #print("im!!!!kwargs!!!",arg)
+            

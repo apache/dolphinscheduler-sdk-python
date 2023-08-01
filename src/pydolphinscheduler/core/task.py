@@ -26,7 +26,6 @@ from typing import Dict, List, Optional, Sequence, Set, Tuple, Union
 from pydolphinscheduler import configuration
 from pydolphinscheduler.constants import (
     Delimiter,
-    IsCache,
     ResourceKey,
     Symbol,
     TaskFlag,
@@ -101,7 +100,6 @@ class Task(Base):
     :param wait_start_timeout: default None
     :param condition_result: default None,
     :param resource_plugin: default None
-    :param is_cache: default False
     :param input_params: default None, input parameters, {param_name: param_value}
     :param output_params: default None, input parameters, {param_name: param_value}
     """
@@ -123,7 +121,6 @@ class Task(Base):
         "timeout_flag",
         "timeout_notify_strategy",
         "timeout",
-        "is_cache",
     }
 
     # task default attribute will into `task_params` property
@@ -164,7 +161,6 @@ class Task(Base):
         wait_start_timeout: Optional[Dict] = None,
         condition_result: Optional[Dict] = None,
         resource_plugin: Optional[ResourcePlugin] = None,
-        is_cache: Optional[bool] = False,
         input_params: Optional[Dict] = None,
         output_params: Optional[Dict] = None,
         *args,
@@ -173,7 +169,6 @@ class Task(Base):
         super().__init__(name, description)
         self.task_type = task_type
         self.flag = flag
-        self._is_cache = is_cache
         self.task_priority = task_priority
         self.worker_group = worker_group
         self._environment_name = environment_name
@@ -252,23 +247,16 @@ class Task(Base):
         return TaskTimeoutFlag.ON if self._timeout else TaskTimeoutFlag.OFF
 
     @property
-    def is_cache(self) -> str:
-        """Whether the cache is being set or not."""
-        if isinstance(self._is_cache, bool):
-            return IsCache.YES if self._is_cache else IsCache.NO
-        else:
-            raise PyDSParamException("is_cache must be a bool")
-
-    @property
     def resource_list(self) -> List[Dict[str, Resource]]:
         """Get task define attribute `resource_list`."""
         resources = set()
         for res in self._resource_list:
+
             if type(res) == str:
                 resources.add(
                     Resource(
                         name=res, user_name=self.user_name
-                    ).get_fullname_from_database()
+                    ).get_id_from_database()
                 )
             elif type(res) == dict and ResourceKey.NAME in res:
                 warnings.warn(
@@ -278,9 +266,8 @@ class Task(Base):
                     DeprecationWarning,
                     stacklevel=2,
                 )
-                resources.add(res.get(ResourceKey.NAME))
-        return [{ResourceKey.NAME: r} for r in resources]
-
+                resources.add(res.get(ResourceKey.ID))
+        return [{ResourceKey.ID:r} for r in resources]
     @property
     def user_name(self) -> Optional[str]:
         """Return username of workflow."""
@@ -342,9 +329,7 @@ class Task(Base):
         _ext_attr = getattr(self, self.ext_attr)
         if _ext_attr is not None:
             if isinstance(_ext_attr, str) and _ext_attr.endswith(tuple(self.ext)):
-                res = self.get_plugin()
-                content = res.read_file(_ext_attr)
-                setattr(self, self.ext_attr.lstrip(Symbol.UNDERLINE), content)
+                setattr(self, self.ext_attr.lstrip(Symbol.UNDERLINE), _ext_attr)
             else:
                 if self.resource_plugin is not None or (
                     self.workflow is not None
