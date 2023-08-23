@@ -112,11 +112,6 @@ autodoc_default_options = {
 
 autosectionlabel_prefix_document = True
 
-# extensions for sphinx_github_changelog, token from Jay Chung with None permission scope. have to encode it
-# due to github will delete token string if it finds in any commit
-token_encode = b"Z2hwXzlhczh1ZG1zYTcxbFpPODZZelQzRTVJZHpLYjNDRzBvZzNEUQ=="
-sphinx_github_changelog_token = base64.b64decode(token_encode).decode()
-
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
