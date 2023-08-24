@@ -87,7 +87,7 @@ python ./tutorial.py
 ```
 
 > NOTICE: Since Apache DolphinScheduler's tenant is requests while running command, you have to change
-> tenant value in tutorial.py`. The default value is `tenant_exists`, change it to username exists your host.
+> tenant value in file tutorial.py. The default value is `tenant_exists`, change it to username exists your host.
 
 After that, a new workflow will be created by PyDolphinScheduler, and you can see it in DolphinScheduler web
 UI's Project Management page. It will trigger the workflow automatically, so you can see the workflow running
