@@ -26,7 +26,6 @@
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-import base64
 import os
 import sys
 from pathlib import Path
@@ -111,11 +110,6 @@ autodoc_default_options = {
 }
 
 autosectionlabel_prefix_document = True
-
-# extensions for sphinx_github_changelog, token from Jay Chung with None permission scope. have to encode it
-# due to github will delete token string if it finds in any commit
-token_encode = b"Z2hwXzlhczh1ZG1zYTcxbFpPODZZelQzRTVJZHpLYjNDRzBvZzNEUQ=="
-sphinx_github_changelog_token = base64.b64decode(token_encode).decode()
 
 # -- Options for HTML output -------------------------------------------------
 
