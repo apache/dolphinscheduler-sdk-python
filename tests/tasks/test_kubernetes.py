@@ -47,5 +47,12 @@ def test_kubernetes_get_define():
         "pydolphinscheduler.core.task.Task.gen_code_and_version",
         return_value=(code, version),
     ):
-        k8s = Kubernetes(name, image, namespace, minCpuCores, minMemorySpace)
+        # Original code
+        # k8s = Kubernetes(name, image, namespace, minCpuCores, minMemorySpace)
+
+        # If we don't add key words we can not get kwargs
+        k8s = Kubernetes(name=name, image=image, namespace=namespace, min_cpu_cores=minCpuCores, min_memory_space=minMemorySpace)
+        
+        # Test what happens if min_cpu_cores is None
+        # k8s = Kubernetes(name=name, image=image, namespace=namespace, min_memory_space=minMemorySpace)
         assert k8s.task_params == expect_task_params

@@ -44,14 +44,10 @@ class Kubernetes(KubernetesMixin, Task):
         name: str,
         image: str,
         namespace: str,
-        min_cpu_cores: float,
-        min_memory_space: float,
         *args,
         **kwargs
     ):
         super().__init__(name, TaskType.KUBERNETES, *args, **kwargs)
         self.image = image
         self.namespace = namespace
-        self.add_attr(min_cpu_cores, min_memory_space)
-        # self.min_cpu_cores = min_cpu_cores
-        # self.min_memory_space = min_memory_space
+        self.add_attr(**kwargs)
