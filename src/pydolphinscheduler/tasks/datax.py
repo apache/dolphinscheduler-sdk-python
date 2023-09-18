@@ -16,7 +16,7 @@
 # under the License.
 
 """Task datax."""
-
+import json as json_pkg
 from typing import Dict, List, Optional
 
 from pydolphinscheduler.constants import TaskType
@@ -40,13 +40,13 @@ class CustomDataX(Task):
     def __init__(
         self,
         name: str,
-        json: str,
+        config: dict,
         xms: Optional[int] = 1,
         xmx: Optional[int] = 1,
         *args,
         **kwargs
     ):
-        self._json = json
+        self._json = json_pkg.dumps(config, indent=2)
         super().__init__(name, TaskType.DATAX, *args, **kwargs)
         self.custom_config = self.CUSTOM_CONFIG
         self.xms = xms
@@ -98,8 +98,6 @@ class DataX(Task):
         datatarget_name: str,
         sql: str,
         target_table: str,
-        datasource_type: Optional[str] = None,
-        datatarget_type: Optional[str] = None,
         job_speed_byte: Optional[int] = 0,
         job_speed_record: Optional[int] = 1000,
         pre_statements: Optional[List[str]] = None,
@@ -112,9 +110,7 @@ class DataX(Task):
         self._sql = sql
         super().__init__(name, TaskType.DATAX, *args, **kwargs)
         self.custom_config = self.CUSTOM_CONFIG
-        self.datasource_type = datasource_type
         self.datasource_name = datasource_name
-        self.datatarget_type = datatarget_type
         self.datatarget_name = datatarget_name
         self.target_table = target_table
         self.job_speed_byte = job_speed_byte
@@ -127,9 +123,7 @@ class DataX(Task):
     @property
     def source_params(self) -> Dict:
         """Get source params for datax task."""
-        datasource_task_u = Datasource.get_task_usage_4j(
-            self.datasource_name, self.datasource_type
-        )
+        datasource_task_u = Datasource.get_task_usage_4j(self.datasource_name)
         return {
             "dsType": datasource_task_u.type,
             "dataSource": datasource_task_u.id,
@@ -138,9 +132,7 @@ class DataX(Task):
     @property
     def target_params(self) -> Dict:
         """Get target params for datax task."""
-        datasource_task_u = Datasource.get_task_usage_4j(
-            self.datatarget_name, self.datatarget_type
-        )
+        datasource_task_u = Datasource.get_task_usage_4j(self.datatarget_name)
         return {
             "dtType": datasource_task_u.type,
             "dataTarget": datasource_task_u.id,

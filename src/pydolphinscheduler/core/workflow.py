@@ -22,13 +22,13 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional, Set, Union
 
 from pydolphinscheduler import configuration
-from pydolphinscheduler.constants import Symbol, TaskType
+from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.resource import Resource
 from pydolphinscheduler.core.resource_plugin import ResourcePlugin
 from pydolphinscheduler.exceptions import PyDSParamException, PyDSTaskNoFoundException
 from pydolphinscheduler.java_gateway import gateway
 from pydolphinscheduler.models import Base, Project, User
-from pydolphinscheduler.utils.date import MAX_DATETIME, conv_from_str, conv_to_schedule
+from pydolphinscheduler.utils.date import conv_from_str
 
 
 class WorkflowContext:
@@ -119,8 +119,7 @@ class Workflow(Base):
         self,
         name: str,
         description: Optional[str] = None,
-        schedule: Optional[str] = None,
-        online_schedule: Optional[bool] = None,
+        timing_name: Optional[str] = None,
         start_time: Optional[Union[str, datetime]] = None,
         end_time: Optional[Union[str, datetime]] = None,
         timezone: Optional[str] = configuration.WORKFLOW_TIME_ZONE,
@@ -139,22 +138,9 @@ class Workflow(Base):
         **kwargs,
     ):
         super().__init__(name, description)
-        self.schedule = schedule.strip() if schedule else schedule
-        if (
-            self.schedule
-            and self.schedule.count(Symbol.BLANK) != self._EXPECT_SCHEDULE_CHAR_NUM - 1
-        ):
-            raise PyDSParamException(
-                "Invlaid parameter schedule, expect crontab char is %d but get %s",
-                self._EXPECT_SCHEDULE_CHAR_NUM,
-                schedule,
-            )
+        self.timing_name = timing_name.strip() if timing_name else timing_name
 
         #  handle workflow schedule state according to init value
-        if self.schedule and online_schedule is None:
-            self.online_schedule = True
-        else:
-            self.online_schedule = online_schedule or False
         self._start_time = start_time
         self._end_time = end_time
         self.timezone = timezone
@@ -189,6 +175,11 @@ class Workflow(Base):
         self._task_relations: set["TaskRelation"] = set()  # noqa: F821
         self._workflow_code = None
         self.resource_list = resource_list or []
+
+        # do not thing but for air2phin migrate
+        self.schedule = None
+        if 'schedule' in kwargs or 'schedule_interval' in kwargs:
+            self.schedule = kwargs.get('schedule') or kwargs.get('schedule_interval')
 
     def __enter__(self) -> "Workflow":
         WorkflowContext.set(self)
@@ -305,25 +296,6 @@ class Workflow(Base):
         else:
             self._handle_root_relation()
             return [tr.get_define() for tr in self._task_relations]
-
-    @property
-    def schedule_json(self) -> Optional[Dict]:
-        """Get schedule parameter json object. This is requests from java gateway interface."""
-        if not self.schedule:
-            return None
-        else:
-            start_time = conv_to_schedule(
-                self.start_time if self.start_time else datetime.now()
-            )
-            end_time = conv_to_schedule(
-                self.end_time if self.end_time else MAX_DATETIME
-            )
-            return {
-                "startTime": start_time,
-                "endTime": end_time,
-                "crontab": self.schedule,
-                "timezoneId": self.timezone,
-            }
 
     @property
     def task_list(self) -> List["Task"]:  # noqa: F821
@@ -451,8 +423,7 @@ class Workflow(Base):
             # TODO add serialization function
             json.dumps(self.task_relation_json),
             json.dumps(self.task_definition_json),
-            json.dumps(self.schedule_json) if self.schedule_json else None,
-            self.online_schedule,
+            self.timing_name,
             None,
         )
         return self._workflow_code

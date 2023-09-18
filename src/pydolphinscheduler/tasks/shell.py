@@ -16,12 +16,15 @@
 # under the License.
 
 """Task shell."""
+from typing import Dict, List, Optional
 
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.task import Task
+from pydolphinscheduler.tasks.mixin.datasource_list_mixin import DatasourceListMixin
+from pydolphinscheduler.tasks.mixin.remote_connection_mixin import RemoteConnectionMixin
 
 
-class Shell(Task):
+class Shell(Task, DatasourceListMixin, RemoteConnectionMixin):
     """Task shell object, declare behavior for shell task to dolphinscheduler.
 
     :param name: A unique, meaningful string for the shell task.
@@ -53,6 +56,30 @@ class Shell(Task):
     ext: set = {".sh", ".zsh"}
     ext_attr: str = "_raw_script"
 
-    def __init__(self, name: str, command: str, *args, **kwargs):
+    def __init__(
+        self,
+        name: str,
+        command: str,
+        datasource_name: Optional[List[str]] = None,
+        remote_connection: Optional[str] = None,
+        *args,
+        **kwargs
+    ):
         self._raw_script = command
+        self.datasource_name = datasource_name
+        self.remote_connection = remote_connection
         super().__init__(name, TaskType.SHELL, *args, **kwargs)
+
+    @property
+    def task_params(self, camel_attr: bool = True, custom_attr: set = None) -> Dict:
+        """Override Task.task_params for sql task.
+
+        sql task have some specials attribute for task_params, and is odd if we
+        directly set as python property, so we Override Task.task_params here.
+        """
+        params = super().task_params
+        if self.datasource_name:
+            params.update(self.get_datasource())
+        if self.remote_connection:
+            params.update(self.get_remote_connection())
+        return params

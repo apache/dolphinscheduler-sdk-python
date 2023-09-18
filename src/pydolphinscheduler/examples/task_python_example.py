@@ -30,35 +30,74 @@ task_parent -->                        -->  task_union
 it will instantiate and run all the task it have.
 """
 
+import time
+from datetime import datetime
+
 # [start tutorial]
 # [start package_import]
 # Import Workflow object to define your workflow attributes
 from pydolphinscheduler.core.workflow import Workflow
 
 # Import task Shell object cause we would create some shell tasks later
-from pydolphinscheduler.tasks.shell import Shell
+from pydolphinscheduler.tasks.func_wrap import task
+from pydolphinscheduler.tasks.python import Python
 
 # [end package_import]
 
+scope_global = "global-var"
+
+
+# [start task_declare]
+@task
+def print_something():
+    """First task in this workflow."""
+    print("hello python function wrap task")
+
+
+@task
+def depend_import():
+    """Depend on import module."""
+    time.sleep(2)
+
+
+definition_str = """
+from datetime import datetime
+
+def foo():
+    print("hello world in function foo")
+    print(f"Current time is {datetime.now()}")
+"""
+
+
+def bar():
+    print("hello world in function bar")
+    print(f"Current time is {datetime.now()}")
+
+
+# [end task_declare]
+
+
 # [start workflow_declare]
 with Workflow(
-    name="tutorial",
+    name="task_python",
+    schedule="0 0 0 * * ? *",
     start_time="2021-01-01",
-    release_state="online",
 ) as workflow:
     # [end workflow_declare]
-    # [start task_declare]
-    task_parent = Shell(name="task_parent", command="echo hello pydolphinscheduler")
-    task_child_one = Shell(name="task_child_one", command="echo 'child one'")
-    task_child_two = Shell(name="task_child_two", command="echo 'child two'")
-    task_union = Shell(name="task_union", command="echo union")
-    # [end task_declare]
+
+    python_str = Python(
+        name="python_str",
+        definition=definition_str,
+    )
+
+    python_func = Python(
+        name="python_func",
+        definition=bar,
+        datasource_name=["mysql-meta"],
+    )
 
     # [start task_relation_declare]
-    task_group = [task_child_one, task_child_two]
-    task_parent.set_downstream(task_group)
-
-    task_union << task_group
+    print_something() >> depend_import() >> python_str >> python_func
     # [end task_relation_declare]
 
     # [start submit_or_run]

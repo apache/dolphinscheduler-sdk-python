@@ -38,30 +38,47 @@ from pydolphinscheduler.core.workflow import Workflow
 # Import task Shell object cause we would create some shell tasks later
 from pydolphinscheduler.tasks.shell import Shell
 
-# [end package_import]
-
 # [start workflow_declare]
 with Workflow(
-    name="tutorial",
+    name="task_shell",
+    schedule="0 0 0 * * ? *",
     start_time="2021-01-01",
-    release_state="online",
 ) as workflow:
     # [end workflow_declare]
-    # [start task_declare]
-    task_parent = Shell(name="task_parent", command="echo hello pydolphinscheduler")
-    task_child_one = Shell(name="task_child_one", command="echo 'child one'")
-    task_child_two = Shell(name="task_child_two", command="echo 'child two'")
-    task_union = Shell(name="task_union", command="echo union")
-    # [end task_declare]
+    simple = Shell(name="simple", command="echo simple")
 
-    # [start task_relation_declare]
-    task_group = [task_child_one, task_child_two]
-    task_parent.set_downstream(task_group)
+    datasource_source = Shell(
+        name="datasource_source",
+        command="""
+        echo "${getConnectionHost('mysql-meta')}"
+        echo "${getConnectionUsername('mysql-target')}"
+        """,
+        datasource_name=[
+            "mysql-meta",
+            "mysql-target",
+        ],
+    )
 
-    task_union << task_group
-    # [end task_relation_declare]
+    remote_connection = Shell(
+        name="remote_connection",
+        command="ls /tmp",
+        remote_connection="remote-ssh-ws3",
+    )
+
+    mixin = Shell(
+        name="mixin",
+        command="""
+            echo "${getConnectionHost('mysql-meta')}"
+            echo "${getConnectionUsername('mysql-target')}"
+            """,
+        remote_connection="remote-ssh-ws3",
+        datasource_name=[
+            "mysql-meta",
+            "mysql-target",
+        ],
+    )
+
+    simple >> datasource_source >> remote_connection >> mixin
 
     # [start submit_or_run]
     workflow.submit()
-    # [end submit_or_run]
-# [end tutorial]

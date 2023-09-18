@@ -21,18 +21,19 @@ import logging
 import re
 import types
 from pathlib import Path
-from typing import Union
+from typing import Dict, List, Optional, Union
 
 from stmdency.extractor import Extractor
 
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.task import Task
 from pydolphinscheduler.exceptions import PyDSParamException
+from pydolphinscheduler.tasks.mixin.datasource_list_mixin import DatasourceListMixin
 
 log = logging.getLogger(__file__)
 
 
-class Python(Task):
+class Python(Task, DatasourceListMixin):
     """Task Python object, declare behavior for Python task to dolphinscheduler.
 
     Python task support two types of parameters for :param:``definition``, and here is an example:
@@ -57,15 +58,23 @@ class Python(Task):
         want to execute.
     """
 
-    _task_custom_attr = {"raw_script"}
+    _task_custom_attr = {
+        "raw_script",
+    }
 
     ext: set = {".py"}
     ext_attr: Union[str, types.FunctionType] = "_definition"
 
     def __init__(
-        self, name: str, definition: Union[str, types.FunctionType], *args, **kwargs
+        self,
+        name: str,
+        definition: Union[str, types.FunctionType],
+        datasource_name: Optional[List[str]] = None,
+        *args,
+        **kwargs,
     ):
         self._definition = definition
+        self.datasource_name = datasource_name
         super().__init__(name, TaskType.PYTHON, *args, **kwargs)
 
     def _build_exe_str(self) -> str:
@@ -103,3 +112,15 @@ class Python(Task):
                 "Parameter definition do not support % for now.",
                 type(getattr(self, "definition")),
             )
+
+    @property
+    def task_params(self, camel_attr: bool = True, custom_attr: set = None) -> Dict:
+        """Override Task.task_params for sql task.
+
+        sql task have some specials attribute for task_params, and is odd if we
+        directly set as python property, so we Override Task.task_params here.
+        """
+        params = super().task_params
+        if self.datasource_name:
+            params.update(self.get_datasource())
+        return params

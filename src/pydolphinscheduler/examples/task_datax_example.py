@@ -74,6 +74,7 @@ JSON_TEMPLATE = {
 
 with Workflow(
     name="task_datax_example",
+    release_state="offline",
 ) as workflow:
     # This task synchronizes the data in `t_ds_project`
     # of `first_mysql` database to `target_project` of `second_mysql` database.
@@ -89,6 +90,6 @@ with Workflow(
 
     # You can custom json_template of datax to sync data. This task create a new
     # datax job same as task1, transfer record from `first_mysql` to `second_mysql`
-    task2 = CustomDataX(name="task_custom_datax", json=str(JSON_TEMPLATE))
+    task2 = CustomDataX(name="task_custom_datax", config=JSON_TEMPLATE)
     workflow.run()
 # [end workflow_declare]

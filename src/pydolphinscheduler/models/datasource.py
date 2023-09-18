@@ -20,8 +20,6 @@ import json
 import re
 from typing import NamedTuple, Optional
 
-from py4j.java_gateway import JavaObject
-
 from pydolphinscheduler.java_gateway import gateway
 from pydolphinscheduler.models.connection import Connection
 from pydolphinscheduler.models.meta import ModelMeta
@@ -32,6 +30,7 @@ class TaskUsage(NamedTuple):
 
     id: str
     type: str
+    name: str
 
 
 class Datasource(metaclass=ModelMeta):
@@ -91,52 +90,46 @@ class Datasource(metaclass=ModelMeta):
 
     def __init__(
         self,
-        st_db_type: str,
-        name: str,
-        connection_params: str,
-        user_id: Optional[int] = None,
+        datasource_name: str,
+        plugin_name: str,
+        plugin_version: str,
+        datasource_config: str = None,
         id_: Optional[int] = None,
-        note: Optional[str] = None,
+        description: Optional[str] = None,
     ):
         self.id = id_
-        self.name = name
-        self.note = note
-        # TODO try to handle type_ in metaclass
-        self.st_db_type: JavaObject = st_db_type
-        self.user_id = user_id
-        self.connection_params = connection_params
+        self.datasource_name = datasource_name
+        self.plugin_name = plugin_name
+        self.plugin_version = plugin_version
+        self.datasource_config = datasource_config
+        self.description = description
 
     @classmethod
-    def get(
-        cls, datasource_name: str, datasource_type: Optional[str] = None
-    ) -> "Datasource":
+    def get(cls, datasource_name: str) -> "Datasource":
         """Get single datasource.
 
         :param datasource_name: datasource name
         :param datasource_type: datasource type, if not provided, will get datasource by name only
         """
-        datasource = gateway.get_datasource(datasource_name, datasource_type)
+        datasource = gateway.get_datasource(datasource_name)
         if datasource is None:
-            raise ValueError(
-                f"Datasource with name: {datasource_name} and type: {datasource_type} not found."
-            )
+            raise ValueError(f"Datasource with name: {datasource_name} not found.")
         return datasource
 
     @classmethod
-    def get_task_usage_4j(
-        cls, datasource_name: str, datasource_type: Optional[str] = None
-    ) -> TaskUsage:
+    def get_task_usage_4j(cls, datasource_name: str) -> TaskUsage:
         """Get the necessary information of datasource for task usage in web UI."""
-        datasource: "Datasource" = cls.get(datasource_name, datasource_type)
+        datasource: "Datasource" = cls.get(datasource_name)
         return TaskUsage(
             id=str(datasource.id),
-            type=datasource.type,
+            type=datasource.plugin_name,
+            name=datasource.datasource_name,
         )
 
     @property
     def connection(self) -> Connection:
-        """Parse dolphinscheduler connection_params to Connection."""
-        data = json.loads(self.connection_params)
+        """Parse dolphinscheduler datasource_config to Connection."""
+        data = json.loads(self.datasource_config)
 
         pattern_match = self._PATTERN.match(
             data.get("jdbcUrl", data.get("url", None))
@@ -149,16 +142,6 @@ class Datasource(metaclass=ModelMeta):
             username=data.get("user", None),
             password=data.get("password", None),
         )
-
-    @property
-    def type(self) -> str:
-        """Property datasource type."""
-        return self.st_db_type.getDescp()
-
-    @property
-    def type_code(self) -> str:
-        """Property datasource type."""
-        return self.st_db_type.getCode()
 
     @property
     def host(self) -> str:

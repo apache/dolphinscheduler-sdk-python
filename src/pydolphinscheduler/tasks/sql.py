@@ -79,7 +79,6 @@ class Sql(Task):
         name: str,
         datasource_name: str,
         sql: str,
-        datasource_type: Optional[str] = None,
         sql_type: Optional[str] = None,
         pre_statements: Union[str, Sequence[str], None] = None,
         post_statements: Union[str, Sequence[str], None] = None,
@@ -91,7 +90,6 @@ class Sql(Task):
         super().__init__(name, TaskType.SQL, *args, **kwargs)
         self.param_sql_type = sql_type
         self.datasource_name = datasource_name
-        self.datasource_type = datasource_type
         self.pre_statements = self.get_stm_list(pre_statements)
         self.post_statements = self.get_stm_list(post_statements)
         self.display_rows = display_rows
@@ -139,9 +137,7 @@ class Sql(Task):
     @property
     def datasource(self) -> Dict:
         """Get datasource for procedure sql."""
-        datasource_task_u = Datasource.get_task_usage_4j(
-            self.datasource_name, self.datasource_type
-        )
+        datasource_task_u = Datasource.get_task_usage_4j(self.datasource_name)
         return {
             "datasource": datasource_task_u.id,
             "type": datasource_task_u.type,
