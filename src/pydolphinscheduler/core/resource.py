@@ -22,6 +22,7 @@ from typing import Optional
 from pydolphinscheduler.exceptions import PyDSParamException
 from pydolphinscheduler.java_gateway import gateway
 from pydolphinscheduler.models import Base
+from pydolphinscheduler import configuration
 
 
 class Resource(Base):
@@ -38,11 +39,13 @@ class Resource(Base):
     def __init__(
         self,
         name: str,
+        project: Optional[str] = configuration.WORKFLOW_PROJECT,
         content: Optional[str] = None,
         description: Optional[str] = None,
         user_name: Optional[str] = None,
     ):
         super().__init__(name, description)
+        self.project = project
         self.content = content
         self.user_name = user_name
         self._resource_code = None
@@ -66,6 +69,7 @@ class Resource(Base):
                 "`user_name` and `content` are required when create or update resource from python gate."
             )
         gateway.create_or_update_resource(
+            self.project,
             self.user_name,
             self.name,
             self.content,
