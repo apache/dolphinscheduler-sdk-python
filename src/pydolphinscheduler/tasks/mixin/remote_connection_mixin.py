@@ -17,6 +17,7 @@ class RemoteConnectionMixin:
     remote_connection: Optional[str]
 
     def get_remote_connection(self) -> Dict:
+        """Get remote connection from java gateway."""
         if self.remote_connection is not None:
             connection = Datasource.get_task_usage_4j(self.remote_connection)
             connection_itme = RemoteConnectionType(

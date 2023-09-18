@@ -40,7 +40,7 @@ from pydolphinscheduler.tasks.shell import Shell
 
 # [start workflow_declare]
 with Workflow(
-    name="task_shell",
+    name="task_shell_example",
     schedule="0 0 0 * * ? *",
     start_time="2021-01-01",
 ) as workflow:

@@ -20,6 +20,12 @@ Python
 
 .. automodule:: pydolphinscheduler.tasks.python
 
+Example
+-------
+
+.. literalinclude:: ../../../src/pydolphinscheduler/examples/task_python_example.py
+   :start-after: [start workflow_declare]
+   :end-before: [end task_relation_declare]
 
 YAML file example
 -----------------

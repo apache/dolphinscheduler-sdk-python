@@ -184,7 +184,7 @@ def test_get_error(task_type):
 )
 @patch(
     "pydolphinscheduler.models.datasource.Datasource.get_task_usage_4j",
-    return_value=TaskUsage(id=1, type="MYSQL"),
+    return_value=TaskUsage(id="1", type="MYSQL", name="test"),
 )
 @patch(
     "pydolphinscheduler.tasks.dependent.DependentItem.get_code_from_gateway",

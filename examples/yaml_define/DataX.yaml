@@ -30,4 +30,4 @@ tasks:
 
   - name: task_custon_config
     task_type: CustomDataX
-    json: $FILE{"example_datax.json"}
+    config: $FILE{"example_datax.json"}

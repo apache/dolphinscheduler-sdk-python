@@ -76,7 +76,7 @@ def test_config_init(teardown_file_env, home):
         # We test each key in one single section
         ("java_gateway.address", "127.0.0.1"),
         ("default.user.name", "userPythonGateway"),
-        ("default.workflow.project", "project-pydolphin"),
+        ("default.workflow.project", "pydolphinscheduler"),
     ],
 )
 def test_config_get(teardown_file_env, key: str, expect: str):
@@ -96,7 +96,7 @@ def test_config_get(teardown_file_env, key: str, expect: str):
         (("java_gateway.address", "java_gateway.port"), ("127.0.0.1", "25333")),
         (
             ("java_gateway.auto_convert", "default.user.tenant"),
-            ("True", "tenant_pydolphin"),
+            ("True", "whalescheduler"),
         ),
         (
             (

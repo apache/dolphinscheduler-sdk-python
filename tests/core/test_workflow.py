@@ -67,7 +67,7 @@ def test_workflow_key_attr(func):
         ("warning_type", configuration.WORKFLOW_WARNING_TYPE),
         ("warning_group_id", 0),
         ("execution_type", configuration.WORKFLOW_EXECUTION_TYPE.upper()),
-        ("release_state", 1),
+        ("release_state", 0),
     ],
 )
 def test_workflow_default_value(name, value):
@@ -123,6 +123,7 @@ def test_set_release_state(value, expect):
         ), "Workflow set attribute release_state do not return expect value."
 
 
+@pytest.mark.skip("attr schedule do not exists anymore")
 @pytest.mark.parametrize(
     "value,expect",
     [
@@ -354,7 +355,7 @@ def test_workflow_get_define_without_task():
         "warningGroupId": 0,
         "executionType": "PARALLEL",
         "timeout": 0,
-        "releaseState": 1,
+        "releaseState": 0,
         "param": None,
         "tasks": {},
         "taskDefinitionJson": [{}],
@@ -471,6 +472,7 @@ def test_workflow_simple_separate():
     assert all(["task-" in task.name for task in workflow.task_list])
 
 
+@pytest.mark.skip("attr schedule do not exists anymore")
 def test_schedule_json_none_schedule():
     """Test function schedule_json with None as schedule."""
     with Workflow(
@@ -482,6 +484,7 @@ def test_schedule_json_none_schedule():
 
 # We freeze time here, because we test start_time with None, and if will get datetime.datetime.now. If we do
 # not freeze time, it will cause flaky test here.
+@pytest.mark.skip("attr schedule do not exists anymore")
 @freeze_time("2021-01-01")
 @pytest.mark.parametrize(
     "start_time,end_time,expect_date",

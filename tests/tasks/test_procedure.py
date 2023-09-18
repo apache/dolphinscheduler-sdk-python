@@ -42,7 +42,7 @@ TEST_PROCEDURE_DATASOURCE_NAME = "test_datasource"
             {
                 "method": TEST_PROCEDURE_SQL,
                 "type": "MYSQL",
-                "datasource": 1,
+                "datasource": "1",
                 "localParams": [],
                 "resourceList": [],
                 "dependence": {},
@@ -58,7 +58,7 @@ TEST_PROCEDURE_DATASOURCE_NAME = "test_datasource"
 )
 @patch(
     "pydolphinscheduler.models.datasource.Datasource.get_task_usage_4j",
-    return_value=TaskUsage(id=1, type="MYSQL"),
+    return_value=TaskUsage(id="1", type="MYSQL", name="test"),
 )
 def test_property_task_params(mock_datasource, mock_code_version, attr, expect):
     """Test task sql task property."""
@@ -72,14 +72,14 @@ def test_property_task_params(mock_datasource, mock_code_version, attr, expect):
 )
 @patch(
     "pydolphinscheduler.models.datasource.Datasource.get_task_usage_4j",
-    return_value=TaskUsage(id=1, type="MYSQL"),
+    return_value=TaskUsage(id="1", type="MYSQL", name="test"),
 )
 def test_sql_get_define(mock_datasource, mock_code_version):
     """Test task procedure function get_define."""
     name = "test_procedure_get_define"
     expect_task_params = {
         "type": "MYSQL",
-        "datasource": 1,
+        "datasource": "1",
         "method": TEST_PROCEDURE_SQL,
         "localParams": [],
         "resourceList": [],

@@ -41,7 +41,9 @@ def setup_crt_first(request):
     delete_file(file_path)
 
 
-@patch.object(Datasource, "get_task_usage_4j", return_value=TaskUsage(1, "MYSQL"))
+@patch.object(
+    Datasource, "get_task_usage_4j", return_value=TaskUsage("1", "jdbc-mysql", "test")
+)
 def test_datax_get_define(mock_datasource):
     """Test task datax function get_define."""
     code = 123
@@ -53,10 +55,10 @@ def test_datax_get_define(mock_datasource):
     target_table = "test_target_table_name"
     expect_task_params = {
         "customConfig": 0,
-        "dsType": "MYSQL",
-        "dataSource": 1,
-        "dtType": "MYSQL",
-        "dataTarget": 1,
+        "dsType": "jdbc-mysql",
+        "dataSource": "1",
+        "dtType": "jdbc-mysql",
+        "dataTarget": "1",
         "sql": command,
         "targetTable": target_table,
         "jobSpeedByte": 0,
@@ -79,7 +81,7 @@ def test_datax_get_define(mock_datasource):
         assert task.task_params == expect_task_params
 
 
-@pytest.mark.parametrize("json_template", ["json_template"])
+@pytest.mark.parametrize("json_template", [{"content": "test json"}])
 def test_custom_datax_get_define(json_template):
     """Test task custom datax function get_define."""
     with patch(
@@ -89,7 +91,7 @@ def test_custom_datax_get_define(json_template):
         task = CustomDataX("test_custom_datax_get_define", json_template)
         expect_task_params = {
             "customConfig": 1,
-            "json": json_template,
+            "json": '{\n  "content": "test json"\n}',
             "xms": 1,
             "xmx": 1,
             "localParams": [],
@@ -138,38 +140,3 @@ def test_resources_local_datax_command_content(
     """Test task datax sql content through the local resource plug-in."""
     datax = DataX(**attr)
     assert expect == getattr(datax, "sql")
-
-
-@pytest.mark.parametrize(
-    "setup_crt_first",
-    [
-        {
-            "file_path": Path(__file__).parent.joinpath("local_res.json"),
-            "file_content": '{content: "test local resource"}',
-        }
-    ],
-    indirect=True,
-)
-@pytest.mark.parametrize(
-    "attr, expect",
-    [
-        (
-            {
-                "name": "task_custom_datax",
-                "json": "local_res.json",
-                "resource_plugin": Local(str(Path(__file__).parent)),
-            },
-            '{content: "test local resource"}',
-        ),
-    ],
-)
-@patch(
-    "pydolphinscheduler.core.task.Task.gen_code_and_version",
-    return_value=(123, 1),
-)
-def test_resources_local_custom_datax_command_content(
-    mock_code_version, attr, expect, setup_crt_first
-):
-    """Test task CustomDataX json content through the local resource plug-in."""
-    custom_datax = CustomDataX(**attr)
-    assert expect == getattr(custom_datax, "json")

@@ -79,7 +79,7 @@ def bar():
 
 # [start workflow_declare]
 with Workflow(
-    name="task_python",
+    name="task_python_example",
     schedule="0 0 0 * * ? *",
     start_time="2021-01-01",
 ) as workflow:
