@@ -19,10 +19,10 @@
 
 from typing import Optional
 
+from pydolphinscheduler import configuration
 from pydolphinscheduler.exceptions import PyDSParamException
 from pydolphinscheduler.java_gateway import gateway
 from pydolphinscheduler.models import Base
-from pydolphinscheduler import configuration
 
 
 class Resource(Base):

@@ -16,7 +16,6 @@
 # under the License.
 
 """Module database."""
-import json
 import re
 from typing import NamedTuple, Optional
 
@@ -69,7 +68,7 @@ class Datasource(metaclass=ModelMeta):
     """
 
     _PATTERN = re.compile(
-        "jdbc:.*://(?P<host>[\\w\\W]+):(?P<port>\\d+)/(?P<database>[\\w\\W]+)\\?"
+        "jdbc:.*://(?P<host>[\\w\\W]+):(?P<port>\\d+)/(?P<database>[\\w\\W]+)(?P<others>\\?.*|)"
     )
 
     _DATABASE_TYPE_MAP = dict(
@@ -129,18 +128,21 @@ class Datasource(metaclass=ModelMeta):
     @property
     def connection(self) -> Connection:
         """Parse dolphinscheduler datasource_config to Connection."""
-        data = json.loads(self.datasource_config)
 
-        pattern_match = self._PATTERN.match(
-            data.get("jdbcUrl", data.get("url", None))
-        ).groupdict()
+        if "jdbcUrl" in self.datasource_config:
+            jdbc_url = self.datasource_config.get("jdbcUrl")
+        elif "url" in self.datasource_config:
+            jdbc_url = self.datasource_config.get("url")
+        else:
+            raise ValueError("The datasource_config must contain jdbcUrl or url key.")
+        pattern_match = self._PATTERN.match(jdbc_url).groupdict()
 
         return Connection(
             host=pattern_match.get("host", None),
             port=int(pattern_match.get("port", None)),
             schema=pattern_match.get("database", None),
-            username=data.get("user", None),
-            password=data.get("password", None),
+            username=self.datasource_config.get("user", None),
+            password=self.datasource_config.get("password", None),
         )
 
     @property

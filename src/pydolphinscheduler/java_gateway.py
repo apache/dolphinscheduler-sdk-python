@@ -103,7 +103,12 @@ class GatewayEntryPoint:
         return self.gateway.entry_point.getResourcesFileInfo(program_type, main_package)
 
     def create_or_update_resource(
-        self, project_name: str, user_name: str, name: str, content: str, description: Optional[str] = None
+        self,
+        project_name: str,
+        user_name: str,
+        name: str,
+        content: str,
+        description: Optional[str] = None,
     ):
         """Create or update resource through java gateway."""
         return self.gateway.entry_point.createOrUpdateResource(
