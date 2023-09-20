@@ -47,12 +47,33 @@ def test_kubernetes_get_define():
         "pydolphinscheduler.core.task.Task.gen_code_and_version",
         return_value=(code, version),
     ):
-        # Original code
-        # k8s = Kubernetes(name, image, namespace, minCpuCores, minMemorySpace)
-
-        # If we don't add key words we can not get kwargs
         k8s = Kubernetes(name=name, image=image, namespace=namespace, min_cpu_cores=minCpuCores, min_memory_space=minMemorySpace)
-        
-        # Test what happens if min_cpu_cores is None
-        # k8s = Kubernetes(name=name, image=image, namespace=namespace, min_memory_space=minMemorySpace)
+        assert k8s.task_params == expect_task_params
+
+def test_kubernetes_no_passing_mincpucores_get_define():
+    """Test task kubernetes function get_define."""
+    code = 123
+    version = 1
+    name = "test_kubernetes_get_define"
+    image = "ds-dev"
+    namespace = str({"name": "default", "cluster": "lab"})
+    minCpuCores = None
+    minMemorySpace = 15.0
+
+    expect_task_params = {
+        "resourceList": [],
+        "localParams": [],
+        "image": image,
+        "namespace": namespace,
+        "minCpuCores": minCpuCores,
+        "minMemorySpace": minMemorySpace,
+        "dependence": {},
+        "conditionResult": {"successNode": [""], "failedNode": [""]},
+        "waitStartTimeout": {},
+    }
+    with patch(
+        "pydolphinscheduler.core.task.Task.gen_code_and_version",
+        return_value=(code, version),
+    ):
+        k8s = Kubernetes(name=name, image=image, namespace=namespace, min_memory_space=minMemorySpace)
         assert k8s.task_params == expect_task_params
