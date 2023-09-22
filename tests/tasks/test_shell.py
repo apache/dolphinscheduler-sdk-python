@@ -85,7 +85,7 @@ def test_shell_get_define():
         "pydolphinscheduler.core.task.Task.gen_code_and_version",
         return_value=(code, version),
     ):
-        shell = Shell(name, command)
+        shell = Shell(name=name, command=command)
         assert shell.task_params == expect_task_params
 
 

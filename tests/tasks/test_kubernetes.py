@@ -51,10 +51,10 @@ def test_kubernetes_get_define():
         assert k8s.task_params == expect_task_params
 
 def test_kubernetes_no_passing_mincpucores_get_define():
-    """Test task kubernetes function get_define."""
+    """Test task kubernetes function no_passing_mincpucores_get_define."""
     code = 123
     version = 1
-    name = "test_kubernetes_get_define"
+    name = "test_kubernetes_no_passing_mincpucores_get_define"
     image = "ds-dev"
     namespace = str({"name": "default", "cluster": "lab"})
     minCpuCores = None
