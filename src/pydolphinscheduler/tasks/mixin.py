@@ -28,17 +28,3 @@ class KubernetesMixin():
         self.min_memory_space = kwargs.get("min_memory_space", None) 
         if hasattr(self, "_task_custom_attr"): 
             self._task_custom_attr |= { "min_cpu_cores", "min_memory_space"}
-
-"""Task Shell Mixin"""
-class ShellMixin():
-    """ShellMixin object, declare some attributes for Shell task.
-    """
-
-    def add_attr(
-        self, 
-        **kwargs
-    ):
-        self._raw_script = kwargs.get("command", None) 
-        assert self._raw_script != None
-        if hasattr(self, "_task_custom_attr"): 
-            self._task_custom_attr |= { "_raw_script"}
