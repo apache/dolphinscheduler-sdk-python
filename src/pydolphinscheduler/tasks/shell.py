@@ -19,9 +19,10 @@
 
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.task import Task
+from pydolphinscheduler.core.mixin import WorkerResourceMixin
 
 
-class Shell(Task):
+class Shell(WorkerResourceMixin, Task):
     """Task shell object, declare behavior for shell task to dolphinscheduler.
 
     :param name: A unique, meaningful string for the shell task.
@@ -56,3 +57,4 @@ class Shell(Task):
     def __init__(self, name: str, command: str, *args, **kwargs):
         self._raw_script = command
         super().__init__(name, TaskType.SHELL, *args, **kwargs)
+        self.add_attr(**kwargs)

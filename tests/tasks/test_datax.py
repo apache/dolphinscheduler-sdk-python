@@ -173,3 +173,61 @@ def test_resources_local_custom_datax_command_content(
     """Test task CustomDataX json content through the local resource plug-in."""
     custom_datax = CustomDataX(**attr)
     assert expect == getattr(custom_datax, "json")
+
+
+@pytest.mark.parametrize(
+    "resource_limit",
+    [
+        {"cpu_quota": 1, "memory_max": 10},
+        {"memory_max": 15},
+        {},
+    ],
+)
+@patch.object(Datasource, "get_task_usage_4j", return_value=TaskUsage(1, "MYSQL"))
+def test_datax_get_define_cpu_and_memory(mock_datasource, resource_limit):
+    """Test task datax function get_define with resource limit."""
+    code = 123
+    version = 1
+    name = "test_datax_get_define_cpu_and_memory"
+    command = "select name from test_source_table_name_resource_limit"
+    datasource_name = "test_datasource_resource_limit"
+    datatarget_name = "test_datatarget_resource_limit"
+    target_table = "test_target_table_name_resource_limit"
+
+    with patch(
+        "pydolphinscheduler.core.task.Task.gen_code_and_version",
+        return_value=(code, version),
+    ):
+        datax = DataX(name, datasource_name, datatarget_name, command, target_table, **resource_limit)
+        assert 'cpuQuota' in datax.get_define()
+        assert 'cpuQuota' in datax.get_define()
+
+        if resource_limit:
+           datax.get_define().get('cpuQuota') == resource_limit.get("cpu_quota")
+           datax.get_define()['memoryMax'] == resource_limit.get("memory_max")
+
+
+@pytest.mark.parametrize(
+    "resource_limit",
+    [
+        {"cpu_quota": 1, "memory_max": 10},
+        {"memory_max": 15},
+        {},
+    ],
+)
+def test_custom_datax_get_define_cpu_and_memory(resource_limit):
+    """Test custom datax shell function get_define with resource limit."""
+    code = 123
+    version = 1
+
+    with patch(
+        "pydolphinscheduler.core.task.Task.gen_code_and_version",
+        return_value=(code, version),
+    ):
+        custom_datax = CustomDataX("test_custom_datax_get_define", "json_template", **resource_limit)
+        assert 'cpuQuota' in custom_datax.get_define()
+        assert 'cpuQuota' in custom_datax.get_define()
+
+        if resource_limit:
+           custom_datax.get_define().get('cpuQuota') == resource_limit.get("cpu_quota")
+           custom_datax.get_define()['memoryMax'] == resource_limit.get("memory_max")

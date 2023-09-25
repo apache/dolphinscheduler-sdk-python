@@ -112,3 +112,31 @@ def test_resources_local_shell_command_content(
     """Test task shell task command content through the local resource plug-in."""
     task = Shell(**attr)
     assert expect == getattr(task, "raw_script")
+
+
+@pytest.mark.parametrize(
+    "resource_limit",
+    [
+        {"cpu_quota": 1, "memory_max": 10},
+        {"memory_max": 15},
+        {},
+    ],
+)
+def test_shell_get_define_cpu_and_memory(resource_limit):
+    """Test task shell function get_define with resource limit."""
+    code = 123
+    version = 1
+    name = "test_shell_get_define_cpu_and_memory"
+    command = "echo test shell with resource limit"
+
+    with patch(
+        "pydolphinscheduler.core.task.Task.gen_code_and_version",
+        return_value=(code, version),
+    ):
+        shell = Shell(name, command, **resource_limit)
+        assert 'cpuQuota' in shell.get_define()
+        assert 'cpuQuota' in shell.get_define()
+
+        if resource_limit:
+           shell.get_define().get('cpuQuota') == resource_limit.get("cpu_quota")
+           shell.get_define()['memoryMax'] == resource_limit.get("memory_max")

@@ -15,16 +15,24 @@
 # specific language governing permissions and limitations
 # under the License.
 
-"""Task Kubernetes Mixin"""
-class KubernetesMixin():
-    """KubernetesMixin object, declare some attributes for Kubernetes task.
+"""WorkerResource Mixin"""
+class WorkerResourceMixin():
+    """Mixin object, declare some attributes for WorkerResource.
     """
 
     def add_attr(
         self, 
         **kwargs
     ):
-        self.min_cpu_cores = kwargs.get("min_cpu_cores", None) 
-        self.min_memory_space = kwargs.get("min_memory_space", None) 
-        if hasattr(self, "_task_custom_attr"): 
-            self._task_custom_attr |= { "min_cpu_cores", "min_memory_space"}
+        self._cpu_quota = kwargs.get("cpu_quota", None) 
+        self._memory_max = kwargs.get("memory_max", None) 
+        if hasattr(self, "_DEFINE_ATTR"): 
+            self._DEFINE_ATTR |= { "cpu_quota", "memory_max"}
+    
+    @property
+    def cpu_quota(self):
+        return self._cpu_quota
+    
+    @property
+    def memory_max(self):
+        return self._memory_max

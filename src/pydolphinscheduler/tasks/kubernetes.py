@@ -18,10 +18,10 @@
 """Task Kubernetes."""
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.task import Task
-from pydolphinscheduler.tasks.mixin import KubernetesMixin
+from pydolphinscheduler.core.mixin import WorkerResourceMixin
 
 
-class Kubernetes(KubernetesMixin, Task):
+class Kubernetes(WorkerResourceMixin, Task):
     """Task Kubernetes object, declare behavior for Kubernetes task to dolphinscheduler.
 
     :param name: task name
@@ -44,10 +44,14 @@ class Kubernetes(KubernetesMixin, Task):
         name: str,
         image: str,
         namespace: str,
+        min_cpu_cores: float,
+        min_memory_space: float,
         *args,
         **kwargs
     ):
         super().__init__(name, TaskType.KUBERNETES, *args, **kwargs)
         self.image = image
         self.namespace = namespace
+        self.min_cpu_cores = min_cpu_cores
+        self.min_memory_space = min_memory_space
         self.add_attr(**kwargs)

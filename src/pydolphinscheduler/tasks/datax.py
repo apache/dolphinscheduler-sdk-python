@@ -22,9 +22,10 @@ from typing import Dict, List, Optional
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.task import Task
 from pydolphinscheduler.models.datasource import Datasource
+from pydolphinscheduler.core.mixin import WorkerResourceMixin
 
 
-class CustomDataX(Task):
+class CustomDataX(WorkerResourceMixin, Task):
     """Task CustomDatax object, declare behavior for custom DataX task to dolphinscheduler.
 
     You provider json template for DataX, it can synchronize data according to the template you provided.
@@ -51,9 +52,10 @@ class CustomDataX(Task):
         self.custom_config = self.CUSTOM_CONFIG
         self.xms = xms
         self.xmx = xmx
+        self.add_attr(**kwargs)
 
 
-class DataX(Task):
+class DataX(WorkerResourceMixin, Task):
     """Task DataX object, declare behavior for DataX task to dolphinscheduler.
 
     It should run database datax job in multiply sql link engine, such as:
@@ -123,6 +125,7 @@ class DataX(Task):
         self.post_statements = post_statements or []
         self.xms = xms
         self.xmx = xmx
+        self.add_attr(**kwargs)
 
     @property
     def source_params(self) -> Dict:

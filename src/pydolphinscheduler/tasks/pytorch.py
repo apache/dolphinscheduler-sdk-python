@@ -20,6 +20,7 @@ from typing import Optional
 
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.task import Task
+from pydolphinscheduler.core.mixin import WorkerResourceMixin
 
 
 class DEFAULT:
@@ -30,7 +31,7 @@ class DEFAULT:
     python_command = "${PYTHON_HOME}"
 
 
-class Pytorch(Task):
+class Pytorch(WorkerResourceMixin, Task):
     """Task Pytorch object, declare behavior for Pytorch task to dolphinscheduler.
 
     See also: `DolphinScheduler Pytorch Task Plugin
@@ -83,6 +84,7 @@ class Pytorch(Task):
         self.python_env_tool = python_env_tool
         self.requirements = requirements
         self.conda_python_version = conda_python_version
+        self.add_attr(**kwargs)
 
     @property
     def other_params(self):
