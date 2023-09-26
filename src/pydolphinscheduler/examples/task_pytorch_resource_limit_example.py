@@ -15,24 +15,25 @@
 # specific language governing permissions and limitations
 # under the License.
 
-"""WorkerResource Mixin"""
-class WorkerResourceMixin():
-    """Mixin object, declare some attributes for WorkerResource.
-    """
+# [start workflow_declare]
+"""An example workflow for task pytorch with resoure limit."""
 
-    def add_attr(
-        self, 
-        **kwargs
-    ):
-        self._cpu_quota = kwargs.get("cpu_quota", -1) 
-        self._memory_max = kwargs.get("memory_max", -1) 
-        if hasattr(self, "_DEFINE_ATTR"): 
-            self._DEFINE_ATTR |= {"cpu_quota", "memory_max"}
-    
-    @property
-    def cpu_quota(self):
-        return self._cpu_quota
-    
-    @property
-    def memory_max(self):
-        return self._memory_max
+from pydolphinscheduler.core.workflow import Workflow
+from pydolphinscheduler.tasks.pytorch import Pytorch
+
+with Workflow(
+    name="task_pytorch_with_resoure_limit_example",
+) as workflow:
+    # run project with existing environment
+    task_existing_env = Pytorch(
+        name="task_existing_env",
+        script="main.py",
+        script_params="--dry-run --no-cuda",
+        project_path="https://github.com/pytorch/examples#mnist",
+        python_command="/home/anaconda3/envs/pytorch/bin/python3",
+        cpu_quota=1,
+        memory_max=100,
+    )
+
+    workflow.submit()
+# [end workflow_declare]

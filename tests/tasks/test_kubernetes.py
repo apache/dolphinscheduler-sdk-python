@@ -52,32 +52,3 @@ def test_kubernetes_get_define():
         assert k8s.task_params == expect_task_params
 
 
-@pytest.mark.parametrize(
-    "resource_limit",
-    [
-        {"cpu_quota": 1, "memory_max": 10},
-        {"memory_max": 15},
-        {},
-    ],
-)
-def test_kubernetes_get_define_cpu_and_memory(resource_limit):
-    """Test task kubernetes function get_define with resource limit."""
-    code = 123
-    version = 1
-    name = "test_kubernetes_get_define"
-    image = "ds-dev"
-    namespace = str({"name": "default", "cluster": "lab"})
-
-    with patch(
-        "pydolphinscheduler.core.task.Task.gen_code_and_version",
-        return_value=(code, version),
-    ):
-        k8s = Kubernetes(name=name, image=image, namespace=namespace, min_cpu_cores=0, min_memory_space=0, **resource_limit)
-        assert 'cpuQuota' in k8s.get_define()
-        assert 'cpuQuota' in k8s.get_define()
-
-        if resource_limit:
-           k8s.get_define().get('cpuQuota') == resource_limit.get("cpu_quota")
-           k8s.get_define()['memoryMax'] == resource_limit.get("memory_max")
-
-

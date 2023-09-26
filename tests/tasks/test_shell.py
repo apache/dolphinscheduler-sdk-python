@@ -135,8 +135,10 @@ def test_shell_get_define_cpu_and_memory(resource_limit):
     ):
         shell = Shell(name, command, **resource_limit)
         assert 'cpuQuota' in shell.get_define()
-        assert 'cpuQuota' in shell.get_define()
+        assert 'memoryMax' in shell.get_define()
 
-        if resource_limit:
-           shell.get_define().get('cpuQuota') == resource_limit.get("cpu_quota")
-           shell.get_define()['memoryMax'] == resource_limit.get("memory_max")
+        if 'cpuQuota' in resource_limit:
+           assert shell.get_define()['cpuQuota'] == resource_limit.get("cpu_quota")
+        
+        if 'memoryMax' in resource_limit:
+           assert shell.get_define()['memoryMax'] == resource_limit.get("memory_max")

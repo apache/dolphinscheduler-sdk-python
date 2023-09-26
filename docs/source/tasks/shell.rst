@@ -27,6 +27,15 @@ Example
    :start-after: [start workflow_declare]
    :end-before: [end task_relation_declare]
 
+Resource Limit Example
+-------
+
+We can add resource limit like CPU quota and max memory by passing parameters when declaring tasks.
+
+.. literalinclude:: ../../../src/pydolphinscheduler/examples/tutorial_resource_limit.py
+   :start-after: [start workflow_declare]
+   :end-before: [end workflow_declare]
+
 Dive Into
 ---------
 

@@ -199,8 +199,10 @@ def test_python_get_define_cpu_and_memory(resource_limit):
     ):
         python = Python(name="task", definition="print('hello world.')", **resource_limit)
         assert 'cpuQuota' in python.get_define()
-        assert 'cpuQuota' in python.get_define()
+        assert 'memoryMax' in python.get_define()
 
-        if resource_limit:
-           python.get_define().get('cpuQuota') == resource_limit.get("cpu_quota")
-           python.get_define()['memoryMax'] == resource_limit.get("memory_max")
+        if 'cpuQuota' in resource_limit:
+           assert python.get_define()['cpuQuota'] == resource_limit.get("cpu_quota")
+        
+        if 'memoryMax' in resource_limit:
+           assert python.get_define()['memoryMax'] == resource_limit.get("memory_max")

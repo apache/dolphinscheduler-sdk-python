@@ -15,24 +15,20 @@
 # specific language governing permissions and limitations
 # under the License.
 
-"""WorkerResource Mixin"""
-class WorkerResourceMixin():
-    """Mixin object, declare some attributes for WorkerResource.
-    """
+# [start workflow_declare]
+"""An example workflow for task shell with resoure limit."""
 
-    def add_attr(
-        self, 
-        **kwargs
-    ):
-        self._cpu_quota = kwargs.get("cpu_quota", -1) 
-        self._memory_max = kwargs.get("memory_max", -1) 
-        if hasattr(self, "_DEFINE_ATTR"): 
-            self._DEFINE_ATTR |= {"cpu_quota", "memory_max"}
-    
-    @property
-    def cpu_quota(self):
-        return self._cpu_quota
-    
-    @property
-    def memory_max(self):
-        return self._memory_max
+from pydolphinscheduler.core.workflow import Workflow
+from pydolphinscheduler.tasks.shell import Shell
+
+with Workflow(
+    name="task_shell_with_resourceexample",
+) as workflow:
+    task_shell = Shell(
+        name="task", 
+        command="echo resource limit",
+        cpu_quota=1,
+        memory_max=100,
+    )
+    workflow.submit()
+# [end workflow_declare]
