@@ -16,17 +16,17 @@
 # under the License.
 
 # [start workflow_declare]
-"""An example workflow for task shell with resoure limit."""
+"""An example workflow for task python with resource limit."""
 
 from pydolphinscheduler.core.workflow import Workflow
-from pydolphinscheduler.tasks.shell import Shell
+from pydolphinscheduler.tasks.python import Python
 
 with Workflow(
-    name="task_shell_with_resource_limit_example",
+    name="task_python_with_resource_limit_example",
 ) as workflow:
-    task_shell = Shell(
+    task_python = Python(
         name="task", 
-        command="echo resource limit",
+        definition="print('hello world.')",
         cpu_quota=1,
         memory_max=100,
     )

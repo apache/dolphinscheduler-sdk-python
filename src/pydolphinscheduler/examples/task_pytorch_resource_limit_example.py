@@ -16,13 +16,13 @@
 # under the License.
 
 # [start workflow_declare]
-"""An example workflow for task pytorch with resoure limit."""
+"""An example workflow for task pytorch with resource limit."""
 
 from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.tasks.pytorch import Pytorch
 
 with Workflow(
-    name="task_pytorch_with_resoure_limit_example",
+    name="task_pytorch_with_resource_limit_example",
 ) as workflow:
     # run project with existing environment
     task_existing_env = Pytorch(

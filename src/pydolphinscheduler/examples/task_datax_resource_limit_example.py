@@ -16,14 +16,14 @@
 # under the License.
 
 # [start workflow_declare]
-"""An example workflow for task datax with resoure limit."""
+"""An example workflow for task datax with resource limit."""
 
 
 from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.tasks.datax import CustomDataX, DataX
 
 with Workflow(
-    name="task_datax_with_resoure_limit_example",
+    name="task_datax_with_resource_limit_example",
 ) as workflow:
     # This task synchronizes the data in `t_ds_project`
     # of `first_mysql` database to `target_project` of `second_mysql` database.
