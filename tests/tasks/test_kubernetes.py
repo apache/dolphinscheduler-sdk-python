@@ -17,7 +17,6 @@
 
 """Test Task Kubernetes."""
 
-import pytest
 from unittest.mock import patch
 
 from pydolphinscheduler.tasks.kubernetes import Kubernetes
@@ -48,7 +47,5 @@ def test_kubernetes_get_define():
         "pydolphinscheduler.core.task.Task.gen_code_and_version",
         return_value=(code, version),
     ):
-        k8s = Kubernetes(name=name, image=image, namespace=namespace, min_cpu_cores=minCpuCores, min_memory_space=minMemorySpace)
+        k8s = Kubernetes(name, image, namespace, minCpuCores, minMemorySpace)
         assert k8s.task_params == expect_task_params
-
-

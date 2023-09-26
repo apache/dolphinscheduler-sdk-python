@@ -28,7 +28,7 @@ Example
    :end-before: [end task_relation_declare]
 
 Resource Limit Example
--------
+----------------------
 
 We can add resource limit like CPU quota and max memory by passing parameters when declaring tasks.
 
