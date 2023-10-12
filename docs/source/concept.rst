@@ -130,7 +130,7 @@ Alert is the way to notify user when workflow instance is success or failed. We 
 ``warning_type`` and ``warning_group_id`` in workflow definition.
 
 * ``warning_type`` represent the type of alert, when workflow instance in those status, it will trigger alert.
-The value of ``warning_type`` could be one of ``failure``, ``success``, ``all``, ``none``.
+  The value of ``warning_type`` could be one of ``failure``, ``success``, ``all``, ``none``.
 * ``warning_group_id`` represent the group of alert, you can get the group id from DolphinScheduler web UI.
 
 Tasks
