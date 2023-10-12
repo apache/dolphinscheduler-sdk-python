@@ -123,6 +123,16 @@ Parameter ``execution type`` can be set in
 * Via environment variables, configurations file setting, for more detail about those way setting, you can see
   you can read :doc:`config` section.
 
+Alert
+~~~~~
+
+Alert is the way to notify user when workflow instance is success or failed. We can set alert with parameter
+``warning_type`` and ``warning_group_id`` in workflow definition.
+
+* ``warning_type`` represent the type of alert, when workflow instance in those status, it will trigger alert.
+The value of ``warning_type`` could be one of ``failure``, ``success``, ``all``, ``none``.
+* ``warning_group_id`` represent the group of alert, you can get the group id from DolphinScheduler web UI.
+
 Tasks
 -----
 
