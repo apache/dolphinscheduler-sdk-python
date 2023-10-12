@@ -309,6 +309,6 @@ users who may use it in other way.
 [black]: https://black.readthedocs.io/en/stable/index.html
 [flake8]: https://flake8.pycqa.org/en/latest/index.html
 [black-editor]: https://black.readthedocs.io/en/stable/integrations/editors.html#pycharm-intellij-idea
-[coverage]: https://coverage.readthedocs.io/en/stable/
+[coverage]: https://coverage.readthedocs.io/en/latest/
 [isort]: https://pycqa.github.io/isort/index.html
 [sphinx]: https://www.sphinx-doc.org/en/master
