@@ -70,5 +70,4 @@ class Resource(Base):
             self.name,
             self.description,
             self.content,
-            self.description,
         )
