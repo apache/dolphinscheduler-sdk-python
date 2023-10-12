@@ -92,6 +92,9 @@ class Task(Base):
     :param task_priority: default TaskPriority.MEDIUM
     :param worker_group: default configuration.WORKFLOW_WORKER_GROUP
     :param environment_name: default None
+    :param task_group_id: Identify of task group to restrict the parallelism of tasks instance run, default 0.
+    :param task_group_priority: Priority for same task group to, the higher the value, the higher the
+        priority, default 0.
     :param delay_time: deault 0
     :param fail_retry_times: default 0
     :param fail_retry_interval: default 1
