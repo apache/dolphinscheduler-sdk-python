@@ -193,6 +193,41 @@ decide workflow of task. You could set `workflow` in both normal assign or in co
 
 With both `Workflow`_, `Tasks`_  and `Tasks Dependence`_, we could build a workflow with multiple tasks.
 
+Task Group
+~~~~~~~~~~
+
+A task group can manage and control the maximum number of concurrently running tasks. This is particularly
+useful when you want to limit the simultaneous execution of various task types. For instance, in an ETL
+(Extract, Transform, Load) job where data is extracted from a source database, it's crucial to control the
+parallelism of extract tasks to prevent an excessive number of connections to the source database. This is
+where a task group comes into play. There are two key parameters, ``task_group_id`` and ``task_group_priority``
+that determine the behavior of the task group.
+
+Task group can control the maximum number of tasks running at the same time. It is useful when you don't want
+to run too many type of tasks at the same time. For example when you extract data from source database in ELT
+job, you want to control the parallelism of extract task to avoid too many connections to source database.
+Then task group can help you. There are two major parameters ``task_group_id`` and ``task_group_priority``
+to control the behavior of task group.
+
+* ``task_group_id``: is an integer used to identify the task group. You can set a ``task_group_id`` to
+  restrict the parallelism of tasks. The ``task_group_id`` can be find in the DolphinScheduler web UI. The
+  default value is ``0``, which means there are no restrictions for this task group.
+* ``task_group_priority``: is an integer used to define the priority of the task group. When different tasks
+  share the same ``task_group_id``, the task group's priority comes into play, controlling the order in which
+  they run. Higher values indicate higher priority. The default value is ``0``, which means there's no
+  specific priority for this task group, and tasks will run in the order they were created.
+
+Here's an example in Python:
+
+.. code-block:: python
+
+   extract = Shell(
+      name="extract",
+      command="echo 'Some extract command here'",
+      task_group_id=1,
+      task_group_priority=123
+   )
+
 Resource Files
 --------------
 
