@@ -108,6 +108,8 @@ def test_property_task_params(mock_resource, mock_code_version, attr, expect):
                 "version": 1,
                 "description": None,
                 "delayTime": 0,
+                "taskGroupId": 0,
+                "taskGroupPriority": 0,
                 "taskType": "test-engine",
                 "taskParams": {
                     "mainClass": "org.apache.examples.mock.Mock",
