@@ -264,7 +264,7 @@ class Task(Base):
                 resources.add(
                     Resource(name=res, user_name=self.user_name).get_id_from_database()
                 )
-            elif type(res) == dict and res.get(ResourceKey.ID) is not None:
+            elif isinstance(res, dict) and res.get(ResourceKey.ID) is not None:
                 warnings.warn(
                     """`resource_list` should be defined using List[str] with resource paths,
                        the use of ids to define resources will be remove in version 3.2.0.
