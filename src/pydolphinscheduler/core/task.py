@@ -262,11 +262,9 @@ class Task(Base):
         for res in self._resource_list:
             if isinstance(res, str):
                 resources.add(
-                    Resource(
-                        name=res, user_name=self.user_name
-                    ).get_fullname_from_database()
+                    Resource(name=res, user_name=self.user_name).get_id_from_database()
                 )
-            elif isinstance(res, dict) and ResourceKey.NAME in res:
+            elif isinstance(res, dict) and res.get(ResourceKey.ID) is not None:
                 warnings.warn(
                     """`resource_list` should be defined using List[str] with resource paths,
                        the use of ids to define resources will be remove in version 3.2.0.
@@ -274,8 +272,8 @@ class Task(Base):
                     DeprecationWarning,
                     stacklevel=2,
                 )
-                resources.add(res.get(ResourceKey.NAME))
-        return [{ResourceKey.NAME: r} for r in resources]
+                resources.add(res.get(ResourceKey.ID))
+        return [{ResourceKey.ID: r} for r in resources]
 
     @property
     def user_name(self) -> Optional[str]:
