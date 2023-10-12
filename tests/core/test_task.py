@@ -243,6 +243,8 @@ def test_task_get_define():
         "version": version,
         "description": None,
         "delayTime": 0,
+        'taskGroupId': 0,
+        'taskGroupPriority': 0,
         "taskType": task_type,
         "taskParams": {
             "resourceList": [],
