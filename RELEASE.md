@@ -100,6 +100,8 @@ Git tag for the release: https://github.com/apache/dolphinscheduler-sdk-python/t
 
 Release Commit ID: https://github.com/apache/dolphinscheduler-sdk-python/commit/<commit-SHA>
 
+How to check the candidate: https://github.com/apache/dolphinscheduler-sdk-python/blob/main/RELEASE.md#check-release-candidate
+
 Keys to verify the Release Candidate: https://downloads.apache.org/dolphinscheduler/KEYS
 
 The vote will be open for at least 72 hours or until the necessary number of votes is reached.
