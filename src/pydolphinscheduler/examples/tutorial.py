@@ -52,13 +52,22 @@ with Workflow(
     task_child_one = Shell(name="task_child_one", command="echo 'child one'")
     task_child_two = Shell(name="task_child_two", command="echo 'child two'")
     task_union = Shell(name="task_union", command="echo union")
+
+    # [start resource_limit]
+    resource_limit = Shell(
+        name="resource_limit",
+        command="echo resource limit",
+        cpu_quota=1,
+        memory_max=100,
+    )
+    # [end resource_limit]
     # [end task_declare]
 
     # [start task_relation_declare]
     task_group = [task_child_one, task_child_two]
     task_parent.set_downstream(task_group)
 
-    task_union << task_group
+    resource_limit << task_union << task_group
     # [end task_relation_declare]
 
     # [start submit_or_run]

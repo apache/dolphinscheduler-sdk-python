@@ -56,5 +56,17 @@ with Workflow(
         requirements="requirements.txt",
     )
 
+    # [start resource_limit]
+    pytorch_resources_limit = Pytorch(
+        name="pytorch_resources_limit",
+        script="main.py",
+        script_params="--dry-run --no-cuda",
+        project_path="https://github.com/pytorch/examples#mnist",
+        python_command="/home/anaconda3/envs/pytorch/bin/python3",
+        cpu_quota=1,
+        memory_max=100,
+    )
+    # [end resource_limit]
+
     workflow.submit()
 # [end workflow_declare]
