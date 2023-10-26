@@ -26,13 +26,14 @@ from typing import Union
 from stmdency.extractor import Extractor
 
 from pydolphinscheduler.constants import TaskType
+from pydolphinscheduler.core.mixin import WorkerResourceMixin
 from pydolphinscheduler.core.task import Task
 from pydolphinscheduler.exceptions import PyDSParamException
 
 log = logging.getLogger(__file__)
 
 
-class Python(Task):
+class Python(WorkerResourceMixin, Task):
     """Task Python object, declare behavior for Python task to dolphinscheduler.
 
     Python task support two types of parameters for :param:``definition``, and here is an example:
@@ -67,6 +68,7 @@ class Python(Task):
     ):
         self._definition = definition
         super().__init__(name, TaskType.PYTHON, *args, **kwargs)
+        self.add_attr(**kwargs)
 
     def _build_exe_str(self) -> str:
         """Build executable string from given definition.

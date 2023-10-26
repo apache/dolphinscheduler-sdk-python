@@ -24,7 +24,6 @@ import os
 task_without_example = {
     "http",
     "sub_workflow",
-    "python",
     "procedure",
 }
 

@@ -122,3 +122,31 @@ def test_other_params(is_create_environment, project_path, python_command, expec
             python_command=python_command,
         )
         assert task.other_params == expect
+
+
+@pytest.mark.parametrize(
+    "resource_limit",
+    [
+        {"cpu_quota": 1, "memory_max": 10},
+        {"memory_max": 15},
+        {},
+    ],
+)
+def test_pytorch_get_define_cpu_and_memory(resource_limit):
+    """Test task pytorch function get_define with resource limit."""
+    code = 123
+    version = 1
+
+    with patch(
+        "pydolphinscheduler.core.task.Task.gen_code_and_version",
+        return_value=(code, version),
+    ):
+        pytorch = Pytorch(name="test", script="", script_params="", **resource_limit)
+        assert "cpuQuota" in pytorch.get_define()
+        assert "memoryMax" in pytorch.get_define()
+
+        if "cpuQuota" in resource_limit:
+            assert pytorch.get_define()["cpuQuota"] == resource_limit.get("cpu_quota")
+
+        if "memoryMax" in resource_limit:
+            assert pytorch.get_define()["memoryMax"] == resource_limit.get("memory_max")

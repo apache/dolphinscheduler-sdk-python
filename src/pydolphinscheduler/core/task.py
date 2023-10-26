@@ -273,13 +273,13 @@ class Task(Base):
         """Get task define attribute `resource_list`."""
         resources = set()
         for res in self._resource_list:
-            if type(res) == str:
+            if isinstance(res, str):
                 resources.add(
                     Resource(
                         name=res, user_name=self.user_name
                     ).get_fullname_from_database()
                 )
-            elif type(res) == dict and ResourceKey.NAME in res:
+            elif isinstance(res, dict) and ResourceKey.NAME in res:
                 warnings.warn(
                     """`resource_list` should be defined using List[str] with resource paths,
                        the use of ids to define resources will be remove in version 3.2.0.
