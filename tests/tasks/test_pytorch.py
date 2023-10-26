@@ -142,11 +142,11 @@ def test_pytorch_get_define_cpu_and_memory(resource_limit):
         return_value=(code, version),
     ):
         pytorch = Pytorch(name="test", script="", script_params="", **resource_limit)
-        assert 'cpuQuota' in pytorch.get_define()
-        assert 'memoryMax' in pytorch.get_define()
+        assert "cpuQuota" in pytorch.get_define()
+        assert "memoryMax" in pytorch.get_define()
 
-        if 'cpuQuota' in resource_limit:
-           assert pytorch.get_define()['cpuQuota'] == resource_limit.get("cpu_quota")
-        
-        if 'memoryMax' in resource_limit:
-           assert pytorch.get_define()['memoryMax'] == resource_limit.get("memory_max")
+        if "cpuQuota" in resource_limit:
+            assert pytorch.get_define()["cpuQuota"] == resource_limit.get("cpu_quota")
+
+        if "memoryMax" in resource_limit:
+            assert pytorch.get_define()["memoryMax"] == resource_limit.get("memory_max")

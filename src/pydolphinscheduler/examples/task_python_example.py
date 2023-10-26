@@ -25,7 +25,7 @@ with Workflow(
     name="task_python_example",
 ) as workflow:
     task_python = Python(
-        name="task", 
+        name="task",
         definition="print('hello world.')",
     )
     workflow.submit()

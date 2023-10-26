@@ -41,6 +41,8 @@ with Workflow(
 
     # You can custom json_template of datax to sync data. This task create a new
     # datax job same as task1, transfer record from `first_mysql` to `second_mysql`
-    task2 = CustomDataX(name="task_custom_datax", json="json", cpu_quota=1, memory_max=100)
+    task2 = CustomDataX(
+        name="task_custom_datax", json="json", cpu_quota=1, memory_max=100
+    )
     workflow.run()
 # [end workflow_declare]

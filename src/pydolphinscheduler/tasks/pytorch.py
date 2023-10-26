@@ -19,8 +19,8 @@
 from typing import Optional
 
 from pydolphinscheduler.constants import TaskType
-from pydolphinscheduler.core.task import Task
 from pydolphinscheduler.core.mixin import WorkerResourceMixin
+from pydolphinscheduler.core.task import Task
 
 
 class DEFAULT:

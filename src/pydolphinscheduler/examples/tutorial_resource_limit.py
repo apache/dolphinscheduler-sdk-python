@@ -25,7 +25,7 @@ with Workflow(
     name="task_shell_with_resource_limit_example",
 ) as workflow:
     task_shell = Shell(
-        name="task", 
+        name="task",
         command="echo resource limit",
         cpu_quota=1,
         memory_max=100,

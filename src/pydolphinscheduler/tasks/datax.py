@@ -20,9 +20,9 @@
 from typing import Dict, List, Optional
 
 from pydolphinscheduler.constants import TaskType
+from pydolphinscheduler.core.mixin import WorkerResourceMixin
 from pydolphinscheduler.core.task import Task
 from pydolphinscheduler.models.datasource import Datasource
-from pydolphinscheduler.core.mixin import WorkerResourceMixin
 
 
 class CustomDataX(WorkerResourceMixin, Task):
