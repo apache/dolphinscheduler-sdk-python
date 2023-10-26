@@ -92,6 +92,9 @@ class Task(Base):
     :param task_priority: default TaskPriority.MEDIUM
     :param worker_group: default configuration.WORKFLOW_WORKER_GROUP
     :param environment_name: default None
+    :param task_group_id: Identify of task group to restrict the parallelism of tasks instance run, default 0.
+    :param task_group_priority: Priority for same task group to, the higher the value, the higher the
+        priority, default 0.
     :param delay_time: deault 0
     :param fail_retry_times: default 0
     :param fail_retry_interval: default 1
@@ -120,6 +123,8 @@ class Task(Base):
         "delay_time",
         "fail_retry_times",
         "fail_retry_interval",
+        "task_group_id",
+        "task_group_priority",
         "timeout_flag",
         "timeout_notify_strategy",
         "timeout",
@@ -153,6 +158,8 @@ class Task(Base):
         task_priority: Optional[str] = TaskPriority.MEDIUM,
         worker_group: Optional[str] = configuration.WORKFLOW_WORKER_GROUP,
         environment_name: Optional[str] = None,
+        task_group_id: Optional[int] = 0,
+        task_group_priority: Optional[int] = 0,
         delay_time: Optional[int] = 0,
         fail_retry_times: Optional[int] = 0,
         fail_retry_interval: Optional[int] = 1,
@@ -177,6 +184,8 @@ class Task(Base):
         self.task_priority = task_priority
         self.worker_group = worker_group
         self._environment_name = environment_name
+        self.task_group_id = task_group_id
+        self.task_group_priority = task_group_priority
         self.fail_retry_times = fail_retry_times
         self.fail_retry_interval = fail_retry_interval
         self.delay_time = delay_time
@@ -264,13 +273,13 @@ class Task(Base):
         """Get task define attribute `resource_list`."""
         resources = set()
         for res in self._resource_list:
-            if type(res) == str:
+            if isinstance(res, str):
                 resources.add(
                     Resource(
                         name=res, user_name=self.user_name
                     ).get_fullname_from_database()
                 )
-            elif type(res) == dict and ResourceKey.NAME in res:
+            elif isinstance(res, dict) and ResourceKey.NAME in res:
                 warnings.warn(
                     """`resource_list` should be defined using List[str] with resource paths,
                        the use of ids to define resources will be remove in version 3.2.0.

@@ -80,7 +80,7 @@ run tests. And it is scattered commands to reproduce each step of the integratio
 ### With GitHub Action
 
 GitHub Action test in various environment for pydolphinscheduler, including different python version in
-`3.6|3.7|3.8|3.9|3.10|3.11` and operating system `linux|macOS|windows`. It will trigger and run automatically when you
+`3.6|3.7|3.8|3.9|3.10|3.11|3.12` and operating system `linux|macOS|windows`. It will trigger and run automatically when you
 submit pull requests to repository `apache/dolphinscheduler-sdk-python`.
 
 ### Automated Testing With tox
@@ -214,7 +214,7 @@ make clean && make multiversion
 ## Unit Test
 
 pydolphinscheduler using [pytest][pytest] to test our codebase. GitHub Action will run our test when you create
-pull request or commit to dev branch, with python version `3.6|3.7|3.8|3.9|3.10|3.11` and operating system `linux|macOS|windows`.
+pull request or commit to dev branch, with python version `3.6|3.7|3.8|3.9|3.10|3.11|3.12` and operating system `linux|macOS|windows`.
 
 ### Unit Test Using tox
 
@@ -309,6 +309,6 @@ users who may use it in other way.
 [black]: https://black.readthedocs.io/en/stable/index.html
 [flake8]: https://flake8.pycqa.org/en/latest/index.html
 [black-editor]: https://black.readthedocs.io/en/stable/integrations/editors.html#pycharm-intellij-idea
-[coverage]: https://coverage.readthedocs.io/en/stable/
+[coverage]: https://coverage.readthedocs.io/en/latest/
 [isort]: https://pycqa.github.io/isort/index.html
 [sphinx]: https://www.sphinx-doc.org/en/master

@@ -4,12 +4,14 @@
 
 # Cache
 __pycache__/
+.DS_Store
 .tox/
 .pytest_cache/
 MANIFEST
 
 # Build
 build/
+dist/
 *egg-info/
 
 # Test coverage

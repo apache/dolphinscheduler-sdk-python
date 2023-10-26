@@ -44,7 +44,9 @@ from pydolphinscheduler.utils.versions import version_match
 @mock.patch("pathlib.Path.open")
 def test_version_match(mock_open, content: str, name: str, version: str, expect: str):
     """Test function version_match."""
-    mock_open.return_value.__enter__.return_value.read.return_value = content
+    mock_open.return_value.__enter__.return_value.readlines.return_value = [
+        f"{content}\n"
+    ]
     assert version_match(name, version) == expect
     assert mock_open.call_count == 1
 

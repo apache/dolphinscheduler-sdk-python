@@ -26,9 +26,9 @@ from typing import Union
 from stmdency.extractor import Extractor
 
 from pydolphinscheduler.constants import TaskType
+from pydolphinscheduler.core.mixin import WorkerResourceMixin
 from pydolphinscheduler.core.task import Task
 from pydolphinscheduler.exceptions import PyDSParamException
-from pydolphinscheduler.core.mixin import WorkerResourceMixin
 
 log = logging.getLogger(__file__)
 

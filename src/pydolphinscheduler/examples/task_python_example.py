@@ -25,8 +25,19 @@ with Workflow(
     name="task_python_example",
 ) as workflow:
     task_python = Python(
-        name="task", 
+        name="task",
         definition="print('hello world.')",
     )
+
+    # [start resource_limit]
+    python_resources_limit = Python(
+        name="python_resources_limit",
+        definition="print('hello world.')",
+        cpu_quota=1,
+        memory_max=100,
+    )
+    # [end resource_limit]
+
+    task_python >> python_resources_limit
     workflow.submit()
 # [end workflow_declare]

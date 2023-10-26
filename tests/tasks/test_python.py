@@ -197,12 +197,14 @@ def test_python_get_define_cpu_and_memory(resource_limit):
         "pydolphinscheduler.core.task.Task.gen_code_and_version",
         return_value=(code, version),
     ):
-        python = Python(name="task", definition="print('hello world.')", **resource_limit)
-        assert 'cpuQuota' in python.get_define()
-        assert 'memoryMax' in python.get_define()
+        python = Python(
+            name="task", definition="print('hello world.')", **resource_limit
+        )
+        assert "cpuQuota" in python.get_define()
+        assert "memoryMax" in python.get_define()
 
-        if 'cpuQuota' in resource_limit:
-           assert python.get_define()['cpuQuota'] == resource_limit.get("cpu_quota")
-        
-        if 'memoryMax' in resource_limit:
-           assert python.get_define()['memoryMax'] == resource_limit.get("memory_max")
+        if "cpuQuota" in resource_limit:
+            assert python.get_define()["cpuQuota"] == resource_limit.get("cpu_quota")
+
+        if "memoryMax" in resource_limit:
+            assert python.get_define()["memoryMax"] == resource_limit.get("memory_max")

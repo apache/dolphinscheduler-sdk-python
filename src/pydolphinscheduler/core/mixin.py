@@ -16,23 +16,24 @@
 # under the License.
 
 """WorkerResource Mixin"""
-class WorkerResourceMixin():
-    """Mixin object, declare some attributes for WorkerResource.
-    """
 
-    def add_attr(
-        self, 
-        **kwargs
-    ):
-        self._cpu_quota = kwargs.get("cpu_quota", -1) 
-        self._memory_max = kwargs.get("memory_max", -1) 
-        if hasattr(self, "_DEFINE_ATTR"): 
+
+class WorkerResourceMixin:
+    """Mixin object, declare some attributes for WorkerResource."""
+
+    def add_attr(self, **kwargs):
+        """Add attributes to WorkerResource, include cpu_quota and memory_max now."""
+        self._cpu_quota = kwargs.get("cpu_quota", -1)
+        self._memory_max = kwargs.get("memory_max", -1)
+        if hasattr(self, "_DEFINE_ATTR"):
             self._DEFINE_ATTR |= {"cpu_quota", "memory_max"}
-    
+
     @property
     def cpu_quota(self):
+        """Get cpu_quota."""
         return self._cpu_quota
-    
+
     @property
     def memory_max(self):
+        """Get memory_max."""
         return self._memory_max
