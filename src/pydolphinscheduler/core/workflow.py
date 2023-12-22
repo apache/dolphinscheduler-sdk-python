@@ -18,7 +18,7 @@
 """Module workflow, core class for workflow define."""
 
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Set, Union
 
 from pydolphinscheduler import configuration
@@ -28,7 +28,7 @@ from pydolphinscheduler.core.resource_plugin import ResourcePlugin
 from pydolphinscheduler.exceptions import PyDSParamException, PyDSTaskNoFoundException
 from pydolphinscheduler.java_gateway import gateway
 from pydolphinscheduler.models import Base, Project, User
-from pydolphinscheduler.utils.date import MAX_DATETIME, conv_from_str, conv_to_schedule
+from pydolphinscheduler.utils.date import MAX_DATETIME, conv_from_str, conv_to_schedule, timedelta2timeout
 
 
 class WorkflowContext:
@@ -130,7 +130,7 @@ class Workflow(Base):
         warning_type: Optional[str] = configuration.WORKFLOW_WARNING_TYPE,
         warning_group_id: Optional[int] = 0,
         execution_type: Optional[str] = configuration.WORKFLOW_EXECUTION_TYPE,
-        timeout: Optional[int] = 0,
+        timeout: Optional[Union[timedelta, int]] = None,
         release_state: Optional[str] = configuration.WORKFLOW_RELEASE_STATE,
         param: Optional[Dict] = None,
         resource_plugin: Optional[ResourcePlugin] = None,
@@ -180,7 +180,7 @@ class Workflow(Base):
             )
         else:
             self._execution_type = execution_type
-        self.timeout = timeout
+        self._timeout: Union[timedelta, int] = timeout
         self._release_state = release_state
         self.param = param
         self.tasks: dict = {}
@@ -262,6 +262,25 @@ class Workflow(Base):
     def release_state(self, val: str) -> None:
         """Set attribute release_state."""
         self._release_state = val.lower()
+
+    @staticmethod
+    def _parse_timeout(val: Any) -> Any:
+        if val is None or isinstance(val, timedelta):
+            return timedelta2timeout(val) if val else 0
+        elif val >= 0:
+            return val
+        else:
+            raise PyDSParamException("The timeout value cannot be negative")
+
+    @property
+    def timeout(self) -> int:
+        """Get attribute timeout."""
+        return self._parse_timeout(self._timeout)
+
+    @timeout.setter
+    def timeout(self, val: Union[timedelta, int]) -> None:
+        """Set attribute timeout."""
+        self._timeout = val
 
     @property
     def execution_type(self) -> str:

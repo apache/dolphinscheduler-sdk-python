@@ -21,7 +21,7 @@ import types
 import warnings
 from datetime import timedelta
 from logging import getLogger
-from typing import Dict, List, Optional, Sequence, Set, Tuple, Union
+from typing import Dict, List, Optional, Sequence, Set, Tuple, Union, Any
 
 from pydolphinscheduler import configuration
 from pydolphinscheduler.constants import (
@@ -69,10 +69,10 @@ class TaskRelation(Base):
     }
 
     def __init__(
-        self,
-        pre_task_code: int,
-        post_task_code: int,
-        name: Optional[str] = None,
+            self,
+            pre_task_code: int,
+            post_task_code: int,
+            name: Optional[str] = None,
     ):
         super().__init__(name)
         self.pre_task_code = pre_task_code
@@ -150,32 +150,32 @@ class Task(Base):
     DEFAULT_CONDITION_RESULT = {"successNode": [""], "failedNode": [""]}
 
     def __init__(
-        self,
-        name: str,
-        task_type: str,
-        description: Optional[str] = None,
-        flag: Optional[str] = TaskFlag.YES,
-        task_priority: Optional[str] = TaskPriority.MEDIUM,
-        worker_group: Optional[str] = configuration.WORKFLOW_WORKER_GROUP,
-        environment_name: Optional[str] = None,
-        task_group_id: Optional[int] = 0,
-        task_group_priority: Optional[int] = 0,
-        delay_time: Optional[int] = 0,
-        fail_retry_times: Optional[int] = 0,
-        fail_retry_interval: Optional[int] = 1,
-        timeout_notify_strategy: Optional = None,
-        timeout: Optional[timedelta] = None,
-        workflow: Optional[Workflow] = None,
-        resource_list: Optional[List] = None,
-        dependence: Optional[Dict] = None,
-        wait_start_timeout: Optional[Dict] = None,
-        condition_result: Optional[Dict] = None,
-        resource_plugin: Optional[ResourcePlugin] = None,
-        is_cache: Optional[bool] = False,
-        input_params: Optional[Dict] = None,
-        output_params: Optional[Dict] = None,
-        *args,
-        **kwargs,
+            self,
+            name: str,
+            task_type: str,
+            description: Optional[str] = None,
+            flag: Optional[str] = TaskFlag.YES,
+            task_priority: Optional[str] = TaskPriority.MEDIUM,
+            worker_group: Optional[str] = configuration.WORKFLOW_WORKER_GROUP,
+            environment_name: Optional[str] = None,
+            task_group_id: Optional[int] = 0,
+            task_group_priority: Optional[int] = 0,
+            delay_time: Optional[int] = 0,
+            fail_retry_times: Optional[int] = 0,
+            fail_retry_interval: Optional[int] = 1,
+            timeout_notify_strategy: Optional = None,
+            timeout: Optional[Union[timedelta, int]] = None,
+            workflow: Optional[Workflow] = None,
+            resource_list: Optional[List] = None,
+            dependence: Optional[Dict] = None,
+            wait_start_timeout: Optional[Dict] = None,
+            condition_result: Optional[Dict] = None,
+            resource_plugin: Optional[ResourcePlugin] = None,
+            is_cache: Optional[bool] = False,
+            input_params: Optional[Dict] = None,
+            output_params: Optional[Dict] = None,
+            *args,
+            **kwargs,
     ):
         super().__init__(name, description)
         self.task_type = task_type
@@ -190,7 +190,7 @@ class Task(Base):
         self.fail_retry_interval = fail_retry_interval
         self.delay_time = delay_time
         self.timeout_notify_strategy = timeout_notify_strategy
-        self._timeout: timedelta = timeout
+        self._timeout: Union[timedelta, int] = timeout
         self._workflow = None
         self._input_params = input_params or {}
         self._output_params = output_params or {}
@@ -245,13 +245,22 @@ class Task(Base):
         """Set attribute workflow."""
         self._workflow = workflow
 
+    @staticmethod
+    def _parse_timeout(val: Any) -> Any:
+        if val is None or isinstance(val, timedelta):
+            return timedelta2timeout(val) if val else 0
+        elif val >= 0:
+            return val
+        else:
+            raise PyDSParamException("The timeout value cannot be negative")
+
     @property
     def timeout(self) -> int:
         """Get attribute timeout."""
-        return timedelta2timeout(self._timeout) if self._timeout else 0
+        return self._parse_timeout(self._timeout)
 
     @timeout.setter
-    def timeout(self, val: timedelta) -> None:
+    def timeout(self, val: Union[timedelta, int]) -> None:
         """Set attribute timeout."""
         self._timeout = val
 
@@ -356,8 +365,8 @@ class Task(Base):
                 setattr(self, self.ext_attr.lstrip(Symbol.UNDERLINE), content)
             else:
                 if self.resource_plugin is not None or (
-                    self.workflow is not None
-                    and self.workflow.resource_plugin is not None
+                        self.workflow is not None
+                        and self.workflow.resource_plugin is not None
                 ):
                     index = _ext_attr.rfind(Symbol.POINT)
                     if index != -1:
@@ -393,7 +402,7 @@ class Task(Base):
         return self
 
     def _set_deps(
-        self, tasks: Union["Task", Sequence["Task"]], upstream: bool = True
+            self, tasks: Union["Task", Sequence["Task"]], upstream: bool = True
     ) -> None:
         """
         Set parameter tasks dependent to current task.
@@ -473,9 +482,9 @@ class Task(Base):
         return local_params
 
     def add_in(
-        self,
-        name: str,
-        value: Optional[Union[int, str, float, bool, BaseDataType]] = None,
+            self,
+            name: str,
+            value: Optional[Union[int, str, float, bool, BaseDataType]] = None,
     ):
         """Add input parameters.
 
@@ -493,9 +502,9 @@ class Task(Base):
         self._input_params[name] = value
 
     def add_out(
-        self,
-        name: str,
-        value: Optional[Union[int, str, float, bool, BaseDataType]] = None,
+            self,
+            name: str,
+            value: Optional[Union[int, str, float, bool, BaseDataType]] = None,
     ):
         """Add output parameters.
 
