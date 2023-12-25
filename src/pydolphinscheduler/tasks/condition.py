@@ -103,7 +103,7 @@ class ConditionOperator(Base):
         result = []
         attr = None
         for condition in self.args:
-            if isinstance(condition, Status | ConditionOperator):
+            if isinstance(condition, (Status, ConditionOperator)):
                 if attr is None:
                     attr = repr(condition)
                 elif repr(condition) != attr:

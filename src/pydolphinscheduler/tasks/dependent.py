@@ -223,7 +223,7 @@ class DependentOperator(Base):
         result = []
         attr = None
         for dependent in self.args:
-            if isinstance(dependent, DependentItem | DependentOperator):
+            if isinstance(dependent, (DependentItem, DependentOperator)):
                 if attr is None:
                     attr = repr(dependent)
                 elif repr(dependent) != attr:

@@ -99,7 +99,7 @@ class Python(WorkerResourceMixin, Task):
     @property
     def raw_script(self) -> str:
         """Get python task define attribute `raw_script`."""
-        if isinstance(getattr(self, "definition"), str | types.FunctionType):
+        if isinstance(getattr(self, "definition"), (str, types.FunctionType)):
             return self._build_exe_str()
         else:
             raise PyDSParamException(
