@@ -17,7 +17,7 @@
 
 """Task shell."""
 
-from typing import Optional
+from __future__ import annotations
 
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.task import Task
@@ -67,12 +67,12 @@ class Http(Task):
         self,
         name: str,
         url: str,
-        http_method: Optional[str] = HttpMethod.GET,
-        http_params: Optional[str] = None,
-        http_check_condition: Optional[str] = HttpCheckCondition.STATUS_CODE_DEFAULT,
-        condition: Optional[str] = None,
-        connect_timeout: Optional[int] = 60000,
-        socket_timeout: Optional[int] = 60000,
+        http_method: str | None = HttpMethod.GET,
+        http_params: str | None = None,
+        http_check_condition: str | None = HttpCheckCondition.STATUS_CODE_DEFAULT,
+        condition: str | None = None,
+        connect_timeout: int | None = 60000,
+        socket_timeout: int | None = 60000,
         *args,
         **kwargs
     ):

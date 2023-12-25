@@ -17,7 +17,7 @@
 
 """Task Conditions."""
 
-from typing import Dict, List
+from __future__ import annotations
 
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.task import Task
@@ -44,7 +44,7 @@ class Status(Base):
         """Get name for Status or its sub class."""
         return cls.__name__.upper()
 
-    def get_define(self, camel_attr: bool = True) -> List:
+    def get_define(self, camel_attr: bool = True) -> list:
         """Get status definition attribute communicate to Java gateway server."""
         content = []
         for task in self.tasks:
@@ -103,7 +103,7 @@ class ConditionOperator(Base):
         result = []
         attr = None
         for condition in self.args:
-            if isinstance(condition, (Status, ConditionOperator)):
+            if isinstance(condition, Status | ConditionOperator):
                 if attr is None:
                     attr = repr(condition)
                 elif repr(condition) != attr:
@@ -123,7 +123,7 @@ class ConditionOperator(Base):
         setattr(self, attr, result)
         return attr
 
-    def get_define(self, camel_attr=True) -> Dict:
+    def get_define(self, camel_attr=True) -> dict:
         """Overwrite Base.get_define to get task Condition specific get define."""
         attr = self.set_define_attr()
         dependent_define_attr = self._DEFINE_ATTR.union({attr})
@@ -184,7 +184,7 @@ class Condition(Task):
         self.set_downstream([self.success_task, self.failed_task])
 
     @property
-    def condition_result(self) -> Dict:
+    def condition_result(self) -> dict:
         """Get condition result define for java gateway."""
         return {
             "successNode": [self.success_task.code],
@@ -192,7 +192,7 @@ class Condition(Task):
         }
 
     @property
-    def task_params(self, camel_attr: bool = True, custom_attr: set = None) -> Dict:
+    def task_params(self, camel_attr: bool = True, custom_attr: set = None) -> dict:
         """Override Task.task_params for Condition task.
 
         Condition task have some specials attribute `dependence`, and in most of the task

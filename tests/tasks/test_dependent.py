@@ -16,9 +16,10 @@
 # under the License.
 
 """Test Task dependent."""
+from __future__ import annotations
+
 import itertools
 import warnings
-from typing import Dict, List, Optional, Tuple, Union
 from unittest.mock import patch
 
 import pytest
@@ -162,7 +163,7 @@ def test_dependent_item_date_error():
         ({}, None),
     ],
 )
-def test_dependent_item_code_parameter(task_name: dict, result: Optional[str]):
+def test_dependent_item_code_parameter(task_name: dict, result: str | None):
     """Test dependent item property code_parameter."""
     dependent_item = DependentItem(
         project_name=TEST_PROJECT,
@@ -358,9 +359,9 @@ def test_dependent_operator_set_define_error(mock_code, arg_list):
 )
 def test_operator_dependent_item(
     mock_code_info,
-    operators: Tuple[DependentOperator],
-    kwargs: Tuple[dict],
-    expect: List[Dict],
+    operators: tuple[DependentOperator],
+    kwargs: tuple[dict],
+    expect: list[dict],
 ):
     """Test DependentOperator(DependentItem) function get_define.
 
@@ -557,9 +558,9 @@ def test_operator_dependent_item(
 )
 def test_operator_dependent_task_list_multi_dependent_item(
     mock_code_info,
-    operators: Tuple[DependentOperator],
-    args: Tuple[Union[Tuple, dict]],
-    expect: List[Dict],
+    operators: tuple[DependentOperator],
+    args: tuple[tuple | dict],
+    expect: list[dict],
 ):
     """Test DependentOperator(DependentOperator(DependentItem)) single operator function get_define.
 
@@ -687,9 +688,9 @@ def get_dep_task_list(*operator):
 )
 def test_operator_dependent_task_list_multi_dependent_list(
     mock_code_info,
-    operators: Tuple[DependentOperator],
-    args: Tuple[Union[Tuple, dict]],
-    expect: List[Dict],
+    operators: tuple[DependentOperator],
+    args: tuple[tuple | dict],
+    expect: list[dict],
 ):
     """Test DependentOperator(DependentOperator(DependentItem)) multiply operator function get_define.
 

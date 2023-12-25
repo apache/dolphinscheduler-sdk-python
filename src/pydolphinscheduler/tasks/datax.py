@@ -17,7 +17,7 @@
 
 """Task datax."""
 
-from typing import Dict, List, Optional
+from __future__ import annotations
 
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.mixin import WorkerResourceMixin
@@ -42,8 +42,8 @@ class CustomDataX(WorkerResourceMixin, Task):
         self,
         name: str,
         json: str,
-        xms: Optional[int] = 1,
-        xmx: Optional[int] = 1,
+        xms: int | None = 1,
+        xmx: int | None = 1,
         *args,
         **kwargs
     ):
@@ -100,14 +100,14 @@ class DataX(WorkerResourceMixin, Task):
         datatarget_name: str,
         sql: str,
         target_table: str,
-        datasource_type: Optional[str] = None,
-        datatarget_type: Optional[str] = None,
-        job_speed_byte: Optional[int] = 0,
-        job_speed_record: Optional[int] = 1000,
-        pre_statements: Optional[List[str]] = None,
-        post_statements: Optional[List[str]] = None,
-        xms: Optional[int] = 1,
-        xmx: Optional[int] = 1,
+        datasource_type: str | None = None,
+        datatarget_type: str | None = None,
+        job_speed_byte: int | None = 0,
+        job_speed_record: int | None = 1000,
+        pre_statements: list[str] | None = None,
+        post_statements: list[str] | None = None,
+        xms: int | None = 1,
+        xmx: int | None = 1,
         *args,
         **kwargs
     ):
@@ -128,7 +128,7 @@ class DataX(WorkerResourceMixin, Task):
         self.add_attr(**kwargs)
 
     @property
-    def source_params(self) -> Dict:
+    def source_params(self) -> dict:
         """Get source params for datax task."""
         datasource_task_u = Datasource.get_task_usage_4j(
             self.datasource_name, self.datasource_type
@@ -139,7 +139,7 @@ class DataX(WorkerResourceMixin, Task):
         }
 
     @property
-    def target_params(self) -> Dict:
+    def target_params(self) -> dict:
         """Get target params for datax task."""
         datasource_task_u = Datasource.get_task_usage_4j(
             self.datatarget_name, self.datatarget_type
@@ -150,7 +150,7 @@ class DataX(WorkerResourceMixin, Task):
         }
 
     @property
-    def task_params(self, camel_attr: bool = True, custom_attr: set = None) -> Dict:
+    def task_params(self, camel_attr: bool = True, custom_attr: set = None) -> dict:
         """Override Task.task_params for datax task.
 
         datax task have some specials attribute for task_params, and is odd if we

@@ -16,10 +16,11 @@
 # under the License.
 
 """YAML parser utils, parser yaml string to ``ruamel.yaml`` object and nested key dict."""
+from __future__ import annotations
 
 import copy
 import io
-from typing import Any, Dict, Optional
+from typing import Any
 
 from ruamel.yaml import YAML
 from ruamel.yaml.comments import CommentedMap
@@ -58,7 +59,7 @@ class YamlParser:
         yaml_parser["one.two2"] = "value4"
     """
 
-    def __init__(self, content: str, delimiter: Optional[str] = "."):
+    def __init__(self, content: str, delimiter: str | None = "."):
         self._content = content
         self.src_parser = content
         self._delimiter = delimiter
@@ -75,7 +76,7 @@ class YamlParser:
         self._src_parser = self._yaml.load(content)
 
     def parse_nested_dict(
-        self, result: Dict, commented_map: CommentedMap, key: str
+        self, result: dict, commented_map: CommentedMap, key: str
     ) -> None:
         """Parse :class:`ruamel.yaml.comments.CommentedMap` to nested dict using :param:`delimiter`."""
         if not isinstance(commented_map, CommentedMap):
@@ -86,7 +87,7 @@ class YamlParser:
             self.parse_nested_dict(result, commented_map[sub_key], next_key)
 
     @property
-    def dict_parser(self) -> Dict:
+    def dict_parser(self) -> dict:
         """Get :class:`CommentedMap` to nested dict using :param:`delimiter` as key delimiter.
 
         Use Depth-First-Search get all nested key and value, and all key connect by :param:`delimiter`.

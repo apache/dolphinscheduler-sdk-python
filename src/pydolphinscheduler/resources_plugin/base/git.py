@@ -17,6 +17,8 @@
 
 """DolphinScheduler GitFileInfo and Git object."""
 
+from __future__ import annotations
+
 from abc import ABCMeta, abstractmethod
 from typing import Optional
 
@@ -32,10 +34,10 @@ class GitFileInfo:
 
     def __init__(
         self,
-        user: Optional[str] = None,
-        repo_name: Optional[str] = None,
-        branch: Optional[str] = None,
-        file_path: Optional[str] = None,
+        user: str | None = None,
+        repo_name: str | None = None,
+        branch: str | None = None,
+        file_path: str | None = None,
         *args,
         **kwargs
     ):
@@ -56,10 +58,10 @@ class GitHubFileInfo(GitFileInfo):
 
     def __init__(
         self,
-        user: Optional[str] = None,
-        repo_name: Optional[str] = None,
-        branch: Optional[str] = None,
-        file_path: Optional[str] = None,
+        user: str | None = None,
+        repo_name: str | None = None,
+        branch: str | None = None,
+        file_path: str | None = None,
         *args,
         **kwargs
     ):
@@ -85,11 +87,11 @@ class GitLabFileInfo(GitFileInfo):
 
     def __init__(
         self,
-        host: Optional[str] = None,
-        user: Optional[str] = None,
-        repo_name: Optional[str] = None,
-        branch: Optional[str] = None,
-        file_path: Optional[str] = None,
+        host: str | None = None,
+        user: str | None = None,
+        repo_name: str | None = None,
+        branch: str | None = None,
+        file_path: str | None = None,
         *args,
         **kwargs
     ):

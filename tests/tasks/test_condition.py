@@ -16,7 +16,8 @@
 # under the License.
 
 """Test Task dependent."""
-from typing import List, Tuple
+from __future__ import annotations
+
 from unittest.mock import patch
 
 import pytest
@@ -64,7 +65,7 @@ def test_class_status_status_name(obj: Status, expect: str):
         (FAILURE, (ConditionOperator(1), ConditionOperator(2), ConditionOperator(3))),
     ],
 )
-def test_class_status_depend_item_list_no_expect_type(obj: Status, tasks: Tuple):
+def test_class_status_depend_item_list_no_expect_type(obj: Status, tasks: tuple):
     """Test class status and sub class raise error when assign not support type."""
     with pytest.raises(
         PyDSParamException, match=".*?only accept class Task or sub class Task, but get"
@@ -86,7 +87,7 @@ def test_class_status_depend_item_list_no_expect_type(obj: Status, tasks: Tuple)
         (FAILURE, [Task(str(i), TEST_TYPE) for i in range(3)]),
     ],
 )
-def test_class_status_depend_item_list(obj: Status, tasks: Tuple):
+def test_class_status_depend_item_list(obj: Status, tasks: tuple):
     """Test class status and sub class function :func:`depend_item_list`."""
     status = obj.status_name()
     expect = [
@@ -218,7 +219,7 @@ def test_condition_operator_set_define_attr_status(
     ],
 )
 def test_condition_operator_set_define_attr_mix_status(
-    obj: ConditionOperator, status: List[Status]
+    obj: ConditionOperator, status: list[Status]
 ):
     """Test :func:`set_define_attr` with one or more mixed status."""
     attr = "depend_item_list"
@@ -288,7 +289,7 @@ def test_condition_operator_set_define_attr_operator(
     ],
 )
 def test_condition_operator_set_define_attr_mix_operator(
-    cond: ConditionOperator, sub_cond: Tuple[ConditionOperator]
+    cond: ConditionOperator, sub_cond: tuple[ConditionOperator]
 ):
     """Test :func:`set_define_attr` with one or more class mix condition operator."""
     attr = "depend_task_list"

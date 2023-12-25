@@ -16,7 +16,8 @@
 # under the License.
 
 """DolphinScheduler oss resource plugin."""
-from typing import Optional
+from __future__ import annotations
+
 from urllib.parse import urljoin, urlparse
 
 import oss2
@@ -37,8 +38,8 @@ class OSS(ResourcePlugin, Bucket):
     def __init__(
         self,
         prefix: str,
-        access_key_id: Optional[str] = None,
-        access_key_secret: Optional[str] = None,
+        access_key_id: str | None = None,
+        access_key_secret: str | None = None,
         *args,
         **kwargs,
     ):
@@ -46,7 +47,7 @@ class OSS(ResourcePlugin, Bucket):
         self.access_key_id = access_key_id
         self.access_key_secret = access_key_secret
 
-    _bucket_file_info: Optional[OSSFileInfo] = None
+    _bucket_file_info: OSSFileInfo | None = None
 
     def get_bucket_file_info(self, path: str):
         """Get file information from the file url, like repository name, user, branch, and file path."""

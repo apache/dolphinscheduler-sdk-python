@@ -17,11 +17,13 @@
 
 """Parse YAML file to create workflow."""
 
+from __future__ import annotations
+
 import logging
 import os
 import re
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 from pydolphinscheduler import configuration, tasks
 from pydolphinscheduler.constants import Symbol
@@ -250,7 +252,7 @@ class YamlWorkflow(YamlParser):
 
         return content
 
-    def parse_task(self, task_data: dict, name2task: Dict[str, Task]):
+    def parse_task(self, task_data: dict, name2task: dict[str, Task]):
         """Parse various types of tasks.
 
         :param task_data: dict.

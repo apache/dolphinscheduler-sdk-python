@@ -17,7 +17,7 @@
 
 """Task MR."""
 
-from typing import Optional
+from __future__ import annotations
 
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.engine import Engine, ProgramType
@@ -37,10 +37,10 @@ class MR(Engine):
         name: str,
         main_class: str,
         main_package: str,
-        program_type: Optional[ProgramType] = ProgramType.SCALA,
-        app_name: Optional[str] = None,
-        main_args: Optional[str] = None,
-        others: Optional[str] = None,
+        program_type: ProgramType | None = ProgramType.SCALA,
+        app_name: str | None = None,
+        main_args: str | None = None,
+        others: str | None = None,
         *args,
         **kwargs
     ):

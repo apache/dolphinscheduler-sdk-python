@@ -17,7 +17,7 @@
 
 """DolphinScheduler User object."""
 
-from typing import Optional
+from __future__ import annotations
 
 from pydolphinscheduler import configuration
 from pydolphinscheduler.java_gateway import gateway
@@ -40,15 +40,15 @@ class User(BaseSide):
     def __init__(
         self,
         name: str,
-        password: Optional[str] = configuration.USER_PASSWORD,
-        email: Optional[str] = configuration.USER_EMAIL,
-        phone: Optional[str] = configuration.USER_PHONE,
-        tenant: Optional[str] = configuration.USER_TENANT,
-        queue: Optional[str] = configuration.WORKFLOW_QUEUE,
-        status: Optional[int] = configuration.USER_STATE,
+        password: str | None = configuration.USER_PASSWORD,
+        email: str | None = configuration.USER_EMAIL,
+        phone: str | None = configuration.USER_PHONE,
+        tenant: str | None = configuration.USER_TENANT,
+        queue: str | None = configuration.WORKFLOW_QUEUE,
+        status: int | None = configuration.USER_STATE,
     ):
         super().__init__(name)
-        self.user_id: Optional[int] = None
+        self.user_id: int | None = None
         self.password = password
         self.email = email
         self.phone = phone
@@ -79,7 +79,7 @@ class User(BaseSide):
         # gateway_result_checker(result, None)
 
     @classmethod
-    def get_user(cls, user_id) -> "User":
+    def get_user(cls, user_id) -> User:
         """Get User."""
         user = gateway.query_user(user_id)
         if user is None:

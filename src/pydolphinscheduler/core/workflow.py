@@ -17,9 +17,11 @@
 
 """Module workflow, core class for workflow define."""
 
+from __future__ import annotations
+
 import json
 from datetime import datetime, timedelta
-from typing import Any, Dict, List, Optional, Set, Union
+from typing import Any
 
 from pydolphinscheduler import configuration
 from pydolphinscheduler.constants import Symbol, TaskType
@@ -39,15 +41,15 @@ from pydolphinscheduler.utils.date import (
 class WorkflowContext:
     """Class workflow context, use when task get workflow from context expression."""
 
-    _context_managed_workflow: Optional["Workflow"] = None
+    _context_managed_workflow: Workflow | None = None
 
     @classmethod
-    def set(cls, workflow: "Workflow") -> None:
+    def set(cls, workflow: Workflow) -> None:
         """Set attribute self._context_managed_workflow."""
         cls._context_managed_workflow = workflow
 
     @classmethod
-    def get(cls) -> Optional["Workflow"]:
+    def get(cls) -> Workflow | None:
         """Get attribute self._context_managed_workflow."""
         return cls._context_managed_workflow
 
@@ -125,23 +127,23 @@ class Workflow(Base):
     def __init__(
         self,
         name: str,
-        description: Optional[str] = None,
-        schedule: Optional[str] = None,
-        online_schedule: Optional[bool] = None,
-        start_time: Optional[Union[str, datetime]] = None,
-        end_time: Optional[Union[str, datetime]] = None,
-        timezone: Optional[str] = configuration.WORKFLOW_TIME_ZONE,
-        user: Optional[str] = configuration.WORKFLOW_USER,
-        project: Optional[str] = configuration.WORKFLOW_PROJECT,
-        worker_group: Optional[str] = configuration.WORKFLOW_WORKER_GROUP,
-        warning_type: Optional[str] = configuration.WORKFLOW_WARNING_TYPE,
-        warning_group_id: Optional[int] = 0,
-        execution_type: Optional[str] = configuration.WORKFLOW_EXECUTION_TYPE,
-        timeout: Optional[Union[timedelta, int]] = 0,
-        release_state: Optional[str] = configuration.WORKFLOW_RELEASE_STATE,
-        param: Optional[Dict] = None,
-        resource_plugin: Optional[ResourcePlugin] = None,
-        resource_list: Optional[List[Resource]] = None,
+        description: str | None = None,
+        schedule: str | None = None,
+        online_schedule: bool | None = None,
+        start_time: str | datetime | None = None,
+        end_time: str | datetime | None = None,
+        timezone: str | None = configuration.WORKFLOW_TIME_ZONE,
+        user: str | None = configuration.WORKFLOW_USER,
+        project: str | None = configuration.WORKFLOW_PROJECT,
+        worker_group: str | None = configuration.WORKFLOW_WORKER_GROUP,
+        warning_type: str | None = configuration.WORKFLOW_WARNING_TYPE,
+        warning_group_id: int | None = 0,
+        execution_type: str | None = configuration.WORKFLOW_EXECUTION_TYPE,
+        timeout: timedelta | int | None = 0,
+        release_state: str | None = configuration.WORKFLOW_RELEASE_STATE,
+        param: dict | None = None,
+        resource_plugin: ResourcePlugin | None = None,
+        resource_list: list[Resource] | None = None,
         *args,
         **kwargs,
     ):
@@ -187,17 +189,17 @@ class Workflow(Base):
             )
         else:
             self._execution_type = execution_type
-        self._timeout: Union[timedelta, int] = timeout
+        self._timeout: timedelta | int = timeout
         self._release_state = release_state
         self.param = param
         self.tasks: dict = {}
         self.resource_plugin = resource_plugin
         # TODO how to fix circle import
-        self._task_relations: set["TaskRelation"] = set()  # noqa: F821
+        self._task_relations: set[TaskRelation] = set()  # noqa: F821
         self._workflow_code = None
         self.resource_list = resource_list or []
 
-    def __enter__(self) -> "Workflow":
+    def __enter__(self) -> Workflow:
         WorkflowContext.set(self)
         return self
 
@@ -290,7 +292,7 @@ class Workflow(Base):
         self._execution_type = val
 
     @property
-    def param_json(self) -> Optional[List[Dict]]:
+    def param_json(self) -> list[dict] | None:
         """Return param json base on self.param."""
         # Handle empty dict and None value
         if not self.param:
@@ -306,7 +308,7 @@ class Workflow(Base):
         ]
 
     @property
-    def task_definition_json(self) -> List[Dict]:
+    def task_definition_json(self) -> list[dict]:
         """Return all tasks definition in list of dict."""
         if not self.tasks:
             return [self.tasks]
@@ -314,7 +316,7 @@ class Workflow(Base):
             return [task.get_define() for task in self.tasks.values()]
 
     @property
-    def task_relation_json(self) -> List[Dict]:
+    def task_relation_json(self) -> list[dict]:
         """Return all relation between tasks pair in list of dict."""
         if not self.tasks:
             return [self.tasks]
@@ -323,7 +325,7 @@ class Workflow(Base):
             return [tr.get_define() for tr in self._task_relations]
 
     @property
-    def schedule_json(self) -> Optional[Dict]:
+    def schedule_json(self) -> dict | None:
         """Get schedule parameter json object. This is requests from java gateway interface."""
         if not self.schedule:
             return None
@@ -342,7 +344,7 @@ class Workflow(Base):
             }
 
     @property
-    def task_list(self) -> List["Task"]:  # noqa: F821
+    def task_list(self) -> list[Task]:  # noqa: F821
         """Return list of tasks objects."""
         return list(self.tasks.values())
 
@@ -362,17 +364,17 @@ class Workflow(Base):
                 root_relation = TaskRelation(pre_task_code=0, post_task_code=task.code)
                 self._task_relations.add(root_relation)
 
-    def add_task(self, task: "Task") -> None:  # noqa: F821
+    def add_task(self, task: Task) -> None:  # noqa: F821
         """Add a single task to workflow."""
         self.tasks[task.code] = task
         task._workflow = self
 
-    def add_tasks(self, tasks: List["Task"]) -> None:  # noqa: F821
+    def add_tasks(self, tasks: list[Task]) -> None:  # noqa: F821
         """Add task sequence to workflow, it a wrapper of :func:`add_task`."""
         for task in tasks:
             self.add_task(task)
 
-    def get_task(self, code: str) -> "Task":  # noqa: F821
+    def get_task(self, code: str) -> Task:  # noqa: F821
         """Get task object from workflow by given code."""
         if code not in self.tasks:
             raise PyDSTaskNoFoundException(
@@ -382,7 +384,7 @@ class Workflow(Base):
         return self.tasks[code]
 
     # TODO which tying should return in this case
-    def get_tasks_by_name(self, name: str) -> Set["Task"]:  # noqa: F821
+    def get_tasks_by_name(self, name: str) -> set[Task]:  # noqa: F821
         """Get tasks object by given name, if will return all tasks with this name."""
         find = set()
         for task in self.tasks.values():
@@ -390,7 +392,7 @@ class Workflow(Base):
                 find.add(task)
         return find
 
-    def get_one_task_by_name(self, name: str) -> "Task":  # noqa: F821
+    def get_one_task_by_name(self, name: str) -> Task:  # noqa: F821
         """Get exact one task from workflow by given name.
 
         Function always return one task even though this workflow have more than one task with

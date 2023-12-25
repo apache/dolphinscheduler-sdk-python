@@ -17,7 +17,7 @@
 
 """Module for models object."""
 
-from typing import Optional
+from __future__ import annotations
 
 from pydolphinscheduler import configuration
 from pydolphinscheduler.models import Base
@@ -26,7 +26,7 @@ from pydolphinscheduler.models import Base
 class BaseSide(Base):
     """Base class for models object, it declare base behavior for them."""
 
-    def __init__(self, name: str, description: Optional[str] = None):
+    def __init__(self, name: str, description: str | None = None):
         super().__init__(name, description)
 
     @classmethod

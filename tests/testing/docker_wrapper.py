@@ -16,9 +16,9 @@
 # under the License.
 
 """Wrap docker commands for easier create docker container."""
+from __future__ import annotations
 
 import time
-from typing import Optional
 
 import docker
 from docker.errors import ImageNotFound
@@ -50,7 +50,7 @@ class DockerWrapper:
         )
 
     def run_until_log(
-        self, log: str, remove_exists: Optional[bool] = True, *args, **kwargs
+        self, log: str, remove_exists: bool | None = True, *args, **kwargs
     ) -> Container:
         """Create and run a new container, return when specific log appear.
 

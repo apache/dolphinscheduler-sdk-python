@@ -16,9 +16,9 @@
 # under the License.
 
 """Test utils.date module."""
+from __future__ import annotations
 
 from datetime import datetime, timedelta
-from typing import Dict
 
 import pytest
 
@@ -97,7 +97,7 @@ def test_conv_from_str_not_impl(src: str) -> None:
         ({"hours": 1.3}, 78),
     ],
 )
-def test_timedelta2timeout(src: Dict, expect: int) -> None:
+def test_timedelta2timeout(src: dict, expect: int) -> None:
     """Test function timedelta2timeout."""
     td = timedelta(**src)
     assert timedelta2timeout(td) == expect, f"Test case {td} not expect to {expect}."

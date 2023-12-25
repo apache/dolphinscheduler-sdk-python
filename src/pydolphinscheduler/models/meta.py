@@ -22,10 +22,10 @@ This module contains the ModelMeta class, which is used to convert ``py4j.java_g
 server to get some resource from database, but you want to make sure the return object is a in Python
 object.
 """
+from __future__ import annotations
 
 from functools import wraps
 from inspect import signature
-from typing import Dict, Tuple
 
 from py4j.java_gateway import JavaObject
 
@@ -38,7 +38,7 @@ class ModelMeta(type):
     _FUNC_INIT = "__init__"
     _PARAM_SELF = "self"
 
-    def __new__(mcs, name: str, bases: Tuple, attrs: Dict):
+    def __new__(mcs, name: str, bases: tuple, attrs: dict):
         """Create a new class."""
         if mcs._FUNC_INIT not in attrs:
             raise TypeError(
@@ -59,7 +59,7 @@ class ModelMeta(type):
         return super().__new__(mcs, name, bases, attrs)
 
     @classmethod
-    def j2p(mcs, cm: classmethod, name: str, attrs: Dict, params=None):
+    def j2p(mcs, cm: classmethod, name: str, attrs: dict, params=None):
         """Convert JavaObject to Python object according attribute in the ``__init__`` method.
 
         ``py4j.java_gateway.JavaObject`` return the Java object from the DolphinScheduler server, we can

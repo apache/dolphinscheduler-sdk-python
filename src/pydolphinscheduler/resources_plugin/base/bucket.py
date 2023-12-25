@@ -16,6 +16,9 @@
 # under the License.
 
 """DolphinScheduler BucketFileInfo and Bucket object."""
+
+from __future__ import annotations
+
 from abc import ABCMeta, abstractmethod
 from typing import Optional
 
@@ -29,8 +32,8 @@ class BucketFileInfo:
 
     def __init__(
         self,
-        bucket: Optional[str] = None,
-        file_path: Optional[str] = None,
+        bucket: str | None = None,
+        file_path: str | None = None,
         *args,
         **kwargs
     ):
@@ -48,9 +51,9 @@ class OSSFileInfo(BucketFileInfo):
 
     def __init__(
         self,
-        endpoint: Optional[str] = None,
-        bucket: Optional[str] = None,
-        file_path: Optional[str] = None,
+        endpoint: str | None = None,
+        bucket: str | None = None,
+        file_path: str | None = None,
         *args,
         **kwargs
     ):
@@ -67,8 +70,8 @@ class S3FileInfo(BucketFileInfo):
 
     def __init__(
         self,
-        bucket: Optional[str] = None,
-        file_path: Optional[str] = None,
+        bucket: str | None = None,
+        file_path: str | None = None,
         *args,
         **kwargs
     ):

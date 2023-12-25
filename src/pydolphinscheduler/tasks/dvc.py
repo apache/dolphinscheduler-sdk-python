@@ -16,8 +16,9 @@
 # under the License.
 
 """Task dvc."""
+from __future__ import annotations
+
 from copy import deepcopy
-from typing import Dict
 
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.task import Task
@@ -48,7 +49,7 @@ class BaseDVC(Task):
         self.dvc_repository = repository
 
     @property
-    def task_params(self) -> Dict:
+    def task_params(self) -> dict:
         """Return task params."""
         self._task_custom_attr = deepcopy(self._task_custom_attr)
         self._task_custom_attr.update(self._child_task_dvc_attr)

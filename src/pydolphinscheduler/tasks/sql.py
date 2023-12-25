@@ -16,10 +16,11 @@
 # under the License.
 
 """Task sql."""
+from __future__ import annotations
 
 import logging
 import re
-from typing import Dict, List, Optional, Sequence, Union
+from collections.abc import Sequence
 
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.task import Task
@@ -79,11 +80,11 @@ class Sql(Task):
         name: str,
         datasource_name: str,
         sql: str,
-        datasource_type: Optional[str] = None,
-        sql_type: Optional[str] = None,
-        pre_statements: Union[str, Sequence[str], None] = None,
-        post_statements: Union[str, Sequence[str], None] = None,
-        display_rows: Optional[int] = 10,
+        datasource_type: str | None = None,
+        sql_type: str | None = None,
+        pre_statements: str | Sequence[str] | None = None,
+        post_statements: str | Sequence[str] | None = None,
+        display_rows: int | None = 10,
         *args,
         **kwargs
     ):
@@ -97,7 +98,7 @@ class Sql(Task):
         self.display_rows = display_rows
 
     @staticmethod
-    def get_stm_list(stm: Union[str, Sequence[str]]) -> List[str]:
+    def get_stm_list(stm: str | Sequence[str]) -> list[str]:
         """Convert statement to str of list.
 
         :param stm: statements string
@@ -137,7 +138,7 @@ class Sql(Task):
             return SqlType.SELECT
 
     @property
-    def datasource(self) -> Dict:
+    def datasource(self) -> dict:
         """Get datasource for procedure sql."""
         datasource_task_u = Datasource.get_task_usage_4j(
             self.datasource_name, self.datasource_type
@@ -148,7 +149,7 @@ class Sql(Task):
         }
 
     @property
-    def task_params(self, camel_attr: bool = True, custom_attr: set = None) -> Dict:
+    def task_params(self, camel_attr: bool = True, custom_attr: set = None) -> dict:
         """Override Task.task_params for sql task.
 
         sql task have some specials attribute for task_params, and is odd if we

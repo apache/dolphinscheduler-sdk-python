@@ -16,11 +16,12 @@
 # under the License.
 
 """Module java gateway, contain gateway behavior."""
+from __future__ import annotations
 
 import contextlib
 import warnings
 from logging import getLogger
-from typing import Any, Optional
+from typing import Any
 
 from py4j.java_collections import JavaMap
 from py4j.java_gateway import GatewayParameters, JavaGateway
@@ -36,7 +37,7 @@ logger = getLogger(__name__)
 
 def gateway_result_checker(
     result: JavaMap,
-    msg_check: Optional[str] = JavaGatewayDefault.RESULT_MESSAGE_SUCCESS,
+    msg_check: str | None = JavaGatewayDefault.RESULT_MESSAGE_SUCCESS,
 ) -> Any:
     """Check weather java gateway result success or not."""
     if (
@@ -57,10 +58,10 @@ class GatewayEntryPoint:
 
     def __init__(
         self,
-        address: Optional[str] = None,
-        port: Optional[int] = None,
-        auto_convert: Optional[bool] = True,
-        auth_token: Optional[str] = None,
+        address: str | None = None,
+        port: int | None = None,
+        auto_convert: bool | None = True,
+        auth_token: str | None = None,
     ):
         self._gateway = None
         self.address = address or configuration.JAVA_GATEWAY_ADDRESS
@@ -110,7 +111,7 @@ class GatewayEntryPoint:
         """Get the java gateway version, expected to be equal with pydolphinscheduler."""
         return self.gateway.entry_point.getGatewayVersion()
 
-    def get_datasource(self, name: str, type: Optional[str] = None):
+    def get_datasource(self, name: str, type: str | None = None):
         """Get single datasource by java gateway.
 
         Will use datasource_name to query database, and then filter by datasource_type if provided.
@@ -145,7 +146,7 @@ class GatewayEntryPoint:
         )
 
     def create_or_grant_project(
-        self, user: str, name: str, description: Optional[str] = None
+        self, user: str, name: str, description: str | None = None
     ):
         """Create or grant project through java gateway."""
         return self.gateway.entry_point.createOrGrantProject(user, name, description)
@@ -167,7 +168,7 @@ class GatewayEntryPoint:
         return self.gateway.entry_point.deleteProject(user, code)
 
     def create_tenant(
-        self, tenant_name: str, queue_name: str, description: Optional[str] = None
+        self, tenant_name: str, queue_name: str, description: str | None = None
     ):
         """Create tenant through java gateway."""
         return self.gateway.entry_point.createTenant(
@@ -188,7 +189,7 @@ class GatewayEntryPoint:
         tenant_id: int,
         code: str,
         queue_id: int,
-        description: Optional[str] = None,
+        description: str | None = None,
     ):
         """Update tenant through java gateway."""
         return self.gateway.entry_point.updateTenant(
@@ -241,7 +242,7 @@ class GatewayEntryPoint:
         self,
         project_name: str,
         workflow_name: str,
-        task_name: Optional[str] = None,
+        task_name: str | None = None,
     ):
         """Get dependent info through java gateway."""
         return self.gateway.entry_point.getDependentInfo(
@@ -269,9 +270,9 @@ class GatewayEntryPoint:
         release_state: int,
         task_relation_json: str,
         task_definition_json: str,
-        schedule: Optional[str] = None,
-        online_schedule: Optional[bool] = None,
-        other_params_json: Optional[str] = None,
+        schedule: str | None = None,
+        online_schedule: bool | None = None,
+        other_params_json: str | None = None,
     ):
         """Create or update workflow through java gateway."""
         return self.gateway.entry_point.createOrUpdateWorkflow(

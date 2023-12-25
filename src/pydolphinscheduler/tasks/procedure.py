@@ -17,7 +17,7 @@
 
 """Task procedure."""
 
-from typing import Dict, Optional
+from __future__ import annotations
 
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.task import Task
@@ -47,7 +47,7 @@ class Procedure(Task):
         name: str,
         datasource_name: str,
         method: str,
-        datasource_type: Optional[str] = None,
+        datasource_type: str | None = None,
         *args,
         **kwargs
     ):
@@ -57,7 +57,7 @@ class Procedure(Task):
         self.method = method
 
     @property
-    def datasource(self) -> Dict:
+    def datasource(self) -> dict:
         """Get datasource for procedure task."""
         datasource_task_u = Datasource.get_task_usage_4j(
             self.datasource_name, self.datasource_type
@@ -68,7 +68,7 @@ class Procedure(Task):
         }
 
     @property
-    def task_params(self, camel_attr: bool = True, custom_attr: set = None) -> Dict:
+    def task_params(self, camel_attr: bool = True, custom_attr: set = None) -> dict:
         """Override Task.task_params for produce task.
 
         produce task have some specials attribute for task_params, and is odd if we

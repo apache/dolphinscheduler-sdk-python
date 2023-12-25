@@ -16,8 +16,9 @@
 # under the License.
 
 """DolphinScheduler github resource plugin."""
+from __future__ import annotations
+
 import base64
-from typing import Optional
 from urllib.parse import urljoin
 
 import requests
@@ -35,12 +36,12 @@ class GitHub(ResourcePlugin, Git):
     """
 
     def __init__(
-        self, prefix: str, access_token: Optional[str] = None, *args, **kwargs
+        self, prefix: str, access_token: str | None = None, *args, **kwargs
     ):
         super().__init__(prefix, *args, **kwargs)
         self.access_token = access_token
 
-    _git_file_info: Optional[GitHubFileInfo] = None
+    _git_file_info: GitHubFileInfo | None = None
 
     def build_req_api(
         self,

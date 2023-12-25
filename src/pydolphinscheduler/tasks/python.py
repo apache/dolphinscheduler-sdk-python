@@ -17,11 +17,12 @@
 
 """Task Python."""
 
+from __future__ import annotations
+
 import logging
 import re
 import types
 from pathlib import Path
-from typing import Union
 
 from stmdency.extractor import Extractor
 
@@ -61,10 +62,10 @@ class Python(WorkerResourceMixin, Task):
     _task_custom_attr = {"raw_script"}
 
     ext: set = {".py"}
-    ext_attr: Union[str, types.FunctionType] = "_definition"
+    ext_attr: str | types.FunctionType = "_definition"
 
     def __init__(
-        self, name: str, definition: Union[str, types.FunctionType], *args, **kwargs
+        self, name: str, definition: str | types.FunctionType, *args, **kwargs
     ):
         self._definition = definition
         super().__init__(name, TaskType.PYTHON, *args, **kwargs)
@@ -98,7 +99,7 @@ class Python(WorkerResourceMixin, Task):
     @property
     def raw_script(self) -> str:
         """Get python task define attribute `raw_script`."""
-        if isinstance(getattr(self, "definition"), (str, types.FunctionType)):
+        if isinstance(getattr(self, "definition"), str | types.FunctionType):
             return self._build_exe_str()
         else:
             raise PyDSParamException(

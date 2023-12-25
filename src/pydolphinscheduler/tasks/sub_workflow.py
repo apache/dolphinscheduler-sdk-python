@@ -17,7 +17,7 @@
 
 """Task sub workflow."""
 
-from typing import Dict
+from __future__ import annotations
 
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.task import Task
@@ -43,7 +43,7 @@ class SubWorkflow(Task):
         """
         return self.get_workflow_info(self.workflow_name).get("code")
 
-    def get_workflow_info(self, workflow_name: str) -> Dict:
+    def get_workflow_info(self, workflow_name: str) -> dict:
         """Get workflow info from java gateway, contains workflow id, name, code."""
         if not self.workflow:
             raise PyDSWorkflowNotAssignException(

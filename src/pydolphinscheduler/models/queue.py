@@ -17,7 +17,7 @@
 
 """DolphinScheduler User object."""
 
-from typing import Optional
+from __future__ import annotations
 
 from pydolphinscheduler import configuration
 from pydolphinscheduler.models import BaseSide
@@ -29,6 +29,6 @@ class Queue(BaseSide):
     def __init__(
         self,
         name: str = configuration.WORKFLOW_QUEUE,
-        description: Optional[str] = "",
+        description: str | None = "",
     ):
         super().__init__(name, description)

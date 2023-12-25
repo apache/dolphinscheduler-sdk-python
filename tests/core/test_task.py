@@ -16,11 +16,12 @@
 # under the License.
 
 """Test Task class function."""
+from __future__ import annotations
+
 import logging
 import re
 import warnings
 from datetime import timedelta
-from typing import Set, Tuple, Union
 from unittest.mock import PropertyMock, patch
 
 import pytest
@@ -92,7 +93,7 @@ TEST_TASK_RELATION_SIZE = 0
         ),
     ],
 )
-def test__get_attr(addition: Set, ignore: Set, expect: Set):
+def test__get_attr(addition: set, ignore: set, expect: set):
     """Test task function `_get_attr`."""
     task = TestTask(
         name="test-get-attr",
@@ -117,7 +118,7 @@ def test__get_attr(addition: Set, ignore: Set, expect: Set):
         (None, (0, "CLOSE")),
     ],
 )
-def test_task_timeout(value: Union[timedelta, int], expect: Tuple[int, str]):
+def test_task_timeout(value: timedelta | int, expect: tuple[int, str]):
     """Test task timout attribute."""
     task = TestTask(
         name="test-get-attr",

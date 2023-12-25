@@ -16,8 +16,9 @@
 # under the License.
 
 """Task mlflow."""
+from __future__ import annotations
+
 from copy import deepcopy
-from typing import Dict, Optional
 
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.task import Task
@@ -66,7 +67,7 @@ class BaseMLflow(Task):
         self.mlflow_tracking_uri = mlflow_tracking_uri
 
     @property
-    def task_params(self) -> Dict:
+    def task_params(self) -> dict:
         """Return task params."""
         self._task_custom_attr = deepcopy(self._task_custom_attr)
         self._task_custom_attr.update(self._child_task_mlflow_attr)
@@ -98,9 +99,9 @@ class MLflowModels(BaseMLflow):
         self,
         name: str,
         model_uri: str,
-        mlflow_tracking_uri: Optional[str] = DEFAULT_MLFLOW_TRACKING_URI,
-        deploy_mode: Optional[str] = MLflowDeployType.DOCKER,
-        port: Optional[int] = 7000,
+        mlflow_tracking_uri: str | None = DEFAULT_MLFLOW_TRACKING_URI,
+        deploy_mode: str | None = MLflowDeployType.DOCKER,
+        port: int | None = 7000,
         *args,
         **kwargs
     ):
@@ -140,10 +141,10 @@ class MLFlowProjectsCustom(BaseMLflow):
         self,
         name: str,
         repository: str,
-        mlflow_tracking_uri: Optional[str] = DEFAULT_MLFLOW_TRACKING_URI,
-        experiment_name: Optional[str] = "",
-        parameters: Optional[str] = "",
-        version: Optional[str] = "master",
+        mlflow_tracking_uri: str | None = DEFAULT_MLFLOW_TRACKING_URI,
+        experiment_name: str | None = "",
+        parameters: str | None = "",
+        version: str | None = "master",
         *args,
         **kwargs
     ):
@@ -185,11 +186,11 @@ class MLFlowProjectsAutoML(BaseMLflow):
         self,
         name: str,
         data_path: str,
-        automl_tool: Optional[str] = "flaml",
-        mlflow_tracking_uri: Optional[str] = DEFAULT_MLFLOW_TRACKING_URI,
-        experiment_name: Optional[str] = "",
-        model_name: Optional[str] = "",
-        parameters: Optional[str] = "",
+        automl_tool: str | None = "flaml",
+        mlflow_tracking_uri: str | None = DEFAULT_MLFLOW_TRACKING_URI,
+        experiment_name: str | None = "",
+        model_name: str | None = "",
+        parameters: str | None = "",
         *args,
         **kwargs
     ):
@@ -236,12 +237,12 @@ class MLFlowProjectsBasicAlgorithm(BaseMLflow):
         self,
         name: str,
         data_path: str,
-        algorithm: Optional[str] = "lightgbm",
-        mlflow_tracking_uri: Optional[str] = DEFAULT_MLFLOW_TRACKING_URI,
-        experiment_name: Optional[str] = "",
-        model_name: Optional[str] = "",
-        parameters: Optional[str] = "",
-        search_params: Optional[str] = "",
+        algorithm: str | None = "lightgbm",
+        mlflow_tracking_uri: str | None = DEFAULT_MLFLOW_TRACKING_URI,
+        experiment_name: str | None = "",
+        model_name: str | None = "",
+        parameters: str | None = "",
+        search_params: str | None = "",
         *args,
         **kwargs
     ):
