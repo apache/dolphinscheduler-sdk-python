@@ -396,8 +396,7 @@ class Task(Base):
     def _set_deps(
         self, tasks: Union["Task", Sequence["Task"]], upstream: bool = True
     ) -> None:
-        """
-        Set parameter tasks dependent to current task.
+        """Set parameter tasks dependent to current task.
 
         it is a wrapper for :func:`set_upstream` and :func:`set_downstream`.
         """
@@ -438,8 +437,7 @@ class Task(Base):
 
     # TODO code should better generate in bulk mode when :ref: workflow run submit or start
     def gen_code_and_version(self) -> Tuple:
-        """
-        Generate task code and version from java gateway.
+        """Generate task code and version from java gateway.
 
         If task name do not exists in workflow before, if will generate new code and version id
         equal to 0 by java gateway, otherwise if will return the exists code and version.

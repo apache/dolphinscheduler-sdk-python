@@ -40,4 +40,4 @@ def version_match(name: str, version: str) -> bool:
                     return req.specifier.contains(version)
                 except InvalidVersion:
                     return False
-        raise ValueError("%s is not in %s" % (name, Version.FILE_NAME))
+        raise ValueError(f"{name} is not in {Version.FILE_NAME}")

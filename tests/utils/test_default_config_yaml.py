@@ -34,6 +34,6 @@ def nested_key_check(comment_map: CommentedMap) -> None:
 def test_key_without_dot_delimiter():
     """Test wrapper of whether default configuration file exists specific character."""
     yaml = YAML()
-    with open(path_default_config_yaml, "r") as f:
+    with open(path_default_config_yaml) as f:
         comment_map = yaml.load(f.read())
         nested_key_check(comment_map)

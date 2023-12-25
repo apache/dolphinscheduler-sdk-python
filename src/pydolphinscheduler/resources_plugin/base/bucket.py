@@ -75,7 +75,7 @@ class S3FileInfo(BucketFileInfo):
         super().__init__(bucket=bucket, file_path=file_path, *args, **kwargs)
 
 
-class Bucket(object, metaclass=ABCMeta):
+class Bucket(metaclass=ABCMeta):
     """An abstract class of online code repository based on git implementation."""
 
     _bucket_file_info: Optional = None

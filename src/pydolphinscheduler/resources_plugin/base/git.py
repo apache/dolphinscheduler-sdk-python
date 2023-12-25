@@ -104,7 +104,7 @@ class GitLabFileInfo(GitFileInfo):
         self.host = host
 
 
-class Git(object, metaclass=ABCMeta):
+class Git(metaclass=ABCMeta):
     """An abstract class of online code repository based on git implementation."""
 
     _git_file_info: Optional = None

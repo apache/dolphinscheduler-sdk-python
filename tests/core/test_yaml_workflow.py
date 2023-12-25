@@ -91,7 +91,7 @@ def test_parse_possible_yaml_file():
     file_name = "Shell.yaml"
     path = folder.joinpath(file_name)
 
-    with open(path, "r") as f:
+    with open(path) as f:
         expect = "".join(f)
 
     string_param = '$FILE{"%s"}' % file_name

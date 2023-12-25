@@ -101,7 +101,7 @@ class GitLab(ResourcePlugin, Git):
         self.get_git_file_info(path)
         gl = self.authentication()
         project = gl.projects.get(
-            "%s/%s" % (self._git_file_info.user, self._git_file_info.repo_name)
+            f"{self._git_file_info.user}/{self._git_file_info.repo_name}"
         )
         return (
             project.files.get(
