@@ -45,7 +45,7 @@ class CustomDataX(WorkerResourceMixin, Task):
         xms: int | None = 1,
         xmx: int | None = 1,
         *args,
-        **kwargs
+        **kwargs,
     ):
         self._json = json
         super().__init__(name, TaskType.DATAX, *args, **kwargs)
@@ -109,7 +109,7 @@ class DataX(WorkerResourceMixin, Task):
         xms: int | None = 1,
         xmx: int | None = 1,
         *args,
-        **kwargs
+        **kwargs,
     ):
         self._sql = sql
         super().__init__(name, TaskType.DATAX, *args, **kwargs)

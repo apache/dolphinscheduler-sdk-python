@@ -39,7 +39,7 @@ class GitFileInfo:
         branch: str | None = None,
         file_path: str | None = None,
         *args,
-        **kwargs
+        **kwargs,
     ):
         self.user = user
         self.repo_name = repo_name
@@ -63,7 +63,7 @@ class GitHubFileInfo(GitFileInfo):
         branch: str | None = None,
         file_path: str | None = None,
         *args,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(
             user=user,
@@ -71,7 +71,7 @@ class GitHubFileInfo(GitFileInfo):
             branch=branch,
             file_path=file_path,
             *args,
-            **kwargs
+            **kwargs,
         )
 
 
@@ -93,7 +93,7 @@ class GitLabFileInfo(GitFileInfo):
         branch: str | None = None,
         file_path: str | None = None,
         *args,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(
             user=user,
@@ -101,7 +101,7 @@ class GitLabFileInfo(GitFileInfo):
             branch=branch,
             file_path=file_path,
             *args,
-            **kwargs
+            **kwargs,
         )
         self.host = host
 

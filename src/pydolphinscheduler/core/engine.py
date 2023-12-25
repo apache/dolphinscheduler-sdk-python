@@ -49,7 +49,7 @@ class Engine(Task):
         main_package: str,
         program_type: ProgramType | None = ProgramType.SCALA,
         *args,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(name, task_type, *args, **kwargs)
         self.main_class = main_class

@@ -62,7 +62,7 @@ class Spark(Engine):
         main_args: str | None = None,
         others: str | None = None,
         *args,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(
             name,
@@ -71,7 +71,7 @@ class Spark(Engine):
             main_package,
             program_type,
             *args,
-            **kwargs
+            **kwargs,
         )
         self.deploy_mode = deploy_mode
         self.app_name = app_name

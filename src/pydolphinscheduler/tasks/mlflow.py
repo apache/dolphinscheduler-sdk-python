@@ -103,7 +103,7 @@ class MLflowModels(BaseMLflow):
         deploy_mode: str | None = MLflowDeployType.DOCKER,
         port: int | None = 7000,
         *args,
-        **kwargs
+        **kwargs,
     ):
         """Init mlflow models task."""
         super().__init__(name, mlflow_tracking_uri, *args, **kwargs)
@@ -146,7 +146,7 @@ class MLFlowProjectsCustom(BaseMLflow):
         parameters: str | None = "",
         version: str | None = "master",
         *args,
-        **kwargs
+        **kwargs,
     ):
         """Init mlflow projects task."""
         super().__init__(name, mlflow_tracking_uri, *args, **kwargs)
@@ -192,7 +192,7 @@ class MLFlowProjectsAutoML(BaseMLflow):
         model_name: str | None = "",
         parameters: str | None = "",
         *args,
-        **kwargs
+        **kwargs,
     ):
         """Init mlflow projects task."""
         super().__init__(name, mlflow_tracking_uri, *args, **kwargs)
@@ -244,7 +244,7 @@ class MLFlowProjectsBasicAlgorithm(BaseMLflow):
         parameters: str | None = "",
         search_params: str | None = "",
         *args,
-        **kwargs
+        **kwargs,
     ):
         """Init mlflow projects task."""
         super().__init__(name, mlflow_tracking_uri, *args, **kwargs)

@@ -70,7 +70,7 @@ class Flink(Engine):
         main_args: str | None = None,
         others: str | None = None,
         *args,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(
             name,
@@ -79,7 +79,7 @@ class Flink(Engine):
             main_package,
             program_type,
             *args,
-            **kwargs
+            **kwargs,
         )
         self.deploy_mode = deploy_mode
         self.flink_version = flink_version

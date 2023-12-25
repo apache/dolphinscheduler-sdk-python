@@ -396,9 +396,7 @@ class Task(Base):
         self.__rshift__(other)
         return self
 
-    def _set_deps(
-        self, tasks: Task | Sequence[Task], upstream: bool = True
-    ) -> None:
+    def _set_deps(self, tasks: Task | Sequence[Task], upstream: bool = True) -> None:
         """Set parameter tasks dependent to current task.
 
         it is a wrapper for :func:`set_upstream` and :func:`set_downstream`.

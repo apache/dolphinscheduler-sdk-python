@@ -87,7 +87,7 @@ class DVCDownload(BaseDVC):
         data_path_in_worker: str,
         version: str,
         *args,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(name, repository, *args, **kwargs)
         self.dvc_data_location = data_path_in_dvc_repository
@@ -116,7 +116,7 @@ class DVCUpload(BaseDVC):
         version: str,
         message: str,
         *args,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(name, repository, *args, **kwargs)
         self.dvc_data_location = data_path_in_dvc_repository

@@ -86,7 +86,7 @@ class Sql(Task):
         post_statements: str | Sequence[str] | None = None,
         display_rows: int | None = 10,
         *args,
-        **kwargs
+        **kwargs,
     ):
         self._sql = sql
         super().__init__(name, TaskType.SQL, *args, **kwargs)

@@ -42,7 +42,7 @@ class S3(ResourcePlugin, Bucket):
         access_key_id: str | None = None,
         access_key_secret: str | None = None,
         *args,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(prefix, *args, **kwargs)
         self.access_key_id = access_key_id

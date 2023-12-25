@@ -31,11 +31,7 @@ class BucketFileInfo:
     """
 
     def __init__(
-        self,
-        bucket: str | None = None,
-        file_path: str | None = None,
-        *args,
-        **kwargs
+        self, bucket: str | None = None, file_path: str | None = None, *args, **kwargs
     ):
         self.bucket = bucket
         self.file_path = file_path
@@ -55,7 +51,7 @@ class OSSFileInfo(BucketFileInfo):
         bucket: str | None = None,
         file_path: str | None = None,
         *args,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(bucket=bucket, file_path=file_path, *args, **kwargs)
         self.endpoint = endpoint
@@ -69,11 +65,7 @@ class S3FileInfo(BucketFileInfo):
     """
 
     def __init__(
-        self,
-        bucket: str | None = None,
-        file_path: str | None = None,
-        *args,
-        **kwargs
+        self, bucket: str | None = None, file_path: str | None = None, *args, **kwargs
     ):
         super().__init__(bucket=bucket, file_path=file_path, *args, **kwargs)
 

@@ -35,9 +35,7 @@ class GitHub(ResourcePlugin, Git):
     :param access_token: A string used for identity authentication of GitHub private repository.
     """
 
-    def __init__(
-        self, prefix: str, access_token: str | None = None, *args, **kwargs
-    ):
+    def __init__(self, prefix: str, access_token: str | None = None, *args, **kwargs):
         super().__init__(prefix, *args, **kwargs)
         self.access_token = access_token
 

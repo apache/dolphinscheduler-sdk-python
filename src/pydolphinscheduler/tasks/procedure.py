@@ -49,7 +49,7 @@ class Procedure(Task):
         method: str,
         datasource_type: str | None = None,
         *args,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(name, TaskType.PROCEDURE, *args, **kwargs)
         self.datasource_name = datasource_name

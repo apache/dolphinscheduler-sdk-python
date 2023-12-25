@@ -74,7 +74,7 @@ class Http(Task):
         connect_timeout: int | None = 60000,
         socket_timeout: int | None = 60000,
         *args,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(name, TaskType.HTTP, *args, **kwargs)
         self.url = url

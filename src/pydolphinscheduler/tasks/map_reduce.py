@@ -42,7 +42,7 @@ class MR(Engine):
         main_args: str | None = None,
         others: str | None = None,
         *args,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(
             name, TaskType.MR, main_class, main_package, program_type, *args, **kwargs
