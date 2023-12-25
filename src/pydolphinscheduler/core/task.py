@@ -69,10 +69,10 @@ class TaskRelation(Base):
     }
 
     def __init__(
-        self,
-        pre_task_code: int,
-        post_task_code: int,
-        name: Optional[str] = None,
+            self,
+            pre_task_code: int,
+            post_task_code: int,
+            name: Optional[str] = None,
     ):
         super().__init__(name)
         self.pre_task_code = pre_task_code
@@ -247,6 +247,15 @@ class Task(Base):
         """Set attribute workflow."""
         self._workflow = workflow
 
+    @staticmethod
+    def _parse_timeout(val: Any) -> Any:
+        if val is None or isinstance(val, timedelta):
+            return timedelta2timeout(val) if val else 0
+        elif val >= 0:
+            return val
+        else:
+            raise PyDSParamException("The timeout value cannot be negative")
+
     @property
     def timeout(self) -> int:
         """Get attribute timeout."""
@@ -357,8 +366,8 @@ class Task(Base):
                 setattr(self, self.ext_attr.lstrip(Symbol.UNDERLINE), content)
             else:
                 if self.resource_plugin is not None or (
-                    self.workflow is not None
-                    and self.workflow.resource_plugin is not None
+                        self.workflow is not None
+                        and self.workflow.resource_plugin is not None
                 ):
                     index = _ext_attr.rfind(Symbol.POINT)
                     if index != -1:
@@ -394,7 +403,7 @@ class Task(Base):
         return self
 
     def _set_deps(
-        self, tasks: Union["Task", Sequence["Task"]], upstream: bool = True
+            self, tasks: Union["Task", Sequence["Task"]], upstream: bool = True
     ) -> None:
         """
         Set parameter tasks dependent to current task.
@@ -474,9 +483,9 @@ class Task(Base):
         return local_params
 
     def add_in(
-        self,
-        name: str,
-        value: Optional[Union[int, str, float, bool, BaseDataType]] = None,
+            self,
+            name: str,
+            value: Optional[Union[int, str, float, bool, BaseDataType]] = None,
     ):
         """Add input parameters.
 
@@ -494,9 +503,9 @@ class Task(Base):
         self._input_params[name] = value
 
     def add_out(
-        self,
-        name: str,
-        value: Optional[Union[int, str, float, bool, BaseDataType]] = None,
+            self,
+            name: str,
+            value: Optional[Union[int, str, float, bool, BaseDataType]] = None,
     ):
         """Add output parameters.
 
