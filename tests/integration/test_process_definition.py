@@ -16,8 +16,7 @@
 # under the License.
 
 """Test workflow in integration."""
-
-from typing import Dict
+from __future__ import annotations
 
 import pytest
 
@@ -41,7 +40,7 @@ TASK_NAME = f"task_{WORKFLOW_NAME}"
         )
     ],
 )
-def test_change_workflow_attr(pre: Dict, post: Dict):
+def test_change_workflow_attr(pre: dict, post: dict):
     """Test whether workflow success when specific attribute change."""
     assert pre.keys() == post.keys(), "Not equal keys for pre and post attribute."
     for attrs in [pre, post]:

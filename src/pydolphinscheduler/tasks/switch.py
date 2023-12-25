@@ -16,8 +16,7 @@
 # under the License.
 
 """Task Switch."""
-
-from typing import Dict, Optional
+from __future__ import annotations
 
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.task import Task
@@ -35,7 +34,7 @@ class SwitchBranch(Base):
         "next_node",
     }
 
-    def __init__(self, task: Task, exp: Optional[str] = None):
+    def __init__(self, task: Task, exp: str | None = None):
         super().__init__(f"Switch.{self.__class__.__name__.upper()}")
         self.task = task
         self.exp = exp
@@ -46,11 +45,11 @@ class SwitchBranch(Base):
         return self.task.code
 
     @property
-    def condition(self) -> Optional[str]:
+    def condition(self) -> str | None:
         """Get task switch property condition."""
         return self.exp
 
-    def get_define(self, camel_attr: bool = True) -> Dict:
+    def get_define(self, camel_attr: bool = True) -> dict:
         """Get :class:`ConditionBranch` definition attribute communicate to Java gateway server."""
         if self.condition:
             self._DEFINE_ATTR.add("condition")
@@ -121,7 +120,7 @@ class SwitchCondition(Base):
             setattr(self, "next_node", "")
         setattr(self, "depend_task_list", result)
 
-    def get_define(self, camel_attr=True) -> Dict:
+    def get_define(self, camel_attr=True) -> dict:
         """Overwrite Base.get_define to get task Condition specific get define."""
         self.set_define_attr()
         return super().get_define()
@@ -154,7 +153,7 @@ class Switch(Task):
         self.set_downstream(downstream)
 
     @property
-    def task_params(self, camel_attr: bool = True, custom_attr: set = None) -> Dict:
+    def task_params(self, camel_attr: bool = True, custom_attr: set = None) -> dict:
         """Override Task.task_params for switch task.
 
         switch task have some specials attribute `switch`, and in most of the task

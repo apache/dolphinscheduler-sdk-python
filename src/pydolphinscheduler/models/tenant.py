@@ -17,7 +17,7 @@
 
 """DolphinScheduler Tenant object."""
 
-from typing import Optional
+from __future__ import annotations
 
 from pydolphinscheduler import configuration
 from pydolphinscheduler.java_gateway import gateway
@@ -31,10 +31,10 @@ class Tenant(BaseSide):
         self,
         name: str = configuration.USER_TENANT,
         queue: str = configuration.WORKFLOW_QUEUE,
-        description: Optional[str] = None,
-        tenant_id: Optional[int] = None,
-        code: Optional[str] = None,
-        user_name: Optional[str] = None,
+        description: str | None = None,
+        tenant_id: int | None = None,
+        code: str | None = None,
+        user_name: str | None = None,
     ):
         super().__init__(name, description)
         self.tenant_id = tenant_id
@@ -52,7 +52,7 @@ class Tenant(BaseSide):
         # gateway_result_checker(result, None)
 
     @classmethod
-    def get_tenant(cls, code: str) -> "Tenant":
+    def get_tenant(cls, code: str) -> Tenant:
         """Get Tenant list."""
         tenant = gateway.query_tenant(code)
         if tenant is None:

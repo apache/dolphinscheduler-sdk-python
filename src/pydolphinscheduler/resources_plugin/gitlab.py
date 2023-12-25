@@ -16,7 +16,8 @@
 # under the License.
 
 """DolphinScheduler gitlab resource plugin."""
-from typing import Optional
+from __future__ import annotations
+
 from urllib.parse import urljoin, urlparse
 
 import gitlab
@@ -40,10 +41,10 @@ class GitLab(ResourcePlugin, Git):
     def __init__(
         self,
         prefix: str,
-        private_token: Optional[str] = None,
-        oauth_token: Optional[str] = None,
-        username: Optional[str] = None,
-        password: Optional[str] = None,
+        private_token: str | None = None,
+        oauth_token: str | None = None,
+        username: str | None = None,
+        password: str | None = None,
         *args,
         **kwargs,
     ):

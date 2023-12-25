@@ -17,7 +17,7 @@
 
 """DolphinScheduler Project object."""
 
-from typing import Optional
+from __future__ import annotations
 
 from pydolphinscheduler import configuration
 from pydolphinscheduler.java_gateway import gateway
@@ -30,8 +30,8 @@ class Project(BaseSide):
     def __init__(
         self,
         name: str = configuration.WORKFLOW_PROJECT,
-        description: Optional[str] = None,
-        code: Optional[int] = None,
+        description: str | None = None,
+        code: int | None = None,
     ):
         super().__init__(name, description)
         self.code = code
@@ -43,7 +43,7 @@ class Project(BaseSide):
         # gateway_result_checker(result, None)
 
     @classmethod
-    def get_project_by_name(cls, user=configuration.USER_NAME, name=None) -> "Project":
+    def get_project_by_name(cls, user=configuration.USER_NAME, name=None) -> Project:
         """Get Project by name."""
         project = gateway.query_project_by_name(user, name)
         if project is None:

@@ -17,7 +17,7 @@
 
 """DolphinScheduler Base object."""
 
-from typing import Dict, Optional
+from __future__ import annotations
 
 # from pydolphinscheduler.models.user import User
 from pydolphinscheduler.utils.string import attr2camel
@@ -33,9 +33,9 @@ class Base:
     _DEFINE_ATTR: set = set()
 
     # Object default attribute, will add those attribute to `_DEFINE_ATTR` when init assign missing.
-    _DEFAULT_ATTR: Dict = {}
+    _DEFAULT_ATTR: dict = {}
 
-    def __init__(self, name: str, description: Optional[str] = None):
+    def __init__(self, name: str, description: str | None = None):
         self.name = name
         self.description = description
 
@@ -49,7 +49,7 @@ class Base:
 
     def get_define_custom(
         self, camel_attr: bool = True, custom_attr: set = None
-    ) -> Dict:
+    ) -> dict:
         """Get object definition attribute by given attr set."""
         content = {}
         for attr in custom_attr:
@@ -60,7 +60,7 @@ class Base:
                 content[attr] = val
         return content
 
-    def get_define(self, camel_attr: bool = True) -> Dict:
+    def get_define(self, camel_attr: bool = True) -> dict:
         """Get object definition attribute communicate to Java gateway server.
 
         use attribute `self._DEFINE_ATTR` to determine which attributes should including when

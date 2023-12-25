@@ -16,8 +16,8 @@
 # under the License.
 
 """Test Task switch."""
+from __future__ import annotations
 
-from typing import Optional, Tuple
 from unittest.mock import patch
 
 import pytest
@@ -37,7 +37,7 @@ TEST_NAME = "test-task"
 TEST_TYPE = "test-type"
 
 
-def task_switch_arg_wrapper(obj, task: Task, exp: Optional[str] = None) -> SwitchBranch:
+def task_switch_arg_wrapper(obj, task: Task, exp: str | None = None) -> SwitchBranch:
     """Wrap task switch and its subclass."""
     if obj is Default:
         return obj(task)
@@ -121,7 +121,7 @@ def test_switch_branch_get_define_condition(obj: SwitchBranch):
         ),
     ],
 )
-def test_switch_condition_set_define_attr_error(args: Tuple, msg: str):
+def test_switch_condition_set_define_attr_error(args: tuple, msg: str):
     """Test error case on :class:`SwitchCondition`."""
     switch_condition = SwitchCondition(*args)
     with pytest.raises(PyDSParamException, match=msg):

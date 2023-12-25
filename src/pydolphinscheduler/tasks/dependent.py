@@ -16,9 +16,9 @@
 # under the License.
 
 """Task dependent."""
+from __future__ import annotations
 
 import warnings
-from typing import Dict, Optional, Tuple
 
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.task import Task
@@ -91,9 +91,9 @@ class DependentItem(Base):
         self,
         project_name: str,
         # TODO zhongjiajie should be also depeloped in 4.1.0
-        workflow_name: Optional[str] = None,
-        dependent_task_name: Optional[str] = DEPENDENT_ALL_TASK_IN_WORKFLOW,
-        dependent_date: Optional[DependentDate] = DependentDate.TODAY,
+        workflow_name: str | None = None,
+        dependent_task_name: str | None = DEPENDENT_ALL_TASK_IN_WORKFLOW,
+        dependent_date: DependentDate | None = DependentDate.TODAY,
         *args,
         **kwargs,
     ):
@@ -170,7 +170,7 @@ class DependentItem(Base):
         return self.dependent_task_name == DEPENDENT_ALL_TASK_IN_WORKFLOW
 
     @property
-    def code_parameter(self) -> Tuple:
+    def code_parameter(self) -> tuple:
         """Get name info parameter to query code."""
         param = (
             self.project_name,
@@ -179,7 +179,7 @@ class DependentItem(Base):
         )
         return param
 
-    def get_code_from_gateway(self) -> Dict:
+    def get_code_from_gateway(self) -> dict:
         """Get project, definition, task code from given parameter."""
         if self._code:
             return self._code
@@ -241,7 +241,7 @@ class DependentOperator(Base):
         setattr(self, attr, result)
         return attr
 
-    def get_define(self, camel_attr=True) -> Dict:
+    def get_define(self, camel_attr=True) -> dict:
         """Overwrite Base.get_define to get task dependent specific get define."""
         attr = self.set_define_attr()
         dependent_define_attr = self._DEFINE_ATTR.union({attr})
@@ -280,7 +280,7 @@ class Dependent(Task):
         self.dependence = dependence
 
     @property
-    def task_params(self, camel_attr: bool = True, custom_attr: set = None) -> Dict:
+    def task_params(self, camel_attr: bool = True, custom_attr: set = None) -> dict:
         """Override Task.task_params for dependent task.
 
         Dependent task have some specials attribute `dependence`, and in most of the task

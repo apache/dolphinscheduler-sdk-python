@@ -1,5 +1,7 @@
 src = ["src"]
 
+target-version = "py38"
+
 # max-line-length = 110
 line-length = 110
 

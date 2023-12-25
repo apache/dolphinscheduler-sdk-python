@@ -17,7 +17,7 @@
 
 """Module engine."""
 
-from typing import Dict, Optional
+from __future__ import annotations
 
 from py4j.protocol import Py4JJavaError
 
@@ -47,9 +47,9 @@ class Engine(Task):
         task_type: str,
         main_class: str,
         main_package: str,
-        program_type: Optional[ProgramType] = ProgramType.SCALA,
+        program_type: ProgramType | None = ProgramType.SCALA,
         *args,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(name, task_type, *args, **kwargs)
         self.main_class = main_class
@@ -76,7 +76,7 @@ class Engine(Task):
         return self.get_resource_info(self.program_type, self.main_package).get("id")
 
     @property
-    def task_params(self, camel_attr: bool = True, custom_attr: set = None) -> Dict:
+    def task_params(self, camel_attr: bool = True, custom_attr: set = None) -> dict:
         """Override Task.task_params for engine children task.
 
         children task have some specials attribute for task_params, and is odd if we

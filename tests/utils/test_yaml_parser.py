@@ -16,8 +16,7 @@
 # under the License.
 
 """Test utils.path_dict module."""
-
-from typing import Dict
+from __future__ import annotations
 
 import pytest
 from ruamel.yaml import YAML
@@ -99,7 +98,7 @@ with open(path_default_config_yaml) as f:
         ),
     ],
 )
-def test_yaml_parser_specific_delimiter(src: str, delimiter: str, expect: Dict):
+def test_yaml_parser_specific_delimiter(src: str, delimiter: str, expect: dict):
     """Test specific delimiter for :class:`YamlParser`."""
 
     def ch_dl(key):
@@ -135,7 +134,7 @@ def test_yaml_parser_specific_delimiter(src: str, delimiter: str, expect: Dict):
         ),
     ],
 )
-def test_yaml_parser_contains(src: str, expect: Dict):
+def test_yaml_parser_contains(src: str, expect: dict):
     """Test magic function :func:`YamlParser.__contain__` also with `key in obj` syntax."""
     yaml_parser = YamlParser(src)
     assert len(expect.keys()) == len(
@@ -159,7 +158,7 @@ def test_yaml_parser_contains(src: str, expect: Dict):
         ),
     ],
 )
-def test_yaml_parser_get(src: str, expect: Dict):
+def test_yaml_parser_get(src: str, expect: dict):
     """Test magic function :func:`YamlParser.__getitem__` also with `obj[key]` syntax."""
     yaml_parser = YamlParser(src)
     assert all(
@@ -191,7 +190,7 @@ def test_yaml_parser_get(src: str, expect: Dict):
         ),
     ],
 )
-def test_yaml_parser_set(src: str, expect: Dict):
+def test_yaml_parser_set(src: str, expect: dict):
     """Test magic function :func:`YamlParser.__setitem__` also with `obj[key] = val` syntax."""
     yaml_parser = YamlParser(src)
     for key in expect:
@@ -241,7 +240,7 @@ name:
         ),
     ],
 )
-def test_yaml_parser_str_repr(src: str, setter: Dict, expect: str):
+def test_yaml_parser_str_repr(src: str, setter: dict, expect: str):
     """Test function :func:`YamlParser.to_string`."""
     yaml_parser = YamlParser(src)
 

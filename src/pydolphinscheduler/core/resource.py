@@ -17,7 +17,7 @@
 
 """Module resource."""
 
-from typing import Optional
+from __future__ import annotations
 
 from pydolphinscheduler.exceptions import PyDSParamException
 from pydolphinscheduler.java_gateway import gateway
@@ -38,9 +38,9 @@ class Resource(Base):
     def __init__(
         self,
         name: str,
-        content: Optional[str] = None,
-        description: Optional[str] = None,
-        user_name: Optional[str] = None,
+        content: str | None = None,
+        description: str | None = None,
+        user_name: str | None = None,
     ):
         super().__init__(name, description)
         self.content = content

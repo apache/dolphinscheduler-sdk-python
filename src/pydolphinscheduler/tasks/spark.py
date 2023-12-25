@@ -17,7 +17,7 @@
 
 """Task Spark."""
 
-from typing import Optional
+from __future__ import annotations
 
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.engine import Engine, ProgramType
@@ -51,18 +51,18 @@ class Spark(Engine):
         name: str,
         main_class: str,
         main_package: str,
-        program_type: Optional[ProgramType] = ProgramType.SCALA,
-        deploy_mode: Optional[DeployMode] = DeployMode.CLUSTER,
-        app_name: Optional[str] = None,
-        driver_cores: Optional[int] = 1,
-        driver_memory: Optional[str] = "512M",
-        num_executors: Optional[int] = 2,
-        executor_memory: Optional[str] = "2G",
-        executor_cores: Optional[int] = 2,
-        main_args: Optional[str] = None,
-        others: Optional[str] = None,
+        program_type: ProgramType | None = ProgramType.SCALA,
+        deploy_mode: DeployMode | None = DeployMode.CLUSTER,
+        app_name: str | None = None,
+        driver_cores: int | None = 1,
+        driver_memory: str | None = "512M",
+        num_executors: int | None = 2,
+        executor_memory: str | None = "2G",
+        executor_cores: int | None = 2,
+        main_args: str | None = None,
+        others: str | None = None,
         *args,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(
             name,
@@ -71,7 +71,7 @@ class Spark(Engine):
             main_package,
             program_type,
             *args,
-            **kwargs
+            **kwargs,
         )
         self.deploy_mode = deploy_mode
         self.app_name = app_name

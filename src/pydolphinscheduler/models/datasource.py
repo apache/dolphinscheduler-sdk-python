@@ -16,9 +16,11 @@
 # under the License.
 
 """Module database."""
+from __future__ import annotations
+
 import json
 import re
-from typing import NamedTuple, Optional
+from dataclasses import dataclass
 
 from py4j.java_gateway import JavaObject
 
@@ -27,7 +29,8 @@ from pydolphinscheduler.models.connection import Connection
 from pydolphinscheduler.models.meta import ModelMeta
 
 
-class TaskUsage(NamedTuple):
+@dataclass
+class TaskUsage:
     """Class for task usage just like datasource in web ui."""
 
     id: int
@@ -92,9 +95,9 @@ class Datasource(metaclass=ModelMeta):
         type_: str,
         name: str,
         connection_params: str,
-        user_id: Optional[int] = None,
-        id_: Optional[int] = None,
-        note: Optional[str] = None,
+        user_id: int | None = None,
+        id_: int | None = None,
+        note: str | None = None,
     ):
         self.id = id_
         self.name = name
@@ -106,8 +109,8 @@ class Datasource(metaclass=ModelMeta):
 
     @classmethod
     def get(
-        cls, datasource_name: str, datasource_type: Optional[str] = None
-    ) -> "Datasource":
+        cls, datasource_name: str, datasource_type: str | None = None
+    ) -> Datasource:
         """Get single datasource.
 
         :param datasource_name: datasource name
@@ -122,10 +125,10 @@ class Datasource(metaclass=ModelMeta):
 
     @classmethod
     def get_task_usage_4j(
-        cls, datasource_name: str, datasource_type: Optional[str] = None
+        cls, datasource_name: str, datasource_type: str | None = None
     ) -> TaskUsage:
         """Get the necessary information of datasource for task usage in web UI."""
-        datasource: "Datasource" = cls.get(datasource_name, datasource_type)
+        datasource: Datasource = cls.get(datasource_name, datasource_type)
         return TaskUsage(
             id=datasource.id,
             type=datasource.type.upper(),

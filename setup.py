@@ -16,13 +16,14 @@
 # under the License.
 
 """The script for setting up pydolphinscheduler."""
+from __future__ import annotations
+
 import logging
 import os
 import sys
 from distutils.command.sdist import sdist
 from distutils.dir_util import remove_tree
 from distutils.errors import DistutilsExecError
-from typing import List
 
 from setuptools import Command, setup
 
@@ -38,7 +39,7 @@ class CleanCommand(Command):
     """Command to clean up python api before setup by running `python setup.py clean`."""
 
     description = "Clean up project root"
-    user_options: List[str] = []
+    user_options: list[str] = []
     clean_list = [
         "build",
         "htmlcov",

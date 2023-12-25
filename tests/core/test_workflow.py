@@ -16,9 +16,11 @@
 # under the License.
 
 """Test workflow."""
+from __future__ import annotations
+
 import warnings
 from datetime import datetime, timedelta
-from typing import Any, List, Union
+from typing import Any
 from unittest.mock import patch
 
 import pytest
@@ -93,7 +95,7 @@ def test_workflow_default_value(name, value):
         ("param", dict, {"key": "value"}),
         (
             "resource_list",
-            List,
+            list,
             [Resource(name="/dev/test.py", content="hello world", description="desc")],
         ),
     ],
@@ -117,7 +119,7 @@ def test_set_attr(name, cls, expect):
         (timedelta(seconds=360), 6),
     ],
 )
-def test_workflow_timeout(value: Union[timedelta, int], expect: int):
+def test_workflow_timeout(value: timedelta | int, expect: int):
     """Test workflow timout attribute."""
     with Workflow(TEST_WORKFLOW_NAME, timeout=value) as workflow:
         assert (

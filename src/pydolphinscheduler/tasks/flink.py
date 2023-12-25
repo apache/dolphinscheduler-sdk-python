@@ -17,7 +17,7 @@
 
 """Task Flink."""
 
-from typing import Optional
+from __future__ import annotations
 
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.engine import Engine, ProgramType
@@ -58,19 +58,19 @@ class Flink(Engine):
         name: str,
         main_class: str,
         main_package: str,
-        program_type: Optional[ProgramType] = ProgramType.SCALA,
-        deploy_mode: Optional[DeployMode] = DeployMode.CLUSTER,
-        flink_version: Optional[FlinkVersion] = FlinkVersion.LOW_VERSION,
-        app_name: Optional[str] = None,
-        job_manager_memory: Optional[str] = "1G",
-        task_manager_memory: Optional[str] = "2G",
-        slot: Optional[int] = 1,
-        task_manager: Optional[int] = 2,
-        parallelism: Optional[int] = 1,
-        main_args: Optional[str] = None,
-        others: Optional[str] = None,
+        program_type: ProgramType | None = ProgramType.SCALA,
+        deploy_mode: DeployMode | None = DeployMode.CLUSTER,
+        flink_version: FlinkVersion | None = FlinkVersion.LOW_VERSION,
+        app_name: str | None = None,
+        job_manager_memory: str | None = "1G",
+        task_manager_memory: str | None = "2G",
+        slot: int | None = 1,
+        task_manager: int | None = 2,
+        parallelism: int | None = 1,
+        main_args: str | None = None,
+        others: str | None = None,
         *args,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(
             name,
@@ -79,7 +79,7 @@ class Flink(Engine):
             main_package,
             program_type,
             *args,
-            **kwargs
+            **kwargs,
         )
         self.deploy_mode = deploy_mode
         self.flink_version = flink_version

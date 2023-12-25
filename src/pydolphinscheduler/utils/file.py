@@ -17,15 +17,16 @@
 
 """File util for pydolphinscheduler."""
 
+from __future__ import annotations
+
 from pathlib import Path
-from typing import Optional
 
 
 def write(
     content: str,
     to_path: str,
-    create: Optional[bool] = True,
-    overwrite: Optional[bool] = False,
+    create: bool | None = True,
+    overwrite: bool | None = False,
 ) -> None:
     """Write configs dict to configuration file.
 

@@ -16,18 +16,18 @@
 # under the License.
 
 """Testing util about file operating."""
+from __future__ import annotations
 
 from pathlib import Path
-from typing import Union
 
 
-def get_file_content(path: Union[str, Path]) -> str:
+def get_file_content(path: str | Path) -> str:
     """Get file content in given path."""
     with open(path) as f:
         return f.read()
 
 
-def delete_file(path: Union[str, Path]) -> None:
+def delete_file(path: str | Path) -> None:
     """Delete file in given path."""
     path = Path(path).expanduser() if isinstance(path, str) else path.expanduser()
     if path.exists():

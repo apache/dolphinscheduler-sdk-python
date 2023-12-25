@@ -17,6 +17,8 @@
 
 """DolphinScheduler GitFileInfo and Git object."""
 
+from __future__ import annotations
+
 from abc import ABCMeta, abstractmethod
 from typing import Optional
 
@@ -32,12 +34,12 @@ class GitFileInfo:
 
     def __init__(
         self,
-        user: Optional[str] = None,
-        repo_name: Optional[str] = None,
-        branch: Optional[str] = None,
-        file_path: Optional[str] = None,
+        user: str | None = None,
+        repo_name: str | None = None,
+        branch: str | None = None,
+        file_path: str | None = None,
         *args,
-        **kwargs
+        **kwargs,
     ):
         self.user = user
         self.repo_name = repo_name
@@ -56,12 +58,12 @@ class GitHubFileInfo(GitFileInfo):
 
     def __init__(
         self,
-        user: Optional[str] = None,
-        repo_name: Optional[str] = None,
-        branch: Optional[str] = None,
-        file_path: Optional[str] = None,
+        user: str | None = None,
+        repo_name: str | None = None,
+        branch: str | None = None,
+        file_path: str | None = None,
         *args,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(
             user=user,
@@ -69,7 +71,7 @@ class GitHubFileInfo(GitFileInfo):
             branch=branch,
             file_path=file_path,
             *args,
-            **kwargs
+            **kwargs,
         )
 
 
@@ -85,13 +87,13 @@ class GitLabFileInfo(GitFileInfo):
 
     def __init__(
         self,
-        host: Optional[str] = None,
-        user: Optional[str] = None,
-        repo_name: Optional[str] = None,
-        branch: Optional[str] = None,
-        file_path: Optional[str] = None,
+        host: str | None = None,
+        user: str | None = None,
+        repo_name: str | None = None,
+        branch: str | None = None,
+        file_path: str | None = None,
         *args,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(
             user=user,
@@ -99,7 +101,7 @@ class GitLabFileInfo(GitFileInfo):
             branch=branch,
             file_path=file_path,
             *args,
-            **kwargs
+            **kwargs,
         )
         self.host = host
 
