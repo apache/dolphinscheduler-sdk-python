@@ -80,7 +80,7 @@ name:
 """
 ]
 
-with open(path_default_config_yaml, "r") as f:
+with open(path_default_config_yaml) as f:
     param.append(f.read())
 
 

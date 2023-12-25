@@ -23,7 +23,7 @@ from pydolphinscheduler.exceptions import PyResPluginException
 
 
 # [start resource_plugin_definition]
-class ResourcePlugin(object, metaclass=ABCMeta):
+class ResourcePlugin(metaclass=ABCMeta):
     """ResourcePlugin object, declare resource plugin for task and workflow to dolphinscheduler.
 
     :param prefix: A string representing the prefix of ResourcePlugin.

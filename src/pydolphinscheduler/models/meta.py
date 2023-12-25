@@ -56,7 +56,7 @@ class ModelMeta(type):
         for attr_name, attr_value in attrs.items():
             if isinstance(attr_value, classmethod) and not attr_name.startswith("__"):
                 attrs[attr_name] = mcs.j2p(attr_value, name, attrs, param)
-        return super(ModelMeta, mcs).__new__(mcs, name, bases, attrs)
+        return super().__new__(mcs, name, bases, attrs)
 
     @classmethod
     def j2p(mcs, cm: classmethod, name: str, attrs: Dict, params=None):

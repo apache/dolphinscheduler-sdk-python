@@ -44,7 +44,7 @@ def get_configs() -> YamlParser:
     default path.
     """
     path = str(config_path()) if config_path().exists() else BUILD_IN_CONFIG_PATH
-    with open(path, mode="r") as f:
+    with open(path) as f:
         return YamlParser(f.read())
 
 
@@ -131,7 +131,7 @@ def token_alert(auth_token: str) -> None:
             "Auth token is None, highly recommend add a token in production, "
             "especially you deploy in public network."
         )
-    with open(BUILD_IN_CONFIG_PATH, mode="r") as f:
+    with open(BUILD_IN_CONFIG_PATH) as f:
         config = YamlParser(f.read())
         if config.get("java_gateway.auth_token") == auth_token:
             logger.warning(

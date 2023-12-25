@@ -15,7 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-"""WorkerResource Mixin"""
+"""WorkerResource Mixin."""
 
 
 class WorkerResourceMixin:

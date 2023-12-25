@@ -1,0 +1,50 @@
+src = ["src"]
+
+# max-line-length = 110
+line-length = 110
+
+extend-select = [
+    "I",   # isort
+    "D",   # pydocstyle
+    "UP",  # pyupgrade
+]
+
+ignore = [
+    # D107: Missing docstring in __init__
+    "D107",
+    # D105: Missing docstring in magic method
+    "D105",
+    # D418: Function/ Method decorated with @overload shouldn’t contain a docstring
+    "D418",
+    # D400: First line should end with a period
+    "D400",
+]
+
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    "__pycache__",
+    ".egg-info",
+    ".eggs",
+    ".git",
+    ".pytest_cache",
+    ".tox",
+    "build",
+    "dist",
+    "examples",
+    "venv",
+    "docs/source/conf.py",
+    "htmlcov"
+]
+
+[extend-per-file-ignores]
+"*/pydolphinscheduler/side/__init__.py" = ["F401"]
+"*/pydolphinscheduler/tasks/__init__.py" = ["F401"]
+
+[isort]
+# Mark sqlfluff, test and it's plugins as known first party
+known-first-party = [
+    "pydolphinscheduler",
+]
+
+[pydocstyle]
+convention = "google"

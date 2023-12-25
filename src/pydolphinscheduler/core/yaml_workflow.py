@@ -52,7 +52,7 @@ class ParseTool:
             path = re.findall(r"\$FILE\{\"(.*?)\"\}", string_param)[0]
             base_folder = kwargs.get("base_folder", ".")
             path = ParseTool.get_possible_path(path, base_folder)
-            with open(path, "r") as read_file:
+            with open(path) as read_file:
                 string_param = "".join(read_file)
         return string_param
 
@@ -147,7 +147,7 @@ class YamlWorkflow(YamlParser):
     ]
 
     def __init__(self, yaml_file: str):
-        with open(yaml_file, "r") as f:
+        with open(yaml_file) as f:
             content = f.read()
 
         self._base_folder = Path(yaml_file).parent

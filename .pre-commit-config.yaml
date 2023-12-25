@@ -24,29 +24,12 @@ default_language_version:
   python: python3
 repos:
   # Python API Hooks
-  - repo: https://github.com/pycqa/isort
-    rev: 5.10.1
-    hooks:
-      - id: isort
-        name: isort (python)
   - repo: https://github.com/psf/black
     rev: 22.3.0
     hooks:
       - id: black
-  - repo: https://github.com/pycqa/flake8
-    rev: 4.0.1
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.1.0
     hooks:
-      - id: flake8
-        additional_dependencies: [
-          'flake8-docstrings>=1.6',
-          'flake8-black>=0.2',
-        ]
-  - repo: https://github.com/pycqa/autoflake
-    rev: v1.4
-    hooks:
-      - id: autoflake
-        args: [
-          --remove-all-unused-imports,
-          --ignore-init-module-imports,
-          --in-place
-        ]
+      - id: ruff
+        args: [ --fix, --exit-non-zero-on-fix ]

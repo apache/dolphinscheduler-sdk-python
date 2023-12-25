@@ -23,7 +23,7 @@ from typing import Union
 
 def get_file_content(path: Union[str, Path]) -> str:
     """Get file content in given path."""
-    with open(path, mode="r") as f:
+    with open(path) as f:
         return f.read()
 
 
