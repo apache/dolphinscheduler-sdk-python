@@ -247,15 +247,6 @@ class Task(Base):
         """Set attribute workflow."""
         self._workflow = workflow
 
-    @staticmethod
-    def _parse_timeout(val: Any) -> Any:
-        if val is None or isinstance(val, timedelta):
-            return timedelta2timeout(val) if val else 0
-        elif val >= 0:
-            return val
-        else:
-            raise PyDSParamException("The timeout value cannot be negative")
-
     @property
     def timeout(self) -> int:
         """Get attribute timeout."""
