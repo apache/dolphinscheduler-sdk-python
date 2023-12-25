@@ -86,8 +86,9 @@ def test_update_user():
         password="test-password-",
         email="test-email-updated@abc.com",
         phone="17366637766",
-        tenant="test-tenant-updated",
-        queue="test-queue-updated",
+        # java gateway will raise error when tenant or queue change
+        tenant=user.tenant,
+        queue=user.queue,
         status=2,
     )
     user_ = User.get_user(user.user_id)
