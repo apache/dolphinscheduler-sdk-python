@@ -5,6 +5,9 @@
     },
     {
       "pattern": "^https://img.shields.io/badge"
+    },
+    {
+      "pattern": "https://twitter.com/dolphinschedule"
     }
   ],
   "httpHeaders": [
