@@ -56,7 +56,7 @@ git commit -am "Release v${VERSION}"
 
 # Add Tag
 git tag -a "${VERSION}" -m "Release v${VERSION}"
-git push "${REMOTE}" --tags
+git push "${REMOTE}" tags/"${VERSION}"
 
 # Build and sign according to the Apache requirements
 python setup.py clean && python setup.py asdist
