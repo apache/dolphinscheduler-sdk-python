@@ -99,7 +99,9 @@ class Task(Base):
     :param fail_retry_times: default 0
     :param fail_retry_interval: default 1
     :param timeout_notify_strategy: default, None
-    :param timeout: default None
+    :param timeout: Timeout attribute for task, in minutes. Task is consider as  timed out task when the
+        running time of a task exceeds than this value. when data type is :class:`datetime.timedelta` will
+        be converted to int(in minutes). default ``None``
     :param resource_list: default None
     :param wait_start_timeout: default None
     :param condition_result: default None,
@@ -164,7 +166,7 @@ class Task(Base):
         fail_retry_times: Optional[int] = 0,
         fail_retry_interval: Optional[int] = 1,
         timeout_notify_strategy: Optional = None,
-        timeout: Optional[timedelta] = None,
+        timeout: Optional[Union[timedelta, int]] = None,
         workflow: Optional[Workflow] = None,
         resource_list: Optional[List] = None,
         dependence: Optional[Dict] = None,
@@ -190,7 +192,7 @@ class Task(Base):
         self.fail_retry_interval = fail_retry_interval
         self.delay_time = delay_time
         self.timeout_notify_strategy = timeout_notify_strategy
-        self._timeout: timedelta = timeout
+        self._timeout: Union[timedelta, int] = timeout
         self._workflow = None
         self._input_params = input_params or {}
         self._output_params = output_params or {}
@@ -248,12 +250,11 @@ class Task(Base):
     @property
     def timeout(self) -> int:
         """Get attribute timeout."""
+        if isinstance(self._timeout, int):
+            if self._timeout < 0:
+                raise PyDSParamException("The timeout value must be greater than 0")
+            return self._timeout
         return timedelta2timeout(self._timeout) if self._timeout else 0
-
-    @timeout.setter
-    def timeout(self, val: timedelta) -> None:
-        """Set attribute timeout."""
-        self._timeout = val
 
     @property
     def timeout_flag(self) -> str:

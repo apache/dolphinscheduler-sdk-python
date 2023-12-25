@@ -18,7 +18,7 @@
 """Module workflow, core class for workflow define."""
 
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional, Set, Union
 
 from pydolphinscheduler import configuration
@@ -28,7 +28,12 @@ from pydolphinscheduler.core.resource_plugin import ResourcePlugin
 from pydolphinscheduler.exceptions import PyDSParamException, PyDSTaskNoFoundException
 from pydolphinscheduler.java_gateway import gateway
 from pydolphinscheduler.models import Base, Project, User
-from pydolphinscheduler.utils.date import MAX_DATETIME, conv_from_str, conv_to_schedule
+from pydolphinscheduler.utils.date import (
+    MAX_DATETIME,
+    conv_from_str,
+    conv_to_schedule,
+    timedelta2timeout,
+)
 
 
 class WorkflowContext:
@@ -75,7 +80,9 @@ class Workflow(Base):
             finished.
           * ``SERIAL_PRIORITY``: means the all instance will wait for the previous instance to finish, and
             all the waiting instances will be executed base on workflow priority order.
-
+    :param timeout: Timeout attribute for task, in minutes. Task is consider as timed out task when the
+        running time of a task exceeds than this value. when data type is :class:`datetime.timedelta` will
+        be converted to int(in minutes). default ``0``
     :param user: The user for current workflow. Will create a new one if it do not exists. If your
         parameter ``project`` already exists but project's create do not belongs to ``user``, will grant
         ``project`` to ``user`` automatically.
@@ -130,7 +137,7 @@ class Workflow(Base):
         warning_type: Optional[str] = configuration.WORKFLOW_WARNING_TYPE,
         warning_group_id: Optional[int] = 0,
         execution_type: Optional[str] = configuration.WORKFLOW_EXECUTION_TYPE,
-        timeout: Optional[int] = 0,
+        timeout: Optional[Union[timedelta, int]] = 0,
         release_state: Optional[str] = configuration.WORKFLOW_RELEASE_STATE,
         param: Optional[Dict] = None,
         resource_plugin: Optional[ResourcePlugin] = None,
@@ -180,7 +187,7 @@ class Workflow(Base):
             )
         else:
             self._execution_type = execution_type
-        self.timeout = timeout
+        self._timeout: Union[timedelta, int] = timeout
         self._release_state = release_state
         self.param = param
         self.tasks: dict = {}
@@ -262,6 +269,15 @@ class Workflow(Base):
     def release_state(self, val: str) -> None:
         """Set attribute release_state."""
         self._release_state = val.lower()
+
+    @property
+    def timeout(self) -> int:
+        """Get attribute timeout."""
+        if isinstance(self._timeout, int):
+            if self._timeout < 0:
+                raise PyDSParamException("The timeout value must be greater than 0")
+            return self._timeout
+        return timedelta2timeout(self._timeout) if self._timeout else 0
 
     @property
     def execution_type(self) -> str:

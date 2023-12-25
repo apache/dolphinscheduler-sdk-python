@@ -20,7 +20,7 @@ import logging
 import re
 import warnings
 from datetime import timedelta
-from typing import Set, Tuple
+from typing import Set, Tuple, Union
 from unittest.mock import PropertyMock, patch
 
 import pytest
@@ -111,9 +111,13 @@ def test__get_attr(addition: Set, ignore: Set, expect: Set):
         (timedelta(seconds=61), (2, "OPEN")),
         (timedelta(seconds=0), (0, "CLOSE")),
         (timedelta(minutes=1.3), (2, "OPEN")),
+        (1, (1, "OPEN")),
+        (5, (5, "OPEN")),
+        (0, (0, "CLOSE")),
+        (None, (0, "CLOSE")),
     ],
 )
-def test_task_timeout(value: timedelta, expect: Tuple[int, str]):
+def test_task_timeout(value: Union[timedelta, int], expect: Tuple[int, str]):
     """Test task timout attribute."""
     task = TestTask(
         name="test-get-attr",

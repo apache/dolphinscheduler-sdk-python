@@ -17,8 +17,8 @@
 
 """Test workflow."""
 import warnings
-from datetime import datetime
-from typing import Any, List
+from datetime import datetime, timedelta
+from typing import Any, List, Union
 from unittest.mock import patch
 
 import pytest
@@ -90,7 +90,6 @@ def test_workflow_default_value(name, value):
         ("warning_type", str, "FAILURE"),
         ("warning_group_id", int, 1),
         ("execution_type", str, "PARALLEL"),
-        ("timeout", int, 1),
         ("param", dict, {"key": "value"}),
         (
             "resource_list",
@@ -106,6 +105,24 @@ def test_set_attr(name, cls, expect):
         assert (
             getattr(workflow, name) == expect
         ), f"Workflow set attribute `{name}` do not work expect"
+
+
+@pytest.mark.parametrize(
+    "value, expect",
+    [
+        (0, 0),
+        (5, 5),
+        (timedelta(seconds=60), 1),
+        (timedelta(seconds=61), 2),
+        (timedelta(seconds=360), 6),
+    ],
+)
+def test_workflow_timeout(value: Union[timedelta, int], expect: int):
+    """Test workflow timout attribute."""
+    with Workflow(TEST_WORKFLOW_NAME, timeout=value) as workflow:
+        assert (
+            workflow.timeout == expect
+        ), f"Workflow set attribute timeout expect {expect} but get {workflow.timeout}"
 
 
 @pytest.mark.parametrize(
