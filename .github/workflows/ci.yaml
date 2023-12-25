@@ -57,10 +57,10 @@ jobs:
     needs: license
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python 3.7
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.7
+          python-version: 3.11
       - name: Install Dependences
         run: |
           python -m pip install --upgrade ${{ env.DEPENDENCES }}
@@ -76,7 +76,7 @@ jobs:
       matrix:
         # YAML parse `3.10` to `3.1`, so we have to add quotes for `'3.10'`, see also:
         # https://github.com/actions/setup-python/issues/160#issuecomment-724485470
-        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10', '3.11', '3.12']
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
         # FIXME: temp change os to ubuntu-20.04 to fix python can not found error https://github.com/actions/setup-python/issues/162#issuecomment-1325307787
         os: [ubuntu-20.04, macOS-latest, windows-latest]
         # Skip because dependence [py4j](https://pypi.org/project/py4j/) not work on those environments
@@ -122,10 +122,10 @@ jobs:
         env-list: [doc-build, doc-build-multi]
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python 3.7
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.7
+          python-version: 3.11
       - name: Install Dependences
         run: |
           python -m pip install --upgrade ${{ env.DEPENDENCES }}
@@ -140,10 +140,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python 3.7
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.7
+          python-version: 3.11
       - name: Install Dependences
         run: |
           python -m pip install --upgrade ${{ env.DEPENDENCES }}
@@ -195,10 +195,10 @@ jobs:
           -Dcheckstyle.skip=true \
           -Pdocker,release -Ddocker.tag=ci \
           -pl dolphinscheduler-standalone-server -am
-      - name: Set up Python 3.7
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.7
+          python-version: 3.11
       - name: Install Dependences
         run: |
           python -m pip install --upgrade ${{ env.DEPENDENCES }}
