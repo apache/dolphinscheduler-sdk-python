@@ -22,6 +22,7 @@ from __future__ import annotations
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.task import Task
 from pydolphinscheduler.exceptions import PyDSParamException
+from pydolphinscheduler.core.parameter import ParameterHelper
 
 
 class HttpMethod:
@@ -68,7 +69,7 @@ class Http(Task):
         name: str,
         url: str,
         http_method: str | None = HttpMethod.GET,
-        http_params: str | None = None,
+        http_params: dict | None = None,
         http_check_condition: str | None = HttpCheckCondition.STATUS_CODE_DEFAULT,
         condition: str | None = None,
         connect_timeout: int | None = 60000,
@@ -83,7 +84,7 @@ class Http(Task):
                 "Parameter http_method %s not support.", http_method
             )
         self.http_method = http_method
-        self.http_params = http_params or []
+        self.http_params = ParameterHelper.convert_params(http_params, direction=Direction.IN) if http_params else []
         if not hasattr(HttpCheckCondition, http_check_condition):
             raise PyDSParamException(
                 "Parameter http_check_condition %s not support.", http_check_condition
