@@ -23,6 +23,7 @@ from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.task import Task
 from pydolphinscheduler.exceptions import PyDSParamException
 from pydolphinscheduler.core.parameter import ParameterHelper
+import warnings
 
 
 class HttpMethod:
@@ -52,7 +53,29 @@ class HttpCheckCondition:
 
 
 class Http(Task):
-    """Task HTTP object, declare behavior for HTTP task to dolphinscheduler."""
+    """Task HTTP object, declare behavior for HTTP task to dolphinscheduler.
+    Attributes:
+        _task_custom_attr (set): A set containing custom attributes specific to the Http task, 
+                                including 'url', 'http_method', 'http_params', and more.
+                                
+    Args:
+        name (str): The name or identifier for the HTTP task.
+        url (str): The URL endpoint for the HTTP request.
+        http_method (str, optional): The HTTP method for the request (GET, POST, etc.). Defaults to HttpMethod.GET.
+        http_params (str, optional): Parameters for the HTTP request. Defaults to None.
+        http_check_condition (str, optional): Condition for checking the HTTP response status. 
+                                               Defaults to HttpCheckCondition.STATUS_CODE_DEFAULT.
+        condition (str, optional): Additional condition to evaluate if `http_check_condition` is not STATUS_CODE_DEFAULT.
+        connect_timeout (int, optional): Connection timeout for the HTTP request in milliseconds. Defaults to 60000.
+        socket_timeout (int, optional): Socket timeout for the HTTP request in milliseconds. Defaults to 60000.
+        
+    Raises:
+        PyDSParamException: Exception raised for invalid parameters, such as unsupported HTTP methods or conditions.
+
+    Example:
+        Usage example for creating an HTTP task:
+        http_task = Http(name="http_task", url="https://api.example.com", http_method="POST", http_params={"key": "value"})
+    """
 
     _task_custom_attr = {
         "url",
@@ -83,8 +106,27 @@ class Http(Task):
             raise PyDSParamException(
                 "Parameter http_method %s not support.", http_method
             )
+        
+        if isinstance(http_params, list):
+            warnings.warn(
+                "The `http_params` parameter currently accepts a dictionary instead of a list. Your parameter is being ignored.",
+                DeprecationWarning,
+            )
+            
         self.http_method = http_method
-        self.http_params = ParameterHelper.convert_params(http_params, direction=Direction.IN) if http_params else []
+        self.http_params = http_params  # Storing the original value
+
+    @property
+    def http_params(self):
+        """Property to convert http_params using ParameterHelper when accessed."""
+        return ParameterHelper.convert_params(self._http_params, direction=Direction.IN) if self._http_params else []
+
+    @http_params.setter
+    def http_params(self, value):
+        """Setter method for http_params."""
+        self._http_params = value
+
+
         if not hasattr(HttpCheckCondition, http_check_condition):
             raise PyDSParamException(
                 "Parameter http_check_condition %s not support.", http_check_condition
