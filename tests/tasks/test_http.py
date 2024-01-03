@@ -23,7 +23,8 @@ import pytest
 
 from pydolphinscheduler.exceptions import PyDSParamException
 from pydolphinscheduler.tasks.http import Http, HttpCheckCondition, HttpMethod
-
+from pydolphinscheduler.core.parameter import ParameterHelper, ParameterType
+from http.py import Http  # Replace 'your_module_path' with the actual path or import structure
 
 @pytest.mark.parametrize(
     "class_name, attrs",
@@ -126,3 +127,30 @@ def test_http_get_define():
     ):
         http = Http(name, url)
         assert http.task_params == expect_task_params
+
+
+def test_http_params_conversion():
+    # Create a sample http_params dictionary
+    http_params_dict = {
+        "prop1": "value1",
+        "prop2": "value2",
+        "prop3": "value3"
+    }
+
+    # Create an instance of the Http class with http_params as a dictionary
+    http_instance = Http(
+        name="test_http",
+        url="http://www.example.com",
+        http_method="GET",
+        http_params=http_params_dict
+    )
+
+    # Print the initialized http_params attribute (should be converted to the desired format)
+    print("Converted http_params:", http_instance.http_params)
+
+    # Add any assertions or additional tests as required based on your project's logic
+    assert isinstance(http_instance.http_params, list)
+    assert len(http_instance.http_params) == len(http_params_dict)
+
+    
+
