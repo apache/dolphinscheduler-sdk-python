@@ -57,17 +57,17 @@ class Http(Task):
     Attributes:
         _task_custom_attr (set): A set containing custom attributes specific to the Http task, 
                                 including 'url', 'http_method', 'http_params', and more.
-                                
-    Args:
-        name (str): The name or identifier for the HTTP task.
-        url (str): The URL endpoint for the HTTP request.
-        http_method (str, optional): The HTTP method for the request (GET, POST, etc.). Defaults to HttpMethod.GET.
-        http_params (str, optional): Parameters for the HTTP request. Defaults to None.
-        http_check_condition (str, optional): Condition for checking the HTTP response status. 
-                                               Defaults to HttpCheckCondition.STATUS_CODE_DEFAULT.
-        condition (str, optional): Additional condition to evaluate if `http_check_condition` is not STATUS_CODE_DEFAULT.
-        connect_timeout (int, optional): Connection timeout for the HTTP request in milliseconds. Defaults to 60000.
-        socket_timeout (int, optional): Socket timeout for the HTTP request in milliseconds. Defaults to 60000.
+    Args:                            
+        :param str name: The name or identifier for the HTTP task.
+        :param str url: The URL endpoint for the HTTP request.
+        :param str http_method: The HTTP method for the request (GET, POST, etc.). Defaults to HttpMethod.GET.
+        :param dict http_params: Parameters for the HTTP request. Defaults to None.
+        :param str http_check_condition: Condition for checking the HTTP response status. 
+                                        Defaults to HttpCheckCondition.STATUS_CODE_DEFAULT.
+        :param str condition: Additional condition to evaluate if `http_check_condition` is not STATUS_CODE_DEFAULT.
+        :param int connect_timeout: Connection timeout for the HTTP request in milliseconds. Defaults to 60000.
+        :param int socket_timeout: Socket timeout for the HTTP request in milliseconds. Defaults to 60000.
+
         
     Raises:
         PyDSParamException: Exception raised for invalid parameters, such as unsupported HTTP methods or conditions.
@@ -114,31 +114,28 @@ class Http(Task):
             )
             
         self.http_method = http_method
-        self.http_params = http_params  # Storing the original value
+        self._http_params = http_params
 
     @property
     def http_params(self):
         """Property to convert http_params using ParameterHelper when accessed."""
         return ParameterHelper.convert_params(self._http_params, direction=Direction.IN) if self._http_params else []
 
-    @http_params.setter
-    def http_params(self, value):
-        """Setter method for http_params."""
-        self._http_params = value
+    
 
 
-        if not hasattr(HttpCheckCondition, http_check_condition):
-            raise PyDSParamException(
+    if not hasattr(HttpCheckCondition, http_check_condition):
+        raise PyDSParamException(
                 "Parameter http_check_condition %s not support.", http_check_condition
             )
-        self.http_check_condition = http_check_condition
-        if (
-            http_check_condition != HttpCheckCondition.STATUS_CODE_DEFAULT
+    self.http_check_condition = http_check_condition
+    if (
+        http_check_condition != HttpCheckCondition.STATUS_CODE_DEFAULT
             and condition is None
         ):
-            raise PyDSParamException(
-                "Parameter condition must provider if http_check_condition not equal to STATUS_CODE_DEFAULT"
+        raise PyDSParamException(
+            "Parameter condition must provider if http_check_condition not equal to STATUS_CODE_DEFAULT"
             )
-        self.condition = condition
-        self.connect_timeout = connect_timeout
-        self.socket_timeout = socket_timeout
+    self.condition = condition
+    self.connect_timeout = connect_timeout
+    self.socket_timeout = socket_timeout
