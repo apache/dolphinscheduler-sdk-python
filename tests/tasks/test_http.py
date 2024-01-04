@@ -138,7 +138,7 @@ def test_http_params_conversion():
     }
 
     # Create an instance of the Http class with http_params as a dictionary
-    http_instance = Http(
+    http = Http(
         name="test_http",
         url="http://www.example.com",
         http_method="GET",
