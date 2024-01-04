@@ -25,6 +25,8 @@ from pydolphinscheduler.exceptions import PyDSParamException
 from pydolphinscheduler.tasks.http import Http, HttpCheckCondition, HttpMethod
 from pydolphinscheduler.core.parameter import ParameterHelper, ParameterType
 from http.py import Http  # Replace 'your_module_path' with the actual path or import structure
+import warnings
+
 
 @pytest.mark.parametrize(
     "class_name, attrs",
@@ -133,7 +135,7 @@ def test_http_params_conversion():
     # Create a sample http_params dictionary
     http_params_dict = {
         "prop1": "value1",
-        "prop2": "value2",
+        "prop2": 135,
         "prop3": "value3"
     }
 
@@ -145,12 +147,61 @@ def test_http_params_conversion():
         http_params=http_params_dict
     )
 
-    # Print the initialized http_params attribute (should be converted to the desired format)
-    print("Converted http_params:", http_instance.http_params)
 
     # Add any assertions or additional tests as required based on your project's logic
     assert isinstance(http_instance.http_params, list)
     assert len(http_instance.http_params) == len(http_params_dict)
 
+def test_http_params_transformation():
+    """Test the transformation of http_params."""
     
+    # Create a sample http_params dictionary with varied value types
+    http_params_dict = {
+        "prop1": "value1",
+        "prop2": 135,  # Changed this value to an integer as suggested
+        "prop3": "value3"
+    }
 
+    # Create an instance of the Http class with http_params as a dictionary
+    http_instance = Http(
+        name="test_http",
+        url="http://www.example.com",
+        http_method="GET",
+        http_params=http_params_dict
+    )
+
+    # Expected transformation after applying the changes
+    expect = [
+        {"prop": "prop1", "direct": "IN", "type": "VARCHAR", "value": "value1"},
+        {"prop": "prop2", "direct": "IN", "type": "INTEGER", "value": 135},  # Adjusted the type and value
+        {"prop": "prop3", "direct": "IN", "type": "VARCHAR", "value": "value3"},
+    ]
+
+    # Assertion to check if the transformation is as expected
+    assert http_instance.http_params == expect
+
+    
+def test_http_params_deprecation_warning():
+    """Test deprecation warning when user passes list to http_params."""
+    code = 123
+    version = 1
+    name = "test_http_params_deprecation_warning"
+    http_params_list = [{"prop": "abc", "httpParametersType": "PARAMETER", "value": "def"}]
+
+    with patch(
+        "pydolphinscheduler.core.task.Task.gen_code_and_version",
+        return_value=(code, version),
+    ):
+        with warnings.catch_warnings(record=True) as w:
+
+            http = Http(
+                name=name,
+                url="http://www.example.com",
+                http_method="GET",
+                http_params=http_params_list
+            )
+            
+            # Check if a deprecation warning is raised
+            assert len(w) == 1
+            assert issubclass(w[-1].category, DeprecationWarning)
+            assert "deprecated" in str(w[-1].message)
