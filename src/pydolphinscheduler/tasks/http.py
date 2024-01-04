@@ -54,19 +54,19 @@ class HttpCheckCondition:
 
 class Http(Task):
     """Task HTTP object, declare behavior for HTTP task to dolphinscheduler.
+        :param name: The name or identifier for the HTTP task.
+        :param url: The URL endpoint for the HTTP request.
+        :param http_method: The HTTP method for the request (GET, POST, etc.). Defaults to HttpMethod.GET.
+        :param http_params: Parameters for the HTTP request. Defaults to None.
+        :param http_check_condition: Condition for checking the HTTP response status. 
+            Defaults to HttpCheckCondition.STATUS_CODE_DEFAULT.
+        :param condition: Additional condition to evaluate if `http_check_condition` is not STATUS_CODE_DEFAULT.
+        :param connect_timeout: Connection timeout for the HTTP request in milliseconds. Defaults to 60000.
+        :param socket_timeout: Socket timeout for the HTTP request in milliseconds. Defaults to 60000.
+
     Attributes:
         _task_custom_attr (set): A set containing custom attributes specific to the Http task, 
                                 including 'url', 'http_method', 'http_params', and more.
-    Args:                            
-        :param str name: The name or identifier for the HTTP task.
-        :param str url: The URL endpoint for the HTTP request.
-        :param str http_method: The HTTP method for the request (GET, POST, etc.). Defaults to HttpMethod.GET.
-        :param dict http_params: Parameters for the HTTP request. Defaults to None.
-        :param str http_check_condition: Condition for checking the HTTP response status. 
-                                        Defaults to HttpCheckCondition.STATUS_CODE_DEFAULT.
-        :param str condition: Additional condition to evaluate if `http_check_condition` is not STATUS_CODE_DEFAULT.
-        :param int connect_timeout: Connection timeout for the HTTP request in milliseconds. Defaults to 60000.
-        :param int socket_timeout: Socket timeout for the HTTP request in milliseconds. Defaults to 60000.
 
         
     Raises:
