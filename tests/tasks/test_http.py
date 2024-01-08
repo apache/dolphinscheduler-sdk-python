@@ -164,7 +164,7 @@ def test_http_params_deprecation_warning():
         return_value=(code, version),
     ):
         with warnings.catch_warnings(record=True) as w:
-            http = Http(
+            Http(
                 name=name,
                 url="http://www.example.com",
                 http_method="GET",
