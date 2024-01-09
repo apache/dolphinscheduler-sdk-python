@@ -129,7 +129,11 @@ def test_http_get_define():
         assert http.task_params == expect_task_params
 
 
-def test_http_params():
+@patch(
+    "pydolphinscheduler.core.task.Task.gen_code_and_version",
+    return_value=(123, 1),
+)
+def test_http_params(mock_code):
     """Test the transformation and conversion of http_params."""
     http_params_dict = {"prop1": "value1", "prop2": 135, "prop3": "value3"}
 
@@ -174,4 +178,6 @@ def test_http_params_deprecation_warning():
             # Check if a deprecation warning is raised
             assert len(w) == 1
             assert issubclass(w[-1].category, DeprecationWarning)
-            assert "deprecated" in str(w[-1].message)
+            assert "The `http_params` parameter currently accepts a dictionary" in str(
+                w[-1].message
+            )
