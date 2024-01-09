@@ -114,3 +114,16 @@ def test_convert_params():
     ]
 
     assert results == expect
+
+
+def test_convert_params_error_type():
+    """Test the ParameterHelper convert_params with wrong type raise error."""
+    params = [
+        {"prop": "value_INTEGER", "direct": "IN", "type": "INTEGER", "value": 123},
+        {"prop": "value_LONG", "direct": "IN", "type": "LONG", "value": "1000000"},
+    ]
+    with pytest.raises(
+        PyDSParamException,
+        match="Parameter `params` must be a dict, but get",
+    ):
+        ParameterHelper.convert_params(params, direction=Direction.IN)
