@@ -123,7 +123,9 @@ class ParameterHelper:
         parameters = []
         params = params or {}
         if not isinstance(params, dict):
-            raise PyDSParamException("Parameter `params` must be a dict, but get %s", type(params))
+            raise PyDSParamException(
+                "Parameter `params` must be a dict, but get %s", type(params)
+            )
         for key, value in params.items():
             if not isinstance(value, BaseDataType):
                 data_type_cls = ParameterHelper.infer_parameter_type(value)
