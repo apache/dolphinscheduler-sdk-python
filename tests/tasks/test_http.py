@@ -17,6 +17,7 @@
 
 """Test Task HTTP."""
 
+import warnings
 from unittest.mock import patch
 
 import pytest
@@ -126,3 +127,57 @@ def test_http_get_define():
     ):
         http = Http(name, url)
         assert http.task_params == expect_task_params
+
+
+@patch(
+    "pydolphinscheduler.core.task.Task.gen_code_and_version",
+    return_value=(123, 1),
+)
+def test_http_params(mock_code):
+    """Test the transformation and conversion of http_params."""
+    http_params_dict = {"prop1": "value1", "prop2": 135, "prop3": "value3"}
+
+    http_instance = Http(
+        name="test_http",
+        url="http://www.example.com",
+        http_method="GET",
+        http_params=http_params_dict,
+    )
+    expect_transformation = [
+        {"prop": "prop1", "direct": "IN", "type": "VARCHAR", "value": "value1"},
+        {"prop": "prop2", "direct": "IN", "type": "INTEGER", "value": 135},
+        {"prop": "prop3", "direct": "IN", "type": "VARCHAR", "value": "value3"},
+    ]
+
+    assert isinstance(http_instance.http_params, list)
+    assert len(http_instance.http_params) == len(http_params_dict)
+    assert http_instance.http_params == expect_transformation
+
+
+def test_http_params_deprecation_warning():
+    """Test deprecation warning when user passes list to http_params."""
+    code = 123
+    version = 1
+    name = "test_http_params_deprecation_warning"
+    http_params_list = [
+        {"prop": "abc", "httpParametersType": "PARAMETER", "value": "def"}
+    ]
+
+    with patch(
+        "pydolphinscheduler.core.task.Task.gen_code_and_version",
+        return_value=(code, version),
+    ):
+        with warnings.catch_warnings(record=True) as w:
+            Http(
+                name=name,
+                url="http://www.example.com",
+                http_method="GET",
+                http_params=http_params_list,
+            )
+
+            # Check if a deprecation warning is raised
+            assert len(w) == 1
+            assert issubclass(w[-1].category, DeprecationWarning)
+            assert "The `http_params` parameter currently accepts a dictionary" in str(
+                w[-1].message
+            )

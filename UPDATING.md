@@ -27,6 +27,8 @@ It started after version 2.0.5 released
 * Remove attribute tenant from pydolphinscheduler.core.workflow.workflow ([#54](https://github.com/apache/dolphinscheduler-sdk-python/pull/54))
   and please change tenant name in ``config.yaml`` in ``PYDS_HOME``
 * Drop support of python3.6 and python3.7 ([#126](https://github.com/apache/dolphinscheduler-sdk-python/pull/126))
+* Change parameter `http_params` to dict type for easy to use in task http.([#130](https://github.com/apache/dolphinscheduler-sdk-python/pull/130))
+
 
 ## 4.0.0
 
