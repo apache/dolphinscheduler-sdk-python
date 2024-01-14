@@ -51,13 +51,11 @@ with Workflow(
     task_child_one = Shell(
         name="task_child_one",
         command="""
-        echo "Executing line 1 for {param1}"
-        echo "Executing line 2 for {param2}"
-        echo "Executing line 3 for {param3}"
-        """.format(
-            param1="child one", param2="parameter two", param3="parameter three"
-        ),
-        params={"param1": "value1", "param2": "value2", "param3": "value3"},
+        echo "Executing line 1 with parameter str type ${param1}"
+        echo "Executing line 2 with parameter int type ${param2}"
+        echo "Executing line 3 with parameter build-in parameter currently date ${param3}"
+        """,
+        params={"param1": "str1", "param2": 123, "param3": "$[yyyy-MM-dd]"},
     )
     task_child_two = Shell(name="task_child_two", command="echo 'child two'")
     task_union = Shell(name="task_union", command="echo union")
