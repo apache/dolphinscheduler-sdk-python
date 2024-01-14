@@ -29,6 +29,38 @@ class CustomDataX(WorkerResourceMixin, Task):
     """Task CustomDatax object, declare behavior for custom DataX task to dolphinscheduler.
 
     You provider json template for DataX, it can synchronize data according to the template you provided.
+
+    :param name: task name for this task
+    :param json: json template string, or json file path for custom DataX task, :class:`CustomDataX` will not
+        format json template, you should format by yourself.
+
+          * Use config string directly instead of json file path
+            * should use :func:`json.dumps` to format it if your json template is dict
+
+            .. code-block:: python
+
+                import json
+
+                custom = CustomDataX(
+                    name="custom_datax",
+                    json=json.dumps({"job": {"content": [{"reader": {"name": "mysqlreader"}}]}}),
+                )
+
+            * or format it by manual if your json template is native str.
+          * Use json file path, the format it shows in web UI is depended on your json file content.
+
+            .. code-block:: python
+
+                import json
+
+                custom = CustomDataX(
+                    name="custom_datax",
+                    # web UI datax config will show as json file content
+                    json="/path/to/datax.json",
+                )
+
+    :param xms: jvm param about min memory for task datax running, default is 1g
+    :param xmx: jvm param about max memory for task datax running, default is 1g
     """
 
     CUSTOM_CONFIG = 1
@@ -68,12 +100,25 @@ class DataX(WorkerResourceMixin, Task):
     You provider datasource_name and datatarget_name contain connection information, it decisions which
     database type and database instance would synchronous data.
 
-    :param name: task name.
-    :param datasource_name: source database name for task datax to extract data.
-    :param datatarget_name: target database name for task datax to load data.
+    :param name: task name for this task
+    :param datasource_name: source database name for task datax to extract data, it must exist in
+        dolphinscheduler's datasource center otherwise task datax will raise exception.
+    :param datatarget_name: target database name for task datax to load data, it must exist in
+        dolphinscheduler's datasource center otherwise task datax will raise exception.
     :param sql: sql statement for task datax to extract data form source database.
     :param target_table: target table name for task datax to load data into target database.
-    :param datasource_type: source database type, dolphinscheduler use
+    :param datasource_type: source database type, dolphinscheduler use it to find :param:``datasource_name``
+        in datasource center.
+    :param datasource_type: target database type, dolphinscheduler use it to find :param:``datatarget_name``
+        in datasource center.
+    :param job_speed_byte: task datax job speed byte, default is 0. For more detail you can get from
+        :seealso: https://github.com/alibaba/DataX
+    :param job_speed_record: task datax job speed record, default is 1000. For more detail you can get from
+        :seealso: https://github.com/alibaba/DataX
+    :param pre_statements: task datax job pre statements, it will execute before task datax job start to load.
+        default is None.
+    :param post_statements: task datax job post statements, it will execute after task datax job finish load.
+        default is None.
     """
 
     CUSTOM_CONFIG = 0

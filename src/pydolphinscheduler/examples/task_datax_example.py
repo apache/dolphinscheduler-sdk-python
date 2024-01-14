@@ -25,6 +25,8 @@ You can create data sources `first_mysql` and `first_mysql` through UI.
 It creates a task to synchronize datax from the source database to the target database.
 """
 
+import json
+
 from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.tasks.datax import CustomDataX, DataX
 
@@ -89,7 +91,10 @@ with Workflow(
 
     # You can custom json_template of datax to sync data. This task create a new
     # datax job same as task1, transfer record from `first_mysql` to `second_mysql`
-    task2 = CustomDataX(name="task_custom_datax", json=str(JSON_TEMPLATE))
+    # We should format the custom json config if we want to format it in web UI
+    task2 = CustomDataX(
+        name="task_custom_datax", json=json.dumps(JSON_TEMPLATE, indent=4)
+    )
 
     # [start resource_limit]
     resource_limit = DataX(
