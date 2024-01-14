@@ -15,8 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-r"""
-A tutorial example take you to experience pydolphinscheduler.
+r"""A tutorial example take you to experience pydolphinscheduler.
 
 After tutorial.py file submit to Apache DolphinScheduler server a DAG would be create,
 and workflow DAG graph as below:
@@ -49,7 +48,15 @@ with Workflow(
     # [end workflow_declare]
     # [start task_declare]
     task_parent = Shell(name="task_parent", command="echo hello pydolphinscheduler")
-    task_child_one = Shell(name="task_child_one", command="echo 'child one'")
+    task_child_one = Shell(
+        name="task_child_one",
+        command="""
+        echo "Executing line 1 with parameter str type ${param1}"
+        echo "Executing line 2 with parameter int type ${param2}"
+        echo "Executing line 3 with parameter build-in parameter currently date ${param3}"
+        """,
+        params={"param1": "str1", "param2": 123, "param3": "$[yyyy-MM-dd]"},
+    )
     task_child_two = Shell(name="task_child_two", command="echo 'child two'")
     task_union = Shell(name="task_union", command="echo union")
 
