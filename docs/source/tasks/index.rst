@@ -41,8 +41,6 @@ In this section
    kubernetes
 
    datax
-   sub_workflow
-
    sagemaker
    mlflow
    openmldb

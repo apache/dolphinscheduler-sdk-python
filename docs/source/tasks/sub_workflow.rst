@@ -28,7 +28,7 @@ we have a simple example about how to use sub workflow task, when we want to cre
 we should makeh sure in already exists in current project. So the first thing we do is to create a workflow
 will be used as sub workflow task.
 
-.. literalinclude:: ../../../src/pydolphinscheduler/examples/sub_workflow_example.py
+.. literalinclude:: ../../../src/pydolphinscheduler/examples/task_sub_workflow_example.py
    :start-after: [start sub_workflow_declare]
    :end-before: [end sub_workflow_declare]
 
@@ -36,7 +36,7 @@ workflow with name ``sub_workflow_upstream`` would be create after we exists ``s
 
 Then we create a main workflow, and the sub workflow task will connect to workflow we created before.
 
-.. literalinclude:: ../../../src/pydolphinscheduler/examples/sub_workflow_example.py
+.. literalinclude:: ../../../src/pydolphinscheduler/examples/task_sub_workflow_example.py
    :start-after: [start sub_workflow_task_declare]
    :end-before: [end sub_workflow_task_declare]
 
