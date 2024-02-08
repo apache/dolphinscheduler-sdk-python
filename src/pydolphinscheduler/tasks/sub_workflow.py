@@ -20,12 +20,12 @@
 from __future__ import annotations
 
 from pydolphinscheduler.constants import TaskType
-from pydolphinscheduler.core.task import Task
+from pydolphinscheduler.core.task import BatchTask
 from pydolphinscheduler.exceptions import PyDSWorkflowNotAssignException
 from pydolphinscheduler.java_gateway import gateway
 
 
-class SubWorkflow(Task):
+class SubWorkflow(BatchTask):
     """Task SubWorkflow object, declare behavior for SubWorkflow task to dolphinscheduler."""
 
     _task_custom_attr = {"process_definition_code"}

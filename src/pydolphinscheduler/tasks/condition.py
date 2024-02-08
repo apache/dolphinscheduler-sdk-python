@@ -20,7 +20,7 @@
 from __future__ import annotations
 
 from pydolphinscheduler.constants import TaskType
-from pydolphinscheduler.core.task import Task
+from pydolphinscheduler.core.task import BatchTask, Task
 from pydolphinscheduler.exceptions import PyDSParamException
 from pydolphinscheduler.models.base import Base
 
@@ -154,7 +154,7 @@ class Or(ConditionOperator):
         super().__init__(*args)
 
 
-class Condition(Task):
+class Condition(BatchTask):
     """Task condition object, declare behavior for condition task to dolphinscheduler."""
 
     def __init__(

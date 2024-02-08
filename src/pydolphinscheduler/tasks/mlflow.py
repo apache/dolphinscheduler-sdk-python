@@ -21,7 +21,7 @@ from __future__ import annotations
 from copy import deepcopy
 
 from pydolphinscheduler.constants import TaskType
-from pydolphinscheduler.core.task import Task
+from pydolphinscheduler.core.task import BatchTask
 
 
 class MLflowTaskType(str):
@@ -50,7 +50,7 @@ DEFAULT_MLFLOW_TRACKING_URI = "http://127.0.0.1:5000"
 DEFAULT_VERSION = "master"
 
 
-class BaseMLflow(Task):
+class BaseMLflow(BatchTask):
     """Base MLflow task."""
 
     mlflow_task_type = None

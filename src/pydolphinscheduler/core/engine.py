@@ -21,7 +21,7 @@ from __future__ import annotations
 
 from py4j.protocol import Py4JJavaError
 
-from pydolphinscheduler.core.task import Task
+from pydolphinscheduler.core.task import BatchTask
 from pydolphinscheduler.exceptions import PyDSParamException
 from pydolphinscheduler.java_gateway import gateway
 
@@ -34,7 +34,7 @@ class ProgramType(str):
     PYTHON = "PYTHON"
 
 
-class Engine(Task):
+class Engine(BatchTask):
     """Task engine object, declare behavior for engine task to dolphinscheduler.
 
     This is the parent class of spark, flink and mr tasks,

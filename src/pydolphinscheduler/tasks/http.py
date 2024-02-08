@@ -23,7 +23,7 @@ import warnings
 
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.parameter import Direction, ParameterHelper
-from pydolphinscheduler.core.task import Task
+from pydolphinscheduler.core.task import BatchTask
 from pydolphinscheduler.exceptions import PyDSParamException
 
 
@@ -53,7 +53,7 @@ class HttpCheckCondition:
     BODY_NOT_CONTAINS = "BODY_NOT_CONTAINS"
 
 
-class Http(Task):
+class Http(BatchTask):
     """Task HTTP object, declare behavior for HTTP task to dolphinscheduler.
 
         :param name: The name or identifier for the HTTP task.

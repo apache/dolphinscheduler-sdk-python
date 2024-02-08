@@ -511,3 +511,181 @@ class Task(Base):
 
         """
         self._output_params[name] = value
+
+
+class BatchTask(Task):
+    """Task object, parent class for all exactly task type.
+
+    :param name: The name of the task. Node names within the same workflow must be unique.
+    :param task_type:
+    :param description: default None
+    :param flag: default TaskFlag.YES,
+    :param task_priority: default TaskPriority.MEDIUM
+    :param worker_group: default configuration.WORKFLOW_WORKER_GROUP
+    :param environment_name: default None
+    :param task_group_id: Identify of task group to restrict the parallelism of tasks instance run, default 0.
+    :param task_group_priority: Priority for same task group to, the higher the value, the higher the
+        priority, default 0.
+    :param delay_time: deault 0
+    :param fail_retry_times: default 0
+    :param fail_retry_interval: default 1
+    :param timeout_notify_strategy: default, None
+    :param timeout: Timeout attribute for task, in minutes. Task is consider as  timed out task when the
+        running time of a task exceeds than this value. when data type is :class:`datetime.timedelta` will
+        be converted to int(in minutes). default ``None``
+    :param resource_list: default None
+    :param wait_start_timeout: default None
+    :param condition_result: default None,
+    :param resource_plugin: default None
+    :param is_cache: default False
+    :param input_params: default None, input parameters, {param_name: param_value}
+    :param output_params: default None, input parameters, {param_name: param_value}
+    """
+
+    _DEFINE_ATTR = Task._DEFINE_ATTR | {"task_execute_type"}
+
+    def __init__(
+        self,
+        name: str,
+        task_type: str,
+        description: str | None = None,
+        flag: str | None = TaskFlag.YES,
+        task_priority: str | None = TaskPriority.MEDIUM,
+        worker_group: str | None = configuration.WORKFLOW_WORKER_GROUP,
+        environment_name: str | None = None,
+        task_group_id: int | None = 0,
+        task_group_priority: int | None = 0,
+        delay_time: int | None = 0,
+        fail_retry_times: int | None = 0,
+        fail_retry_interval: int | None = 1,
+        timeout_notify_strategy: str | None = None,
+        timeout: timedelta | int | None = None,
+        workflow: Workflow | None = None,
+        resource_list: list | None = None,
+        dependence: dict | None = None,
+        wait_start_timeout: dict | None = None,
+        condition_result: dict | None = None,
+        resource_plugin: ResourcePlugin | None = None,
+        is_cache: bool | None = False,
+        input_params: dict | None = None,
+        output_params: dict | None = None,
+        *args,
+        **kwargs,
+    ):
+        super().__init__(
+            name,
+            task_type,
+            description,
+            flag,
+            task_priority,
+            worker_group,
+            environment_name,
+            task_group_id,
+            task_group_priority,
+            delay_time,
+            fail_retry_times,
+            fail_retry_interval,
+            timeout_notify_strategy,
+            timeout,
+            workflow,
+            resource_list,
+            dependence,
+            wait_start_timeout,
+            condition_result,
+            resource_plugin,
+            is_cache,
+            input_params,
+            output_params,
+            *args,
+            **kwargs,
+        )
+        self.task_execute_type = "BATCH"
+
+
+class StreamTask(Task):
+    """Task object, parent class for all exactly task type.
+
+    :param name: The name of the task. Node names within the same workflow must be unique.
+    :param task_type:
+    :param description: default None
+    :param flag: default TaskFlag.YES,
+    :param task_priority: default TaskPriority.MEDIUM
+    :param worker_group: default configuration.WORKFLOW_WORKER_GROUP
+    :param environment_name: default None
+    :param task_group_id: Identify of task group to restrict the parallelism of tasks instance run, default 0.
+    :param task_group_priority: Priority for same task group to, the higher the value, the higher the
+        priority, default 0.
+    :param delay_time: deault 0
+    :param fail_retry_times: default 0
+    :param fail_retry_interval: default 1
+    :param timeout_notify_strategy: default, None
+    :param timeout: Timeout attribute for task, in minutes. Task is consider as  timed out task when the
+        running time of a task exceeds than this value. when data type is :class:`datetime.timedelta` will
+        be converted to int(in minutes). default ``None``
+    :param resource_list: default None
+    :param wait_start_timeout: default None
+    :param condition_result: default None,
+    :param resource_plugin: default None
+    :param is_cache: default False
+    :param input_params: default None, input parameters, {param_name: param_value}
+    :param output_params: default None, input parameters, {param_name: param_value}
+    """
+
+    _DEFINE_ATTR = Task._DEFINE_ATTR | {"task_execute_type"}
+
+    def __init__(
+        self,
+        name: str,
+        task_type: str,
+        description: str | None = None,
+        flag: str | None = TaskFlag.YES,
+        task_priority: str | None = TaskPriority.MEDIUM,
+        worker_group: str | None = configuration.WORKFLOW_WORKER_GROUP,
+        environment_name: str | None = None,
+        task_group_id: int | None = 0,
+        task_group_priority: int | None = 0,
+        delay_time: int | None = 0,
+        fail_retry_times: int | None = 0,
+        fail_retry_interval: int | None = 1,
+        timeout_notify_strategy: str | None = None,
+        timeout: timedelta | int | None = None,
+        workflow: Workflow | None = None,
+        resource_list: list | None = None,
+        dependence: dict | None = None,
+        wait_start_timeout: dict | None = None,
+        condition_result: dict | None = None,
+        resource_plugin: ResourcePlugin | None = None,
+        is_cache: bool | None = False,
+        input_params: dict | None = None,
+        output_params: dict | None = None,
+        *args,
+        **kwargs,
+    ):
+        super().__init__(
+            name,
+            task_type,
+            description,
+            flag,
+            task_priority,
+            worker_group,
+            environment_name,
+            task_group_id,
+            task_group_priority,
+            delay_time,
+            fail_retry_times,
+            fail_retry_interval,
+            timeout_notify_strategy,
+            timeout,
+            workflow,
+            resource_list,
+            dependence,
+            wait_start_timeout,
+            condition_result,
+            resource_plugin,
+            is_cache,
+            input_params,
+            output_params,
+            *args,
+            **kwargs,
+        )
+        self.task_execute_type = "STREAM"

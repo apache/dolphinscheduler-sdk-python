@@ -21,7 +21,7 @@ from __future__ import annotations
 from copy import deepcopy
 
 from pydolphinscheduler.constants import TaskType
-from pydolphinscheduler.core.task import Task
+from pydolphinscheduler.core.task import BatchTask
 
 
 class DvcTaskType(str):
@@ -32,7 +32,7 @@ class DvcTaskType(str):
     UPLOAD = "Upload"
 
 
-class BaseDVC(Task):
+class BaseDVC(BatchTask):
     """Base class for dvc task."""
 
     dvc_task_type = None

@@ -20,11 +20,11 @@
 from __future__ import annotations
 
 from pydolphinscheduler.constants import TaskType
-from pydolphinscheduler.core.task import Task
+from pydolphinscheduler.core.task import BatchTask
 from pydolphinscheduler.models.datasource import Datasource
 
 
-class Procedure(Task):
+class Procedure(BatchTask):
     """Task Procedure object, declare behavior for Procedure task to dolphinscheduler.
 
     It should run database procedure job in multiply sql lik engine, such as:

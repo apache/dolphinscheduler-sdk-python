@@ -21,11 +21,11 @@ from __future__ import annotations
 
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.mixin import WorkerResourceMixin
-from pydolphinscheduler.core.task import Task
+from pydolphinscheduler.core.task import BatchTask
 from pydolphinscheduler.models.datasource import Datasource
 
 
-class CustomDataX(WorkerResourceMixin, Task):
+class CustomDataX(WorkerResourceMixin, BatchTask):
     """Task CustomDatax object, declare behavior for custom DataX task to dolphinscheduler.
 
     You provider json template for DataX, it can synchronize data according to the template you provided.
@@ -87,7 +87,7 @@ class CustomDataX(WorkerResourceMixin, Task):
         self.add_attr(**kwargs)
 
 
-class DataX(WorkerResourceMixin, Task):
+class DataX(WorkerResourceMixin, BatchTask):
     """Task DataX object, declare behavior for DataX task to dolphinscheduler.
 
     It should run database datax job in multiply sql link engine, such as:

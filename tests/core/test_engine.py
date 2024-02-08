@@ -133,6 +133,7 @@ def test_property_task_params(mock_resource, mock_code_version, attr, expect):
                 "timeoutFlag": "CLOSE",
                 "timeoutNotifyStrategy": None,
                 "timeout": 0,
+                "taskExecuteType": "BATCH",
             },
         )
     ],

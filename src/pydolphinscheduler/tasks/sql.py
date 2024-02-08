@@ -23,7 +23,7 @@ import re
 from collections.abc import Sequence
 
 from pydolphinscheduler.constants import TaskType
-from pydolphinscheduler.core.task import Task
+from pydolphinscheduler.core.task import BatchTask
 from pydolphinscheduler.models.datasource import Datasource
 
 log = logging.getLogger(__file__)
@@ -36,7 +36,7 @@ class SqlType:
     NOT_SELECT = "1"
 
 
-class Sql(Task):
+class Sql(BatchTask):
     """Task SQL object, declare behavior for SQL task to dolphinscheduler.
 
     It should run sql job in multiply sql lik engine, such as:
