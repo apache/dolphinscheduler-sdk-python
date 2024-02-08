@@ -18,10 +18,10 @@
 """Task SageMaker."""
 
 from pydolphinscheduler.constants import TaskType
-from pydolphinscheduler.core.task import Task
+from pydolphinscheduler.core.task import BatchTask
 
 
-class SageMaker(Task):
+class SageMaker(BatchTask):
     """Task SageMaker object, declare behavior for SageMaker task to dolphinscheduler.
 
     :param name: A unique, meaningful string for the SageMaker task.

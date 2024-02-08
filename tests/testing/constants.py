@@ -23,7 +23,6 @@ import os
 # but most of them just without adding by mistake, and we should add it later.
 task_without_example = {
     "http",
-    "sub_workflow",
     "procedure",
 }
 

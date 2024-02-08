@@ -21,7 +21,7 @@ from __future__ import annotations
 import warnings
 
 from pydolphinscheduler.constants import TaskType
-from pydolphinscheduler.core.task import Task
+from pydolphinscheduler.core.task import BatchTask
 from pydolphinscheduler.exceptions import PyDSJavaGatewayException, PyDSParamException
 from pydolphinscheduler.java_gateway import gateway
 from pydolphinscheduler.models.base import Base
@@ -272,7 +272,7 @@ class Or(DependentOperator):
         super().__init__(*args)
 
 
-class Dependent(Task):
+class Dependent(BatchTask):
     """Task dependent object, declare behavior for dependent task to dolphinscheduler."""
 
     def __init__(self, name: str, dependence: DependentOperator, *args, **kwargs):

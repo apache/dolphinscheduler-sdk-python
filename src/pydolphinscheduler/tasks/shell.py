@@ -19,10 +19,10 @@
 
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.mixin import WorkerResourceMixin
-from pydolphinscheduler.core.task import Task
+from pydolphinscheduler.core.task import BatchTask
 
 
-class Shell(WorkerResourceMixin, Task):
+class Shell(WorkerResourceMixin, BatchTask):
     """Task shell object, declare behavior for shell task to dolphinscheduler.
 
     :param name: A unique, meaningful string for the shell task.

@@ -18,10 +18,10 @@
 """Task OpenMLDB."""
 
 from pydolphinscheduler.constants import TaskType
-from pydolphinscheduler.core.task import Task
+from pydolphinscheduler.core.task import BatchTask
 
 
-class OpenMLDB(Task):
+class OpenMLDB(BatchTask):
     """Task OpenMLDB object, declare behavior for OpenMLDB task to dolphinscheduler.
 
     :param name: task name

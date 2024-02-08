@@ -17,10 +17,10 @@
 
 """Task Kubernetes."""
 from pydolphinscheduler.constants import TaskType
-from pydolphinscheduler.core.task import Task
+from pydolphinscheduler.core.task import BatchTask
 
 
-class Kubernetes(Task):
+class Kubernetes(BatchTask):
     """Task Kubernetes object, declare behavior for Kubernetes task to dolphinscheduler.
 
     :param name: task name

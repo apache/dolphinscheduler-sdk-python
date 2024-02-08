@@ -28,13 +28,13 @@ from stmdency.extractor import Extractor
 
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.mixin import WorkerResourceMixin
-from pydolphinscheduler.core.task import Task
+from pydolphinscheduler.core.task import BatchTask
 from pydolphinscheduler.exceptions import PyDSParamException
 
 log = logging.getLogger(__file__)
 
 
-class Python(WorkerResourceMixin, Task):
+class Python(WorkerResourceMixin, BatchTask):
     """Task Python object, declare behavior for Python task to dolphinscheduler.
 
     Python task support two types of parameters for :param:``definition``, and here is an example:

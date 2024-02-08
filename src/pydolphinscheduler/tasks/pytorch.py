@@ -20,7 +20,7 @@ from __future__ import annotations
 
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.mixin import WorkerResourceMixin
-from pydolphinscheduler.core.task import Task
+from pydolphinscheduler.core.task import BatchTask
 
 
 class DEFAULT:
@@ -31,7 +31,7 @@ class DEFAULT:
     python_command = "${PYTHON_HOME}"
 
 
-class Pytorch(WorkerResourceMixin, Task):
+class Pytorch(WorkerResourceMixin, BatchTask):
     """Task Pytorch object, declare behavior for Pytorch task to dolphinscheduler.
 
     See also: `DolphinScheduler Pytorch Task Plugin

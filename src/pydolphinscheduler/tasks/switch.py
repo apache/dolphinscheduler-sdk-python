@@ -19,7 +19,7 @@
 from __future__ import annotations
 
 from pydolphinscheduler.constants import TaskType
-from pydolphinscheduler.core.task import Task
+from pydolphinscheduler.core.task import BatchTask, Task
 from pydolphinscheduler.exceptions import PyDSParamException
 from pydolphinscheduler.models.base import Base
 
@@ -126,7 +126,7 @@ class SwitchCondition(Base):
         return super().get_define()
 
 
-class Switch(Task):
+class Switch(BatchTask):
     """Task switch object, declare behavior for switch task to dolphinscheduler.
 
     Param of workflow or at least one local param of task must be set
