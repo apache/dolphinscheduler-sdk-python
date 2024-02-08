@@ -28,6 +28,7 @@ In this section
    sql
    python
    http
+   sub_workflow
 
    switch
    condition
