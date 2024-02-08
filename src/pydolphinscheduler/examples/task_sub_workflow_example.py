@@ -15,19 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-r"""A tutorial example take you to experience pydolphinscheduler.
-
-After tutorial.py file submit to Apache DolphinScheduler server a DAG would be create,
-and workflow DAG graph as below:
-
-                  --> task_child_one
-                /                    \
-task_parent -->                        -->  task_union
-                \                    /
-                  --> task_child_two
-
-it will instantiate and run all the task it have.
-"""
+"""A example workflow for task sub workflow."""
 
 # [start tutorial]
 # [start package_import]
