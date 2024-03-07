@@ -366,10 +366,8 @@ class Task(Base):
                     index = _ext_attr.rfind(Symbol.POINT)
                     if index != -1:
                         raise ValueError(
-                            "This task does not support files with suffix {}, only supports {}".format(
-                                _ext_attr[index:],
-                                Symbol.COMMA.join(str(suf) for suf in self.ext),
-                            )
+                            f"This task does not support files with suffix {_ext_attr[index:]},"
+                            f"only supports {Symbol.COMMA.join(str(suf) for suf in self.ext)}"
                         )
                 setattr(self, self.ext_attr.lstrip(Symbol.UNDERLINE), _ext_attr)
 
