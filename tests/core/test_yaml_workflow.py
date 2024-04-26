@@ -52,7 +52,7 @@ def test_parse_tool_env_exist(string_param, expect):
 def test_parse_tool_env_not_exist():
     """Test parsing the not exist environment variable."""
     key = "THIS_ENV_NOT_EXIST_0000000"
-    string_param = "$ENV{%s}" % key
+    string_param = f"$ENV{{{key}}}"
     expect = "$" + key
     assert expect == ParseTool.parse_string_param_if_env(string_param)
 
@@ -94,7 +94,7 @@ def test_parse_possible_yaml_file():
     with open(path) as f:
         expect = "".join(f)
 
-    string_param = '$FILE{"%s"}' % file_name
+    string_param = f'$FILE{{"{file_name}"}}'
     content_ = ParseTool.parse_string_param_if_file(string_param, base_folder=folder)
 
     assert expect == content_

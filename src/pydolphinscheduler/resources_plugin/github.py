@@ -90,7 +90,7 @@ class GitHub(ResourcePlugin, Git):
             "Content-Type": "application/json; charset=utf-8",
         }
         if self.access_token is not None:
-            headers.setdefault("Authorization", "Bearer %s" % self.access_token)
+            headers.setdefault("Authorization", f"Bearer {self.access_token}")
         self.get_git_file_info(path)
         response = requests.get(
             headers=headers,

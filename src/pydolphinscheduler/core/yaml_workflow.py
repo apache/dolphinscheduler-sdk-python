@@ -63,8 +63,8 @@ class ParseTool:
         """Use $ENV{env_name} to load environment variable "env_name"."""
         if "$ENV" in string_param:
             key = re.findall(r"\$ENV\{(.*?)\}", string_param)[0]
-            env_value = os.environ.get(key, "$%s" % key)
-            string_param = string_param.replace("$ENV{%s}" % key, env_value)
+            env_value = os.environ.get(key, f"${key}")
+            string_param = string_param.replace(f"$ENV{{{key}}}", env_value)
         return string_param
 
     @staticmethod
@@ -119,7 +119,7 @@ def get_task_cls(task_type) -> Task:
     all_task_types = {type_.capitalize(): type_ for type_ in tasks.__all__}
     task_type_cap = task_type.capitalize()
     if task_type_cap not in all_task_types:
-        raise PyDSTaskNoFoundException("cant not find task %s" % task_type)
+        raise PyDSTaskNoFoundException(f"cant not find task {task_type}")
 
     standard_name = all_task_types[task_type_cap]
     return getattr(tasks, standard_name)
@@ -248,7 +248,7 @@ class YamlWorkflow(YamlParser):
                 workflow_path, self._base_folder
             )
             workflow_name = YamlWorkflow.parse(possible_path)
-            content = content.replace('$WORKFLOW{"%s"}' % workflow_path, workflow_name)
+            content = content.replace(f'$WORKFLOW{{"{workflow_path}"}}', workflow_name)
 
         return content
 
@@ -313,7 +313,7 @@ class YamlWorkflow(YamlParser):
         condition_datas = task_params["condition"]
         conditions = []
         for condition_data in condition_datas:
-            assert "task" in condition_data, "task must be in %s" % condition_data
+            assert "task" in condition_data, f"task must be in {condition_data}"
             task_name = condition_data["task"]
             condition_string = condition_data.get("condition", None)
 
@@ -372,7 +372,7 @@ class YamlWorkflow(YamlParser):
             elif op.lower() == "or":
                 cls = Or
             else:
-                raise Exception("OP must be in And or Or, but get: %s" % op)
+                raise Exception(f"OP must be in And or Or, but get: {op}")
             return cls
 
         second_cond_ops = []
@@ -380,8 +380,8 @@ class YamlWorkflow(YamlParser):
             second_op = first_group["op"]
             task_ops = []
             for condition_data in first_group["groups"]:
-                assert "task" in condition_data, "task must be in %s" % condition_data
-                assert "flag" in condition_data, "flag must be in %s" % condition_data
+                assert "task" in condition_data, f"task must be in {condition_data}"
+                assert "flag" in condition_data, f"flag must be in {condition_data}"
                 task_name = condition_data["task"]
                 flag = condition_data["flag"]
                 task = name2task[task_name]
@@ -448,7 +448,7 @@ class YamlWorkflow(YamlParser):
             elif op.lower() == "or":
                 cls = Or
             else:
-                raise Exception("OP must be in And or Or, but get: %s" % op)
+                raise Exception(f"OP must be in And or Or, but get: {op}")
             return cls
 
         def create_dependent_item(source_items):
