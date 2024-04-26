@@ -89,7 +89,7 @@ class GitLab(ResourcePlugin, Git):
             "password": self.password,
         }
         host = self._git_file_info.host
-        resp = requests.post("%s/oauth/token" % host, data=data)
+        resp = requests.post(f"{host}/oauth/token", data=data)
         oauth_token = resp.json()["access_token"]
         return oauth_token
 

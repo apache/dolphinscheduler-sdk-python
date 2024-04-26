@@ -85,7 +85,7 @@ class ApacheRelease(sdist):
                 f"shasum -a 512 {target_name} > {target_name}.sha512"
             )
         except DistutilsExecError as e:
-            self.warn("Make dist and sign failed: %s" % e)
+            self.warn(f"Make dist and sign failed: {e}")
 
 
 setup(
