@@ -31,7 +31,9 @@ class DockerWrapper:
     :param image: The image to create docker container.
     """
 
-    def __init__(self, image: str, container_name: str, environment: dict | None = None):
+    def __init__(
+        self, image: str, container_name: str, environment: dict | None = None
+    ):
         self._client = docker.from_env()
         self.image = image
         self.container_name = container_name
@@ -47,7 +49,12 @@ class DockerWrapper:
         if not self.images_exists:
             raise ValueError("Docker image named %s do not exists.", self.image)
         return self._client.containers.run(
-            image=self.image, name=self.container_name, detach=True, environment=self.environment, *args, **kwargs
+            image=self.image,
+            name=self.container_name,
+            detach=True,
+            environment=self.environment,
+            *args,
+            **kwargs,
         )
 
     def run_until_log(
