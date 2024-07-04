@@ -64,7 +64,7 @@ There are many ways to start DolphinScheduler, here we use docker to start and r
 ```shell
 # Change the version of dolphinscheduler to the version you want to use, here we use 3.1.1 as example
 DOLPHINSCHEDULER_VERSION=3.1.1
-docker run --name dolphinscheduler-standalone-server -p 12345:12345 -p 25333:25333 -d apache/dolphinscheduler-standalone-server:"${DOLPHINSCHEDULER_VERSION}"
+docker run --name dolphinscheduler-standalone-server -p 12345:12345 -p 25333:25333 -e API_PYTHON_GATEWAY_ENABLED="true" -d apache/dolphinscheduler-standalone-server:"${DOLPHINSCHEDULER_VERSION}"
 ```
 
 After the container is started, you can access the DolphinScheduler UI via http://localhost:12345/dolphinscheduler.

@@ -105,6 +105,8 @@ go `install Apache DolphinScheduler`_ for more details
 
 .. code-block:: bash
 
+   # Export the environment variable to enabled python-gateway service
+   export API_PYTHON_GATEWAY_ENABLED="true"
    # Start DolphinScheduler api-server which including python gateway service
    ./bin/dolphinscheduler-daemon.sh start api-server
 
