@@ -75,4 +75,4 @@ def test_delete_project():
     with pytest.raises(AttributeError) as excinfo:
         _ = project.name
 
-    assert excinfo.type == AttributeError
+    assert excinfo.type is AttributeError
