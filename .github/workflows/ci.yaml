@@ -199,6 +199,8 @@ jobs:
       # Switch to project root directory to run mvnw command
       - name: Build Image
         working-directory: dolphinscheduler
+        env:
+          API_PYTHON_GATEWAY_ENABLED: true
         run: |
           ./mvnw -B clean install \
           -Dmaven.test.skip \
