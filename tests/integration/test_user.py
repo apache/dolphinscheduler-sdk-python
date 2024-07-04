@@ -105,4 +105,4 @@ def test_delete_user():
     with pytest.raises(AttributeError) as excinfo:
         _ = user.user_id
 
-    assert isinstance(excinfo.type, AttributeError)
+    assert excinfo.type is AttributeError

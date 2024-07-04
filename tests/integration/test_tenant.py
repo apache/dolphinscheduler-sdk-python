@@ -83,4 +83,4 @@ def test_delete_tenant():
     with pytest.raises(AttributeError) as excinfo:
         _ = tenant.tenant_id
 
-    assert isinstance(excinfo.type, AttributeError)
+    assert excinfo.type is AttributeError

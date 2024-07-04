@@ -41,6 +41,7 @@ def docker_setup_teardown():
         docker_wrapper = DockerWrapper(
             image="apache/dolphinscheduler-standalone-server:ci",
             container_name="ci-dolphinscheduler-standalone-server",
+            environment={"API_PYTHON_GATEWAY_ENABLED": "true"},
         )
         ports = {"25333/tcp": 25333, "12345/tcp": 12345}
         container = docker_wrapper.run_until_log(
