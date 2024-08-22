@@ -94,10 +94,10 @@ jobs:
           - os: macos-latest
             python-version: 3.8
         include:
-          - os: macos-13
-            python-version: 3.9
-          - os: macos-13
-            python-version: 3.8
+          - python-version: 3.9
+            os: macos-13
+          - python-version: 3.8
+            os: macos-13
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
@@ -111,11 +111,13 @@ jobs:
         run: |
           python -m tox -vv -e code-test
       - uses: codecov/codecov-action@v3
-        # Codecov have a 100-upload limit per commit, and there are 3 * 6 files upload each time run pytest,
+        # FOR NO SCHEDULE: Codecov have a 100-upload limit per commit, and there are 3 * 6 files upload each time run pytest,
         # We should not run upload in schedule GitHub event, because the sixth day we do not change our code
         # and the upload limit will be reached 3 * 6 * 6. For more detail can see:
         # https://community.codecov.com/t/ci-failure-due-to-too-many-uploads-to-this-commit/2587/7
-        if: ${{ github.event_name != 'schedule' }}
+        # FOR NO macos-13: codecov/codecov-action have some error in macos-13, revert this patch until issue
+        # fixed: https://github.com/codecov/codecov-action/issues/1549
+        if: ${{ github.event_name != 'schedule' && matrix.os != 'macos-13' }}
         with:
           token: ${{ env.CODECOV_TOKEN }}
           files: ./coverage.xml
