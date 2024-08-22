@@ -121,7 +121,9 @@ jobs:
           files: ./coverage.xml
           flags: unittests
           name: codecov-umbrella
-          fail_ci_if_error: true
+          # codecov/codecov-action have some error in macos-13, revert this patch until issue fixed: https://github.com/codecov/codecov-action/issues/1549
+          # syntax ref: https://github.com/actions/runner/issues/409#issuecomment-752775072
+          fail_ci_if_error: ${{ matrix.os == 'macos-13' && 'true' || 'false' }}
           verbose: true
   doc-build:
     timeout-minutes: 15
