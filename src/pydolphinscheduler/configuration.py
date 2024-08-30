@@ -28,6 +28,7 @@ from pydolphinscheduler.utils.yaml_parser import YamlParser
 BUILD_IN_CONFIG_PATH = Path(__file__).resolve().parent.joinpath("default_config.yaml")
 
 logger = logging.getLogger(__name__)
+logging.basicConfig()
 
 
 def config_path() -> Path:
@@ -50,13 +51,14 @@ def get_configs() -> YamlParser:
 
 def init_config_file() -> None:
     """Initialize configuration file by default configs."""
-    if config_path().exists():
+    path: Path = config_path()
+    if path.exists():
         raise PyDSConfException(
             "Initialize configuration false to avoid overwrite configure by accident, file already exists "
             "in %s, if you wan to overwrite the exists configure please remove the exists file manually.",
-            str(config_path()),
+            str(path),
         )
-    file.write(content=str(get_configs()), to_path=str(config_path()))
+    file.write(content=str(get_configs()), to_path=str(path))
 
 
 def get_single_config(key: str) -> Any:
@@ -131,13 +133,12 @@ def token_alert(auth_token: str) -> None:
             "Auth token is None, highly recommend add a token in production, "
             "especially you deploy in public network."
         )
-    with open(BUILD_IN_CONFIG_PATH) as f:
-        config = YamlParser(f.read())
-        if config.get("java_gateway.auth_token") == auth_token:
-            logger.warning(
-                "Auth token is default token, highly recommend add a token in production, "
-                "especially you deploy in public network."
-            )
+    config = get_configs()
+    if config.get("java_gateway.auth_token") == auth_token:
+        logger.warning(
+            "Auth token is default token, highly recommend add a token in production, "
+            "especially you deploy in public network."
+        )
 
 
 def get_int(val: Any) -> int:
