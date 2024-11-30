@@ -202,8 +202,7 @@ jobs:
           ./mvnw -B clean install \
           -Dmaven.test.skip=true \
           -Dspotless.skip=true \
-          -Pdocker,staging -Ddocker.tag=ci \
-          -pl dolphinscheduler-standalone-server -am
+          -Pdocker,staging -Ddocker.tag=ci
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
