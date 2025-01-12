@@ -31,19 +31,19 @@ you're using. The python wiki provides up to date
 `instructions for all platforms here`_. When you enter the website
 and choose your operating system, you would be offered the choice and
 select python version. *PyDolphinScheduler* recommends using a version above
-Python 3.6 and we highly recommend installing *Stable Releases* instead
+Python 3.9 and we highly recommend installing *Stable Releases* instead
 of *Pre-releases*.
 
 After you have download and installed Python, you should open your terminal,
 type and run :code:`python --version` to check whether the installation
 is correct or not. If everything is good, you could see the version in console
-without error(here is an example after Python 3.8.7 is installed)
+without error(here is an example after Python 3.9 is installed)
 
 .. code-block:: bash
 
    python --version
 
-Will see detail of Python version, such as *Python 3.8.7*
+Will see detail of Python version, such as *Python 3.9*
 
 Installing PyDolphinScheduler
 -----------------------------
