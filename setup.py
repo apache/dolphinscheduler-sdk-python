@@ -20,17 +20,11 @@ from __future__ import annotations
 
 import logging
 import os
-import sys
 from distutils.command.sdist import sdist
 from distutils.dir_util import remove_tree
 from distutils.errors import DistutilsExecError
 
 from setuptools import Command, setup
-
-if sys.version_info[0] < 3:
-    raise Exception(
-        "pydolphinscheduler does not support Python 2. Please upgrade to Python 3."
-    )
 
 logger = logging.getLogger(__name__)
 
