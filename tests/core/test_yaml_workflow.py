@@ -190,7 +190,7 @@ def test_get_error(task_type):
     "pydolphinscheduler.tasks.dependent.DependentItem.get_code_from_gateway",
     return_value={
         "projectCode": 0,
-        "processDefinitionCode": 0,
+        "workflowDefinitionCode": 0,
         "taskDefinitionCode": 0,
     },
 )

@@ -135,8 +135,8 @@ class DependentItem(Base):
 
     @property
     def definition_code(self) -> str:
-        """Get dependent definition code."""
-        return self.get_code_from_gateway().get("processDefinitionCode")
+        """Get dependent workflow code."""
+        return self.get_code_from_gateway().get("workflowDefinitionCode")
 
     @property
     def dep_task_code(self) -> str:

@@ -56,7 +56,7 @@ class TaskType(str):
     HTTP = "HTTP"
     PYTHON = "PYTHON"
     SQL = "SQL"
-    SUB_WORKFLOW = "SUB_PROCESS"
+    SUB_WORKFLOW = "SUB_WORKFLOW"
     PROCEDURE = "PROCEDURE"
     DATAX = "DATAX"
     DEPENDENT = "DEPENDENT"
