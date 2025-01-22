@@ -310,7 +310,7 @@ class GatewayEntryPoint:
             workflow_name,
             worker_group,
             warning_type,
-            warning_group_id
+            warning_group_id,
         )
 
 
