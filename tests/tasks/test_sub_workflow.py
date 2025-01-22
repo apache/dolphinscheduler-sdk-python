@@ -35,7 +35,7 @@ TEST_WORKFLOW_NAME = "simple-test-workflow"
         (
             {"workflow_name": TEST_SUB_WORKFLOW_NAME},
             {
-                "processDefinitionCode": TEST_SUB_WORKFLOW_CODE,
+                "workflowDefinitionCode": TEST_SUB_WORKFLOW_CODE,
                 "localParams": [],
                 "resourceList": [],
                 "dependence": {},
@@ -83,7 +83,7 @@ def test_sub_workflow_get_define(mock_workflow_definition):
     expect_task_params = {
         "resourceList": [],
         "localParams": [],
-        "processDefinitionCode": TEST_SUB_WORKFLOW_CODE,
+        "workflowDefinitionCode": TEST_SUB_WORKFLOW_CODE,
         "dependence": {},
         "conditionResult": {"successNode": [""], "failedNode": [""]},
         "waitStartTimeout": {},
@@ -115,7 +115,7 @@ def test_deprecated_sub_workflow_get_define(mock_workflow_definition):
     expect_task_params = {
         "resourceList": [],
         "localParams": [],
-        "processDefinitionCode": TEST_SUB_WORKFLOW_CODE,
+        "workflowDefinitionCode": TEST_SUB_WORKFLOW_CODE,
         "dependence": {},
         "conditionResult": {"successNode": [""], "failedNode": [""]},
         "waitStartTimeout": {},

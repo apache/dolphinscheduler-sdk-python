@@ -484,9 +484,7 @@ class Workflow(Base):
             self._user,
             self._project,
             self.name,
-            "",
             self.worker_group,
             self.warning_type,
             self.warning_group_id,
-            24 * 3600,
         )

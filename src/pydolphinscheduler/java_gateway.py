@@ -299,22 +299,18 @@ class GatewayEntryPoint:
         user_name: str,
         project_name: str,
         workflow_name: str,
-        cron_time: str,
         worker_group: str,
         warning_type: str,
         warning_group_id: int,
-        timeout: int,
     ):
         """Exec workflow instance through java gateway."""
         return self.gateway.entry_point.execWorkflowInstance(
             user_name,
             project_name,
             workflow_name,
-            cron_time,
             worker_group,
             warning_type,
-            warning_group_id,
-            timeout,
+            warning_group_id
         )
 
 

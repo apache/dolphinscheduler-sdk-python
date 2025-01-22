@@ -28,14 +28,14 @@ from pydolphinscheduler.java_gateway import gateway
 class SubWorkflow(BatchTask):
     """Task SubWorkflow object, declare behavior for SubWorkflow task to dolphinscheduler."""
 
-    _task_custom_attr = {"process_definition_code"}
+    _task_custom_attr = {"workflow_definition_code"}
 
     def __init__(self, name: str, workflow_name: str, *args, **kwargs):
         super().__init__(name, TaskType.SUB_WORKFLOW, *args, **kwargs)
         self.workflow_name = workflow_name
 
     @property
-    def process_definition_code(self) -> str:
+    def workflow_definition_code(self) -> str:
         """Get workflow code, a wrapper for :func:`get_workflow_info`.
 
         We can not change this function name to workflow_code, because it is a keyword used in

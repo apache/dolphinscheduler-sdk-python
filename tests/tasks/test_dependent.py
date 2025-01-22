@@ -78,7 +78,7 @@ TEST_OPERATOR_LIST = ("AND", "OR")
     "pydolphinscheduler.tasks.dependent.DependentItem.get_code_from_gateway",
     return_value={
         "projectCode": TEST_PROJECT_CODE,
-        "processDefinitionCode": TEST_DEFINITION_CODE,
+        "workflowDefinitionCode": TEST_DEFINITION_CODE,
         "taskDefinitionCode": TEST_TASK_CODE,
     },
 )
@@ -117,7 +117,7 @@ def test_dependent_item_get_define(mock_task_info, dep_date, dep_cycle):
     "pydolphinscheduler.tasks.dependent.DependentItem.get_code_from_gateway",
     return_value={
         "projectCode": TEST_PROJECT_CODE,
-        "processDefinitionCode": TEST_DEFINITION_CODE,
+        "workflowDefinitionCode": TEST_DEFINITION_CODE,
         "taskDefinitionCode": TEST_TASK_CODE,
     },
 )
@@ -212,7 +212,7 @@ def test_dependent_item_code_parameter(task_name: dict, result: str | None):
     "pydolphinscheduler.tasks.dependent.DependentItem.get_code_from_gateway",
     return_value={
         "projectCode": TEST_PROJECT_CODE,
-        "processDefinitionCode": TEST_DEFINITION_CODE,
+        "workflowDefinitionCode": TEST_DEFINITION_CODE,
         "taskDefinitionCode": TEST_TASK_CODE,
     },
 )
@@ -353,7 +353,7 @@ def test_dependent_operator_set_define_error(mock_code, arg_list):
     "pydolphinscheduler.tasks.dependent.DependentItem.get_code_from_gateway",
     return_value={
         "projectCode": TEST_PROJECT_CODE,
-        "processDefinitionCode": TEST_DEFINITION_CODE,
+        "workflowDefinitionCode": TEST_DEFINITION_CODE,
         "taskDefinitionCode": TEST_TASK_CODE,
     },
 )
@@ -552,7 +552,7 @@ def test_operator_dependent_item(
     "pydolphinscheduler.tasks.dependent.DependentItem.get_code_from_gateway",
     return_value={
         "projectCode": TEST_PROJECT_CODE,
-        "processDefinitionCode": TEST_DEFINITION_CODE,
+        "workflowDefinitionCode": TEST_DEFINITION_CODE,
         "taskDefinitionCode": TEST_TASK_CODE,
     },
 )
@@ -682,7 +682,7 @@ def get_dep_task_list(*operator):
     "pydolphinscheduler.tasks.dependent.DependentItem.get_code_from_gateway",
     return_value={
         "projectCode": TEST_PROJECT_CODE,
-        "processDefinitionCode": TEST_DEFINITION_CODE,
+        "workflowDefinitionCode": TEST_DEFINITION_CODE,
         "taskDefinitionCode": TEST_TASK_CODE,
     },
 )
@@ -738,7 +738,7 @@ def test_operator_dependent_task_list_multi_dependent_list(
     "pydolphinscheduler.tasks.dependent.DependentItem.get_code_from_gateway",
     return_value={
         "projectCode": TEST_PROJECT_CODE,
-        "processDefinitionCode": TEST_DEFINITION_CODE,
+        "workflowDefinitionCode": TEST_DEFINITION_CODE,
         "taskDefinitionCode": TEST_TASK_CODE,
     },
 )
