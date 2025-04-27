@@ -49,4 +49,4 @@ def docker_setup_teardown():
         )
         assert container is not None
         yield
-        docker_wrapper.remove_container()
+        # docker_wrapper.remove_container()
