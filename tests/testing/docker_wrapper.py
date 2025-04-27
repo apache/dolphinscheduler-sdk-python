@@ -84,7 +84,13 @@ class DockerWrapper:
         # Stop container and raise error when reach timeout threshold but do not appear specific log output
         else:
             container_log = container.logs()
+            logger.error(
+                "Cannot find specific log `%s` in %d seconds, the whole log as below",
+                log,
+                timeout_threshold,
+            )
             logger.error(container_log.decode("utf-8"))
+
             container.remove(force=True)
             raise RuntimeError(
                 "Can not capture specific log `%s` in %d seconds, remove container.",
