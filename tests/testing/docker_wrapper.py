@@ -75,7 +75,7 @@ class DockerWrapper:
         log_byte = str.encode(log)
         container = self.run(*args, **kwargs)
 
-        timeout_threshold = 6 * 60
+        timeout_threshold = 5 * 60
         start_time = time.time()
         while time.time() <= start_time + timeout_threshold:
             if log_byte in container.logs(tail=1000):
