@@ -17,11 +17,14 @@
 
 """py.test conftest.py file for package integration test."""
 
+import logging
 import os
 
 import pytest
 
 from tests.testing.docker_wrapper import DockerWrapper
+
+logger = logging.getLogger(__name__)
 
 
 @pytest.fixture(scope="package", autouse=True)
@@ -41,7 +44,11 @@ def docker_setup_teardown():
         docker_wrapper = DockerWrapper(
             image="apache/dolphinscheduler-standalone-server:ci",
             container_name="ci-dolphinscheduler-standalone-server",
-            environment={"API_PYTHON_GATEWAY_ENABLED": "true"},
+            environment={
+                "API_PYTHON_GATEWAY_ENABLED": "true",
+                "MASTER_SERVER_LOAD_PROTECTION_ENABLED": "false",
+                "WORKER_SERVER_LOAD_PROTECTION_ENABLED": "false",
+            },
         )
         ports = {"25333/tcp": 25333, "12345/tcp": 12345}
         container = docker_wrapper.run_until_log(
@@ -49,4 +56,9 @@ def docker_setup_teardown():
         )
         assert container is not None
         yield
+        container_logs = container.logs()
+        logger.info(
+            "Finished integration tests run, Container logs: %s",
+            container_logs.decode("utf-8"),
+        )
         docker_wrapper.remove_container()
