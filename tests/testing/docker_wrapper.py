@@ -23,6 +23,9 @@ import time
 import docker
 from docker.errors import ImageNotFound
 from docker.models.containers import Container
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class DockerWrapper:
@@ -72,7 +75,7 @@ class DockerWrapper:
         log_byte = str.encode(log)
         container = self.run(*args, **kwargs)
 
-        timeout_threshold = 2 * 60
+        timeout_threshold = 5 * 60
         start_time = time.time()
         while time.time() <= start_time + timeout_threshold:
             if log_byte in container.logs(tail=1000):
@@ -81,10 +84,11 @@ class DockerWrapper:
         # Stop container and raise error when reach timeout threshold but do not appear specific log output
         else:
             container_log = container.logs()
+            logger.error(container_log.decode('utf-8'))
             container.remove(force=True)
             raise RuntimeError(
-                "Can not capture specific log `%s` in %d seconds, remove container, the whole log is:\n%s",
-                (log, timeout_threshold, container_log),
+                "Can not capture specific log `%s` in %d seconds, remove container.",
+                (log, timeout_threshold),
             )
         return container
 
