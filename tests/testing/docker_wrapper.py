@@ -18,12 +18,12 @@
 """Wrap docker commands for easier create docker container."""
 from __future__ import annotations
 
+import logging
 import time
 
 import docker
 from docker.errors import ImageNotFound
 from docker.models.containers import Container
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -84,7 +84,7 @@ class DockerWrapper:
         # Stop container and raise error when reach timeout threshold but do not appear specific log output
         else:
             container_log = container.logs()
-            logger.error(container_log.decode('utf-8'))
+            logger.error(container_log.decode("utf-8"))
             container.remove(force=True)
             raise RuntimeError(
                 "Can not capture specific log `%s` in %d seconds, remove container.",
