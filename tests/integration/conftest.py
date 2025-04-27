@@ -17,11 +17,14 @@
 
 """py.test conftest.py file for package integration test."""
 
+import logging
 import os
 
 import pytest
 
 from tests.testing.docker_wrapper import DockerWrapper
+
+logger = logging.getLogger(__name__)
 
 
 @pytest.fixture(scope="package", autouse=True)
@@ -53,4 +56,9 @@ def docker_setup_teardown():
         )
         assert container is not None
         yield
-        # docker_wrapper.remove_container()
+        container_logs = container.logs()
+        logger.info(
+            "Finished integration tests run, Container logs: %s",
+            container_logs.decode("utf-8"),
+        )
+        docker_wrapper.remove_container()

@@ -212,10 +212,6 @@ jobs:
         working-directory: src
         run: |
           python -m tox -vv -e integrate-test
-      - name: check docker log
-        run: |
-          docker ps
-          docker logs ci-dolphinscheduler-standalone-server
   result:
     name: CI
     if: always()
