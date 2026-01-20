@@ -215,8 +215,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Status
-        run: |
 #          if [[ ${{ needs.dead-link.result }} != 'success' ]] || \
+        run: |
           if [[ ${{ needs.local-ci.result }} != 'success' ]] || \
             ([[ ${{ needs.integrate-test.result }} != 'skipped' ]] && [[ ${{ needs.integrate-test.result }} != 'success' ]]); then
             echo "CI Failed!"
