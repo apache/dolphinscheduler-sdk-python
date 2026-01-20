@@ -16,6 +16,7 @@
 # under the License.
 
 """Task Pytorch."""
+
 from __future__ import annotations
 
 from pydolphinscheduler.constants import TaskType

@@ -16,6 +16,7 @@
 # under the License.
 
 """Test Database."""
+
 import json
 from unittest.mock import patch
 

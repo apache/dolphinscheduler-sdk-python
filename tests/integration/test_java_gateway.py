@@ -16,6 +16,7 @@
 # under the License.
 
 """Test pydolphinscheduler java gateway."""
+
 import importlib
 import warnings
 from unittest.mock import PropertyMock, patch

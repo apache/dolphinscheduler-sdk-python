@@ -26,7 +26,6 @@ from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.tasks.sub_workflow import SubWorkflow
 from pydolphinscheduler.tasks.shell import Shell
 
-
 # [start workflow_declare]
 # [start sub_workflow_declare]
 with Workflow(name="sub_workflow_downstream") as wf_downstream, Workflow(

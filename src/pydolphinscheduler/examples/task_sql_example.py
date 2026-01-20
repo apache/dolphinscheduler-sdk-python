@@ -18,6 +18,7 @@
 # [start workflow_declare]
 
 """A example workflow for task SQL."""
+
 from pathlib import Path
 
 from pydolphinscheduler.core.workflow import Workflow

@@ -16,6 +16,7 @@
 # under the License.
 
 """Test Task Pytorch."""
+
 from copy import deepcopy
 from unittest.mock import patch
 

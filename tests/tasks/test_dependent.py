@@ -16,6 +16,7 @@
 # under the License.
 
 """Test Task dependent."""
+
 from __future__ import annotations
 
 import itertools

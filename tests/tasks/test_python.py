@@ -16,6 +16,7 @@
 # under the License.
 
 """Test Task python."""
+
 from pathlib import Path
 from unittest.mock import patch
 

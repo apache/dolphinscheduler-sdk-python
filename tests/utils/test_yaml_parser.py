@@ -16,6 +16,7 @@
 # under the License.
 
 """Test utils.path_dict module."""
+
 from __future__ import annotations
 
 import pytest
@@ -67,8 +68,7 @@ expects = [
     },
 ]
 
-param = [
-    """#example
+param = ["""#example
 name:
   # details
   family: Smith   # very common
@@ -76,8 +76,7 @@ name:
   mark:
     name_mark:
       key: value
-"""
-]
+"""]
 
 with open(path_default_config_yaml) as f:
     param.append(f.read())

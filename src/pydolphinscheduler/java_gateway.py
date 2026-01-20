@@ -16,6 +16,7 @@
 # under the License.
 
 """Module java gateway, contain gateway behavior."""
+
 from __future__ import annotations
 
 import contextlib

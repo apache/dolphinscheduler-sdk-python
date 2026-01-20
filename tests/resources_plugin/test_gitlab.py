@@ -16,6 +16,7 @@
 # under the License.
 
 """Test github resource plugin."""
+
 import pytest
 
 from pydolphinscheduler.resources_plugin.gitlab import GitLab

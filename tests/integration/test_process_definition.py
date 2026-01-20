@@ -16,6 +16,7 @@
 # under the License.
 
 """Test workflow in integration."""
+
 from __future__ import annotations
 
 import pytest

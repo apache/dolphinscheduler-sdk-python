@@ -17,7 +17,6 @@
 
 """Test parameter."""
 
-
 import pytest
 
 from pydolphinscheduler.core.parameter import (

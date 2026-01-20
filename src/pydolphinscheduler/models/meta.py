@@ -22,6 +22,7 @@ This module contains the ModelMeta class, which is used to convert ``py4j.java_g
 server to get some resource from database, but you want to make sure the return object is a in Python
 object.
 """
+
 from __future__ import annotations
 
 from functools import wraps

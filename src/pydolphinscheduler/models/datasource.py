@@ -16,6 +16,7 @@
 # under the License.
 
 """Module database."""
+
 from __future__ import annotations
 
 import json

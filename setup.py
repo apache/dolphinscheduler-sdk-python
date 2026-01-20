@@ -16,6 +16,7 @@
 # under the License.
 
 """The script for setting up pydolphinscheduler."""
+
 from __future__ import annotations
 
 import logging

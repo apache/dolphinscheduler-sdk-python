@@ -16,6 +16,7 @@
 # under the License.
 
 """Test Task SageMaker."""
+
 import json
 from unittest.mock import patch
 

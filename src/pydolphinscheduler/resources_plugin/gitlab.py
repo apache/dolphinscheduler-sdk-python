@@ -16,6 +16,7 @@
 # under the License.
 
 """DolphinScheduler gitlab resource plugin."""
+
 from __future__ import annotations
 
 from urllib.parse import urljoin, urlparse

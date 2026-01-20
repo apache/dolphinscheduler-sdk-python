@@ -16,6 +16,7 @@
 # under the License.
 
 """Test Task class function."""
+
 from __future__ import annotations
 
 import logging

@@ -17,6 +17,7 @@
 
 # [start workflow_declare]
 """A example workflow for task sagemaker."""
+
 import json
 
 from pydolphinscheduler.core.workflow import Workflow

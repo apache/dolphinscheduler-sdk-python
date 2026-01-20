@@ -16,6 +16,7 @@
 # under the License.
 
 """Test Task Dvc."""
+
 from unittest.mock import patch
 
 from pydolphinscheduler.tasks.dvc import DVCDownload, DVCInit, DvcTaskType, DVCUpload

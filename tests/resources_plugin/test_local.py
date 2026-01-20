@@ -16,6 +16,7 @@
 # under the License.
 
 """Test local resource plugin."""
+
 from pathlib import Path
 from unittest.mock import PropertyMock, patch
 

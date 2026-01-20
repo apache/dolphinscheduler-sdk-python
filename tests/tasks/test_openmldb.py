@@ -16,6 +16,7 @@
 # under the License.
 
 """Test Task OpenMLDB."""
+
 from unittest.mock import patch
 
 from pydolphinscheduler.tasks.openmldb import OpenMLDB
