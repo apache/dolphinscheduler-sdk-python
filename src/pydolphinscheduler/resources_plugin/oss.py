@@ -16,6 +16,7 @@
 # under the License.
 
 """DolphinScheduler oss resource plugin."""
+
 from __future__ import annotations
 
 from urllib.parse import urljoin, urlparse

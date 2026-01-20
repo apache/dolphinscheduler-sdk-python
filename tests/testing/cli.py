@@ -17,7 +17,6 @@
 
 """Utils of command line test."""
 
-
 from click.testing import CliRunner
 
 from tests.testing.constants import DEV_MODE

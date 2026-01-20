@@ -16,6 +16,7 @@
 # under the License.
 
 """Test pydolphinscheduler tenant."""
+
 import pytest
 
 from pydolphinscheduler.models import Tenant, User

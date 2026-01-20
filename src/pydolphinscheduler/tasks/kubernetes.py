@@ -16,6 +16,7 @@
 # under the License.
 
 """Task Kubernetes."""
+
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.task import BatchTask
 

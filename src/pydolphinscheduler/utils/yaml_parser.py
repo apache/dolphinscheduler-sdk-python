@@ -16,6 +16,7 @@
 # under the License.
 
 """YAML parser utils, parser yaml string to ``ruamel.yaml`` object and nested key dict."""
+
 from __future__ import annotations
 
 import copy

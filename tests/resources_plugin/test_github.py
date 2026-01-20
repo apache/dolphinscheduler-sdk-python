@@ -16,6 +16,7 @@
 # under the License.
 
 """Test github resource plugin."""
+
 from unittest.mock import PropertyMock, patch
 
 import pytest

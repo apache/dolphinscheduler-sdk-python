@@ -35,6 +35,7 @@ task_dependent:
 
 task_dependent(this task dependent on task_dependent_external.task_1 and task_dependent_external.task_2).
 """
+
 from pydolphinscheduler import configuration
 from pydolphinscheduler.core.workflow import Workflow
 from pydolphinscheduler.tasks.dependent import And, Dependent, DependentItem, Or

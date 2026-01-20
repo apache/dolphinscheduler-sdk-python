@@ -16,6 +16,7 @@
 # under the License.
 
 """Test oss resource plugin."""
+
 import pytest
 
 from pydolphinscheduler.resources_plugin import S3

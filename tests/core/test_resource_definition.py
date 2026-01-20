@@ -16,6 +16,7 @@
 # under the License.
 
 """Test resource definition."""
+
 import pytest
 
 from pydolphinscheduler.core.resource import Resource
