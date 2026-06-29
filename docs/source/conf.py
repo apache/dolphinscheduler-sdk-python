@@ -26,17 +26,10 @@
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-import os
 import sys
 from pathlib import Path
 
-# For sphinx-multiversion, we need to build API docs of the corresponding package version, related issue:
-# https://github.com/Holzhaus/sphinx-multiversion/issues/42
-pkg_src_dir = (
-    Path(os.environ.get("SPHINX_MULTIVERSION_SOURCEDIR", default="."))
-    .joinpath("../../src")
-    .resolve()
-)
+pkg_src_dir = Path(__file__).resolve().parents[2].joinpath("src")
 sys.path.insert(0, str(pkg_src_dir))
 
 from pydolphinscheduler import __version__  # noqa
@@ -76,25 +69,10 @@ extensions = [
     # Add inline tabbed content
     "sphinx_inline_tabs",
     "sphinx_copybutton",
-    "sphinx_multiversion",
-    "sphinx_github_changelog",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
-
-# sphinx_multiversion configuration
-html_sidebars = {
-    "**": [
-        "versioning.html",
-    ],
-}
-# Match all exists tag for pydolphinscheduler expect version 2.0.4(not release apache dolphinscheduler)
-smv_tag_whitelist = r"^(?!2.0.4)\d+\.\d+\.\d+$"
-smv_branch_whitelist = "main"
-smv_remote_whitelist = r"^(origin|upstream)$"
-smv_released_pattern = "^refs/tags/.*$"
-smv_outputdir_format = "versions/{ref.name}"
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.

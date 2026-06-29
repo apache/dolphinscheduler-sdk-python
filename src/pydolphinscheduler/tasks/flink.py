@@ -19,6 +19,7 @@
 
 from __future__ import annotations
 
+import pydolphinscheduler
 from pydolphinscheduler.constants import TaskType
 from pydolphinscheduler.core.engine import Engine, ProgramType
 
@@ -59,7 +60,9 @@ class Flink(Engine):
         main_class: str,
         main_package: str,
         program_type: ProgramType | None = ProgramType.SCALA,
-        deploy_mode: DeployMode | None = DeployMode.CLUSTER,
+        deploy_mode: (
+            pydolphinscheduler.tasks.flink.DeployMode | None
+        ) = DeployMode.CLUSTER,
         flink_version: FlinkVersion | None = FlinkVersion.LOW_VERSION,
         app_name: str | None = None,
         job_manager_memory: str | None = "1G",

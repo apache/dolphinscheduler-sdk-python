@@ -29,7 +29,6 @@ under the License.
 [![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat-square&labelColor=ef8336)](https://pycqa.github.io/isort)
 [![CI](https://github.com/apache/dolphinscheduler-sdk-python/actions/workflows/ci.yaml/badge.svg)](https://github.com/apache/dolphinscheduler-sdk-python/actions/workflows/ci.yaml)
 [![Twitter Follow](https://img.shields.io/twitter/follow/dolphinschedule.svg?style=social&label=Follow)](https://twitter.com/dolphinschedule)
-[![Slack Status](https://img.shields.io/badge/slack-join_chat-white.svg?logo=slack&style=social)](https://s.apache.org/dolphinscheduler-slack)
 
 **PyDolphinScheduler** is python API for [Apache DolphinScheduler](https://dolphinscheduler.apache.org),
 which allow you definition your workflow by python code, aka workflow-as-codes.
@@ -39,7 +38,7 @@ which allow you definition your workflow by python code, aka workflow-as-codes.
 ### Version Compatibility
 
 At Nov 7, 2022 we seperated PyDolphinScheduler from DolphinScheduler, and the version of PyDolphinScheduler 4.0.0
-can match multiple versions of DolphinScheduler, for more details, please refer to [version](https://dolphinscheduler.apache.org/python/main/index.html#version)
+can match multiple versions of DolphinScheduler, for more details, please refer to [version](https://dolphinscheduler.apache.org/python/index.html#version)
 
 ### Installation
 
@@ -96,7 +95,7 @@ Project Management, please refer to [DolphinScheduler Workflow](https://dolphins
 
 ## Documentation
 
-For full documentation visit [document](https://dolphinscheduler.apache.org/python/main/index.html). This
+For full documentation visit [document](https://dolphinscheduler.apache.org/python/index.html). This
 documentation is generated from this repository so please raise issues or pull requests for any additions, corrections, or clarifications.
 
 ## Contributing

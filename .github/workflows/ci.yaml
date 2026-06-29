@@ -117,23 +117,18 @@ jobs:
     timeout-minutes: 15
     needs: lint
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        env-list: [doc-build, doc-build-multi]
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          # need to pin to 3.10 cause sphinx-multiversion latest code have but gather equal than 3.11
-          python-version: '3.10'
+          python-version: 3.13
       - name: Install Dependences
         run: |
           python -m pip install --upgrade ${{ env.DEPENDENCES }}
-      - name: Run Build Docs Tests ${{ matrix.env-list }}
+      - name: Run Build Docs Tests
         run: |
-          python -m tox -vv -e ${{ matrix.env-list }}
+          python -m tox -vv -e doc-build
   local-ci:
     timeout-minutes: 15
     needs:

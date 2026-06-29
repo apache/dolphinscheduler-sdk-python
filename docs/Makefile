@@ -24,7 +24,6 @@
 # Add opts `turn warnings into errors` strict sphinx-build behavior
 SPHINXOPTS    ?= -W
 SPHINXBUILD   ?= sphinx-build
-SPHINXMULTIVERSION   ?= sphinx-multiversion
 SOURCEDIR     = source
 BUILDDIR      = build
 
@@ -38,7 +37,3 @@ help:
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
 %: Makefile
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
-
-# Create multiple version of docs
-multiversion:
-	@$(SPHINXMULTIVERSION) "$(SOURCEDIR)" "$(BUILDDIR)/html"

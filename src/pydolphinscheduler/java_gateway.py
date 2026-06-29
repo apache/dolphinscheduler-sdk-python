@@ -65,28 +65,11 @@ class GatewayEntryPoint:
         auth_token: str | None = None,
     ):
         self._gateway = None
+        self._is_gateway_version_checked = False
         self.address = address or configuration.JAVA_GATEWAY_ADDRESS
         self.port = port or configuration.JAVA_GATEWAY_PORT
         self.auto_convert = auto_convert or configuration.JAVA_GATEWAY_AUTO_CONVERT
         self.auth_token = auth_token or configuration.JAVA_GATEWAY_AUTH_TOKEN
-        gateway_version = "unknown"
-        with contextlib.suppress(Py4JError):
-            # 1. Java gateway version is too old: doesn't have method 'getGatewayVersion()'
-            # 2. Error connecting to Java gateway
-            gateway_version = self.get_gateway_version()
-        if (
-            not __version__.endswith("dev")
-            and gateway_version
-            and not version_match(Version.DS, gateway_version)
-        ):
-            warnings.warn(
-                f"Using unmatched version of pydolphinscheduler (version {__version__}) "
-                f"and Java gateway (version {gateway_version}) may cause errors. "
-                "We strongly recommend you to find the matched version "
-                "(check: https://pypi.org/project/apache-dolphinscheduler)",
-                UserWarning,
-                stacklevel=2,
-            )
 
     @property
     def gateway(self) -> JavaGateway:
@@ -108,6 +91,35 @@ class GatewayEntryPoint:
         self._gateway = JavaGateway(gateway_parameters=gateway_parameters)
         return self._gateway
 
+    def _check_gateway_version(self):
+        """Warn once when Python SDK and Java gateway versions do not match."""
+        if self._is_gateway_version_checked:
+            return
+        self._is_gateway_version_checked = True
+        if __version__.endswith("dev"):
+            return
+
+        gateway_version = "unknown"
+        with contextlib.suppress(Py4JError):
+            # 1. Java gateway version is too old: doesn't have method 'getGatewayVersion()'
+            # 2. Error connecting to Java gateway
+            gateway_version = self.gateway.entry_point.getGatewayVersion()
+        if gateway_version and not version_match(Version.DS, gateway_version):
+            warnings.warn(
+                f"Using unmatched version of pydolphinscheduler (version {__version__}) "
+                f"and Java gateway (version {gateway_version}) may cause errors. "
+                "We strongly recommend you to find the matched version "
+                "(check: https://pypi.org/project/apache-dolphinscheduler)",
+                UserWarning,
+                stacklevel=2,
+            )
+
+    @property
+    def entry_point(self):
+        """Return Java gateway entry point with lazy version validation."""
+        self._check_gateway_version()
+        return self.gateway.entry_point
+
     def get_gateway_version(self):
         """Get the java gateway version, expected to be equal with pydolphinscheduler."""
         return self.gateway.entry_point.getGatewayVersion()
@@ -120,29 +132,29 @@ class GatewayEntryPoint:
         :param name: datasource name of the datasource to be queried
         :param type: datasource type of the datasource, only used to filter the result.
         """
-        return self.gateway.entry_point.getDatasource(name, type)
+        return self.entry_point.getDatasource(name, type)
 
     def get_resources_file_info(self, program_type: str, main_package: str):
         """Get resources file info through java gateway."""
-        return self.gateway.entry_point.getResourcesFileInfo(program_type, main_package)
+        return self.entry_point.getResourcesFileInfo(program_type, main_package)
 
     def create_or_update_resource(self, user_name: str, name: str, content: str):
         """Create or update resource through java gateway."""
-        return self.gateway.entry_point.createOrUpdateResource(user_name, name, content)
+        return self.entry_point.createOrUpdateResource(user_name, name, content)
 
     def query_resources_file_info(self, user_name: str, name: str):
         """Get resources file info through java gateway."""
-        return self.gateway.entry_point.queryResourcesFileInfo(user_name, name)
+        return self.entry_point.queryResourcesFileInfo(user_name, name)
 
     def query_environment_info(self, name: str):
         """Get environment info through java gateway."""
-        return self.gateway.entry_point.getEnvironmentInfo(name)
+        return self.entry_point.getEnvironmentInfo(name)
 
     def get_code_and_version(
         self, project_name: str, workflow_name: str, task_name: str
     ):
         """Get code and version through java gateway."""
-        return self.gateway.entry_point.getCodeAndVersion(
+        return self.entry_point.getCodeAndVersion(
             project_name, workflow_name, task_name
         )
 
@@ -150,39 +162,37 @@ class GatewayEntryPoint:
         self, user: str, name: str, description: str | None = None
     ):
         """Create or grant project through java gateway."""
-        return self.gateway.entry_point.createOrGrantProject(user, name, description)
+        return self.entry_point.createOrGrantProject(user, name, description)
 
     def query_project_by_name(self, user: str, name: str):
         """Query project through java gateway."""
-        return self.gateway.entry_point.queryProjectByName(user, name)
+        return self.entry_point.queryProjectByName(user, name)
 
     def update_project(
         self, user: str, project_code: int, project_name: str, description: str
     ):
         """Update project through java gateway."""
-        return self.gateway.entry_point.updateProject(
+        return self.entry_point.updateProject(
             user, project_code, project_name, description
         )
 
     def delete_project(self, user: str, code: int):
         """Delete project through java gateway."""
-        return self.gateway.entry_point.deleteProject(user, code)
+        return self.entry_point.deleteProject(user, code)
 
     def create_tenant(
         self, tenant_name: str, queue_name: str, description: str | None = None
     ):
         """Create tenant through java gateway."""
-        return self.gateway.entry_point.createTenant(
-            tenant_name, description, queue_name
-        )
+        return self.entry_point.createTenant(tenant_name, description, queue_name)
 
     def query_tenant(self, tenant_code: str):
         """Query tenant through java gateway."""
-        return self.gateway.entry_point.queryTenantByCode(tenant_code)
+        return self.entry_point.queryTenantByCode(tenant_code)
 
     def grant_tenant_to_user(self, user_name: str, tenant_code: str):
         """Grant tenant to user through java gateway."""
-        return self.gateway.entry_point.grantTenantToUser(user_name, tenant_code)
+        return self.entry_point.grantTenantToUser(user_name, tenant_code)
 
     def update_tenant(
         self,
@@ -193,13 +203,13 @@ class GatewayEntryPoint:
         description: str | None = None,
     ):
         """Update tenant through java gateway."""
-        return self.gateway.entry_point.updateTenant(
+        return self.entry_point.updateTenant(
             user, tenant_id, code, queue_id, description
         )
 
     def delete_tenant(self, user: str, tenant_id: int):
         """Delete tenant through java gateway."""
-        return self.gateway.entry_point.deleteTenantById(user, tenant_id)
+        return self.entry_point.deleteTenantById(user, tenant_id)
 
     def create_user(
         self,
@@ -212,7 +222,7 @@ class GatewayEntryPoint:
         status: int,
     ):
         """Create user through java gateway."""
-        return self.gateway.entry_point.createUser(
+        return self.entry_point.createUser(
             name, password, email, phone, tenant, queue, status
         )
 
@@ -231,13 +241,13 @@ class GatewayEntryPoint:
         status: int,
     ):
         """Update user through java gateway."""
-        return self.gateway.entry_point.updateUser(
+        return self.entry_point.updateUser(
             name, password, email, phone, tenant, queue, status
         )
 
     def delete_user(self, name: str, user_id: int):
         """Delete user through java gateway."""
-        return self.gateway.entry_point.deleteUser(name, user_id)
+        return self.entry_point.deleteUser(name, user_id)
 
     def get_dependent_info(
         self,
@@ -246,15 +256,11 @@ class GatewayEntryPoint:
         task_name: str | None = None,
     ):
         """Get dependent info through java gateway."""
-        return self.gateway.entry_point.getDependentInfo(
-            project_name, workflow_name, task_name
-        )
+        return self.entry_point.getDependentInfo(project_name, workflow_name, task_name)
 
     def get_workflow_info(self, user_name: str, project_name: str, workflow_name: str):
         """Get workflow info through java gateway."""
-        return self.gateway.entry_point.getWorkflowInfo(
-            user_name, project_name, workflow_name
-        )
+        return self.entry_point.getWorkflowInfo(user_name, project_name, workflow_name)
 
     def create_or_update_workflow(
         self,
@@ -276,7 +282,7 @@ class GatewayEntryPoint:
         other_params_json: str | None = None,
     ):
         """Create or update workflow through java gateway."""
-        return self.gateway.entry_point.createOrUpdateWorkflow(
+        return self.entry_point.createOrUpdateWorkflow(
             user_name,
             project_name,
             name,
@@ -305,7 +311,7 @@ class GatewayEntryPoint:
         warning_group_id: int,
     ):
         """Exec workflow instance through java gateway."""
-        return self.gateway.entry_point.execWorkflowInstance(
+        return self.entry_point.execWorkflowInstance(
             user_name,
             project_name,
             workflow_name,
