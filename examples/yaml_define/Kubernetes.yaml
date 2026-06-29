@@ -25,5 +25,5 @@ tasks:
     task_type: K8S
     image: ds-dev
     namespace: '{ "name": "default","cluster": "lab" }'
-    minCpuCores: 2.0
-    minMemorySpace: 10.0
+    min_cpu_cores: 2.0
+    min_memory_space: 10.0

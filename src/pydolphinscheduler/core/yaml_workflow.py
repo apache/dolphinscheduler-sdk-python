@@ -26,7 +26,7 @@ from pathlib import Path
 from typing import Any
 
 from pydolphinscheduler import configuration, tasks
-from pydolphinscheduler.constants import Symbol
+from pydolphinscheduler.constants import Symbol, TaskType
 from pydolphinscheduler.core.parameter import ParameterType
 from pydolphinscheduler.core.task import Task
 from pydolphinscheduler.core.workflow import Workflow
@@ -113,15 +113,33 @@ class ParseTool:
         return possible_path
 
 
+# Alias from a ``TaskType`` constant value to its task class name, for the
+# cases where the task type constant sent to the backend differs from the
+# Python task class name (e.g. ``TaskType.KUBERNETES`` is ``"K8S"`` while the
+# class is ``Kubernetes``). Add an entry here whenever a new task type's
+# constant value does not equal its class name (case-insensitively).
+_TASK_TYPE_ALIAS = {
+    TaskType.KUBERNETES: "Kubernetes",
+}
+
+
 def get_task_cls(task_type) -> Task:
-    """Get the task class object by task_type (case compatible)."""
+    """Get the task class object by task_type (case compatible).
+
+    Match by class name first (case-insensitively), then fall back to the
+    ``TaskType`` constant values so a YAML ``task_type`` like ``K8S`` resolves
+    to the ``Kubernetes`` task class.
+    """
     # only get task class from tasks.__all__
     all_task_types = {type_.capitalize(): type_ for type_ in tasks.__all__}
     task_type_cap = task_type.capitalize()
-    if task_type_cap not in all_task_types:
+    if task_type_cap in all_task_types:
+        standard_name = all_task_types[task_type_cap]
+    elif task_type.upper() in _TASK_TYPE_ALIAS:
+        standard_name = _TASK_TYPE_ALIAS[task_type.upper()]
+    else:
         raise PyDSTaskNoFoundException(f"cant not find task {task_type}")
 
-    standard_name = all_task_types[task_type_cap]
     return getattr(tasks, standard_name)
 
 
