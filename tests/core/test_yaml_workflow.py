@@ -137,6 +137,9 @@ def test_parse_tool_parse_possible_path_file():
         ("SubWorkflow", tasks.SubWorkflow),
         ("Switch", tasks.Switch),
         ("SageMaker", tasks.SageMaker),
+        ("Kubernetes", tasks.Kubernetes),
+        ("K8S", tasks.Kubernetes),
+        ("k8s", tasks.Kubernetes),
     ],
 )
 def test_get_task(task_type, expect):
@@ -168,6 +171,7 @@ def test_get_error(task_type):
         ("Flink.yaml"),
         ("Procedure.yaml"),
         ("Http.yaml"),
+        ("Kubernetes.yaml"),
         ("MapReduce.yaml"),
         ("Python.yaml"),
         ("Shell.yaml"),
