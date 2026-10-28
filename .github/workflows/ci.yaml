@@ -129,24 +129,6 @@ jobs:
       - name: Run Build Docs Tests
         run: |
           python -m tox -vv -e doc-build
-  local-ci:
-    timeout-minutes: 15
-    needs:
-      - pytest
-      - doc-build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.13
-      - name: Install Dependences
-        run: |
-          python -m pip install --upgrade ${{ env.DEPENDENCES }}
-      - name: Run Tests Build Docs
-        run: |
-          python -m tox -vv -e local-ci
   commit-msg:
     needs: license
     runs-on: ubuntu-latest
@@ -207,15 +189,21 @@ jobs:
     name: CI
     if: always()
     needs:
+      - license
+      - lint
       - dead-link
-      - local-ci
+      - pytest
+      - doc-build
       - integrate-test
     runs-on: ubuntu-latest
     steps:
       - name: Status
         run: |
-          if [[ ${{ needs.dead-link.result }} != 'success' ]] || \
-            [[ ${{ needs.local-ci.result }} != 'success' ]] || \
+          if [[ ${{ needs.license.result }} != 'success' ]] || \
+            [[ ${{ needs.lint.result }} != 'success' ]] || \
+            [[ ${{ needs.dead-link.result }} != 'success' ]] || \
+            [[ ${{ needs.pytest.result }} != 'success' ]] || \
+            [[ ${{ needs.doc-build.result }} != 'success' ]] || \
             ([[ ${{ needs.integrate-test.result }} != 'skipped' ]] && [[ ${{ needs.integrate-test.result }} != 'success' ]]); then
             echo "CI Failed!"
             exit -1
