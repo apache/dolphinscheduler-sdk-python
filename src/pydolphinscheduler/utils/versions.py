@@ -34,7 +34,7 @@ def version_match(name: str, version: str) -> bool:
     path = Path(__file__).parent.parent.joinpath(Version.FILE_NAME)
     with path.open() as match:
         for line in match.readlines():
-            req = packaging_Requirement(line)
+            req = packaging_Requirement(line.strip())
             if req.name == name:
                 try:
                     return req.specifier.contains(version)
