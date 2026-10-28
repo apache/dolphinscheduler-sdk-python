@@ -45,7 +45,7 @@ jobs:
     needs: license
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
       - run: sudo npm install -g markdown-link-check@3.10.0
       - run: |
           for file in $(find . -name "*.md"); do
@@ -56,9 +56,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: license
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v7
         with:
           python-version: 3.13
       - name: Install Dependences
@@ -87,9 +87,9 @@ jobs:
           - os: windows-latest
             python-version: '3.12'
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install Dependences
@@ -98,7 +98,7 @@ jobs:
       - name: Run All Tests
         run: |
           python -m tox -vv -e code-test
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v7
         # FOR NO SCHEDULE: Codecov have a 100-upload limit per commit, and there are 3 * 6 files upload each time run pytest,
         # We should not run upload in schedule GitHub event, because the sixth day we do not change our code
         # and the upload limit will be reached 3 * 6 * 6. For more detail can see:
@@ -118,9 +118,9 @@ jobs:
     needs: lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v7
         with:
           python-version: 3.13
       - name: Install Dependences
@@ -135,7 +135,7 @@ jobs:
     outputs:
       commit_message: ${{ steps.set-commit-message.outputs.commit_message }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - id: set-commit-message
@@ -147,11 +147,11 @@ jobs:
     timeout-minutes: 30
     steps:
       - name: Checkout Dolphinscheduler Python SDK
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
         with:
           path: src
       - name: Checkout Dolphinscheduler
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
         with:
           repository: apache/dolphinscheduler
           path: dolphinscheduler
@@ -159,7 +159,7 @@ jobs:
           # Temporary add to make https://github.com/apache/dolphinscheduler-sdk-python/issues/12 work
           # ref: refs/pull/12918/head
       - name: Cache local Maven repository
-        uses: actions/cache@v3
+        uses: actions/cache@v6
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -175,7 +175,7 @@ jobs:
               -Ddocker.tag=ci \
               -Danalyze.skip=true
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v7
         with:
           python-version: 3.13
       - name: Install Dependences
