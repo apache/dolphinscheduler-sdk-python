@@ -24,7 +24,7 @@ which allow you define your workflow by Python code, aka workflow-as-codes.
 History
 -------
 
-We seperated PyDolphinScheduler code base from `Apache dolphinscheduler code base <https://github.com/apache/dolphinscheduler>`_
+We separated PyDolphinScheduler code base from `Apache dolphinscheduler code base <https://github.com/apache/dolphinscheduler>`_
 into independent repository at Nov 7, 2022. Now the code base is in `Apache dolphinscheduler-sdk-python <https://github.com/apache/dolphinscheduler-sdk-python>`_
 and all issue and pull requests should be submitted to this repository.
 
